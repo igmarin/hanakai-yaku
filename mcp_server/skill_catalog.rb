@@ -105,13 +105,12 @@ class SkillCatalog
 
   # Yields each metadata entry in the catalog.
   #
-  # @yieldparam name [String] skill name
   # @yieldparam metadata [SkillMetadata] skill metadata
   # @return [Enumerator] if no block is given
   def each
     return enum_for(:each) unless block_given?
 
-    @catalog.each do |name, metadata|
+    @catalog.each_value do |metadata|
       yield metadata
     end
   end

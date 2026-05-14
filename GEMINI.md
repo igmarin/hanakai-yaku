@@ -23,7 +23,7 @@ The repository contains 29 atomic skills and 8 workflows covering:
 ## How to Discover Skills
 
 1. **MCP Server** (preferred): The `hanami-skills` MCP server exposes `list_skills` and `use_skill` tools. Load skills on demand to keep context small.
-2. **Direct file reference**: Reference skills by canonical `name` from frontmatter. File paths: `skills/{category}/{skill-name}/SKILL.md` or `workflows/{workflow-name}/SKILL.md`.
+2. **Direct file reference**: Reference skills by canonical `name` from frontmatter.
 3. **GitHub CLI**: `gh skill install igmarin/hanami-skills <canonical-name>`
 
 ## How to Invoke a Skill
@@ -36,7 +36,7 @@ Reference skills by their canonical `name` from YAML frontmatter:
 - `tdd-loop`
 - `build-crud-resource`
 
-File paths (for direct reference):
+File paths (for reference only):
 - `skills/db/write-migration/SKILL.md`
 - `skills/actions/create-action/SKILL.md`
 - `workflows/tdd-loop/SKILL.md`

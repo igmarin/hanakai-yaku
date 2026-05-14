@@ -87,7 +87,7 @@ Use this skill when generating Hanami 2.x components via the CLI.
    ```
 
    Generates:
-   - `db/migrate/20240601120000_create_users.rb`
+   - `db/migrate/{timestamp}_create_users.rb`
 
 5. **Naming convention**:
 
@@ -113,7 +113,7 @@ Use this skill when generating Hanami 2.x components via the CLI.
 | "I'll forget the slice prefix when generating in a slice" | Use `api.users.index` for slice `api`, not just `users.index`. |
 | "I'll manually create files instead of using generators" | Generators ensure correct naming and structure. Use them for consistency. |
 | "I'll run generators without verifying the output" | Always check generated files. Generators create boilerplate that needs editing. |
-| "I'll use plural names for Actions" | Actions use the resource name: `users.index`, `users.show`, not `user.index`. |
+| "I'll use singular names for Actions" | Actions use the plural resource name: `users.index`, `users.show`, not `user.index`. |
 
 ---
 

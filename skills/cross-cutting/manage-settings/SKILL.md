@@ -15,7 +15,7 @@ tags:
   - dry-configurable
 ---
 
-# settings
+# manage-settings
 
 Use this skill when managing Hanami 2.x application settings.
 

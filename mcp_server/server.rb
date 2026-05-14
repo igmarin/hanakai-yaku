@@ -1,17 +1,31 @@
 # frozen_string_literal: true
 
 # MCP stdio server for the hanami-skills repository.
-# Exposes two tools — list_skills and use_skill — plus skill://* resources
-# that serve SKILL.md content on demand.
+#
+# This server implements the Model Context Protocol (MCP) to expose Hanami skills
+# as tools and resources. It provides two main tools:
+#
+# - `list_skills`: Lists all available skills with their metadata
+# - `use_skill`: Fetches the full content of a specific skill by name
+#
+# Additionally, it exposes skill://* resources that serve SKILL.md content on demand,
+# allowing clients to read skill files directly via the MCP resource protocol.
+#
+# @see SkillCatalog The catalog class that manages skill discovery and loading
 require "bundler/setup"
 require "mcp"
 require_relative "skill_catalog"
 
+# Initialize paths to skills and workflows directories
 skills_root = File.expand_path("../skills", __dir__)
 workflows_root = File.expand_path("../workflows", __dir__)
 
+# Initialize the skill catalog with root directories
+# @return [SkillCatalog] The catalog instance for skill discovery and loading
 catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
 
+# Build MCP resources for each skill entry
+# @return [Array<MCP::Resource>] Array of resources keyed by skill:// URIs
 resources = catalog.list.map do |entry|
   MCP::Resource.new(
     uri: "skill://#{entry.name}",
@@ -21,12 +35,22 @@ resources = catalog.list.map do |entry|
   )
 end
 
+# Initialize the MCP server with name, version, and resources
+# @return [MCP::Server] The configured MCP server instance
 server = MCP::Server.new(
   name: "hanami-skills",
   version: "1.0.0",
   resources: resources
 )
 
+# Define the list_skills tool
+#
+# This tool returns a list of all available Hanami skills with their metadata,
+# including name, description, category, and ecosystem sources.
+#
+# @param server_context [MCP::ServerContext] The server context for the request
+# @param args [Hash] Additional arguments (unused)
+# @return [MCP::Tool::Response] JSON response containing array of skill entries
 server.define_tool(
   name: "list_skills",
   description: "List all available Hanami skills with their metadata",

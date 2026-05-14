@@ -4,7 +4,7 @@ version: "1.0.0"
 license: MIT
 description: >
   Use when implementing a full CRUD resource in Hanami 2.x. Chains entity,
-  relation, repository, action, view, write-request-spec, and code-review.
+  relation, repository, action, view, write-request-spec, and review-code.
 ecosystem_sources:
   - hanami/hanami
   - rom-rb/rom

@@ -49,11 +49,12 @@ Use this skill when injecting dependencies into Hanami 2.x components.
      module Actions
        module Users
          class Index < MyApp::Action
-           include Deps["repos.user_repo"]
+            include Deps["repos.user_repo"]
 
-           def handle(request, response)
-             response.render(view, users: user_repo.all)
-           end
+            def handle(request, response)
+              # `view` is resolved by Hanami from the Action class name convention
+              response.render(view, users: user_repo.all)
+            end
          end
        end
      end
