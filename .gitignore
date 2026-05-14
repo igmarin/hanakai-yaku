@@ -1,0 +1,19 @@
+.DS_Store
+.kiro/
+
+# Ruby
+*.gem
+.bundle/
+.ruby-lsp/
+
+# MCP Server
+mcp_server/.bundle/
+mcp_server/.rspec_status
+mcp_server/spec/.rspec_status
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+Thumbs.db

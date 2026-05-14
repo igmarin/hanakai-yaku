@@ -1,0 +1,117 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "yaml"
+
+def scan_skills(root, errors)
+  return [] unless File.directory?(root)
+
+  Dir.glob(File.join(root, "**", "SKILL.md")).filter_map do |file_path|
+    content = File.read(file_path)
+    frontmatter = extract_frontmatter(content)
+
+    unless frontmatter
+      errors << "Missing or invalid frontmatter in #{file_path}"
+      next
+    end
+
+    {
+      name: frontmatter["name"],
+      file_path: file_path,
+      frontmatter: frontmatter
+    }
+  rescue Psych::SyntaxError => e
+    errors << "malformed YAML in #{file_path}: #{e.message}"
+    nil
+  end
+end
+
+def extract_frontmatter(content)
+  return nil unless content.start_with?("---")
+
+  _, frontmatter, _ = content.split("---", 3)
+  return nil if frontmatter.nil? || frontmatter.strip.empty?
+
+  YAML.safe_load(frontmatter, permitted_classes: [], permitted_symbols: [], aliases: true)
+rescue Psych::SyntaxError
+  nil
+end
+
+def validate_frontmatter(skill)
+  errors = []
+
+  required_fields = %w[name version license description ecosystem_sources]
+  required_fields.each do |field|
+    value = skill[:frontmatter][field]
+    if value.nil? || (value.respond_to?(:empty?) && value.empty?)
+      errors << "Missing required frontmatter field '#{field}' in #{skill[:file_path]}"
+    end
+  end
+
+  errors
+end
+
+def validate_sections(content, file_path)
+  errors = []
+
+  # All files need these sections
+  required_sections = ["Quick Reference", "Common Mistakes", "Red Flags", "Integration"]
+  required_sections.each do |section|
+    unless content.include?("## #{section}")
+      errors << "Missing required section '## #{section}' in #{file_path}"
+    end
+  end
+
+  # Skills use "Core Rules", workflows use "Core Process"
+  if file_path.include?("workflows/")
+    unless content.include?("## Core Process")
+      errors << "Missing required section '## Core Process' in #{file_path}"
+    end
+  else
+    unless content.include?("## Core Rules")
+      errors << "Missing required section '## Core Rules' in #{file_path}"
+    end
+  end
+
+  errors
+end
+
+errors = []
+
+skills = scan_skills("skills", errors)
+workflows = scan_skills("workflows", errors)
+all_skills = skills + workflows
+
+# Check for duplicate names
+names = all_skills.map { |s| s[:name] }
+duplicates = names.select { |name| names.count(name) > 1 }.uniq
+duplicates.each do |name|
+  paths = all_skills.select { |s| s[:name] == name }.map { |s| s[:file_path] }
+  errors << "Duplicate skill name '#{name}' found in:\n  #{paths.join("\n  ")}"
+end
+
+# Validate frontmatter and sections
+all_skills.each do |skill|
+  errors.concat(validate_frontmatter(skill))
+  errors.concat(validate_sections(File.read(skill[:file_path]), skill[:file_path]))
+end
+
+# Check catalog sync: every skill should be listed in docs/reference/skill-catalog.md
+if File.exist?("docs/reference/skill-catalog.md")
+  catalog_content = File.read("docs/reference/skill-catalog.md")
+  all_skills.each do |skill|
+    # Use word boundary matching to avoid substring false positives
+    unless catalog_content.match?(/\b#{Regexp.escape(skill[:name])}\b/)
+      errors << "Skill '#{skill[:name]}' missing from docs/reference/skill-catalog.md"
+    end
+  end
+end
+
+if errors.any?
+  warn "VALIDATION FAILED:"
+  errors.each { |error| warn "  - #{error}" }
+  exit 1
+else
+  puts "Validation passed: #{all_skills.length} skills/workflows checked."
+  exit 0
+end

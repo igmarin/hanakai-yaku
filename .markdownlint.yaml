@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json
+---
+default: true
+
+# Consistent heading levels
+heading-style:
+  style: atx
+
+# Fenced code blocks must specify language
+fenced-code-language: true
+
+# No trailing whitespace
+no-trailing-spaces: true
+
+# Consistent list markers
+list-marker-style:
+  style: dash
+
+# Line length
+line-length:
+  line_length: 120
+  heading_line_length: 120
+  code_block_line_length: 120
+
+# Allow specific HTML
+no-inline-html: false
