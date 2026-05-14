@@ -16,7 +16,7 @@ Each skill in `hanami-skills` is **atomic** — it covers one specific task comp
 
 ### I need to add a database table
 
-```
+```text
 write-migration (create the table)
   → define-relation (map the table to ROM)
     → define-entity (create the data structure)
@@ -26,7 +26,7 @@ write-migration (create the table)
 
 ### I need to add an HTTP endpoint
 
-```
+```text
 create-action (implement the endpoint)
   → validate-params (add input validation)
     → handle-errors (add error responses)
@@ -36,20 +36,20 @@ create-action (implement the endpoint)
 
 ### I need to change an existing table
 
-```
+```text
 write-migration (add the column)
   → add-table-column workflow (full cascade: migration → relation → entity → repository → tests)
 ```
 
 ### I need to create a new bounded context
 
-```
+```text
 create-new-slice workflow (generate → routes → configure → DI → tests)
 ```
 
 ### I need to implement a full CRUD resource
 
-```
+```text
 build-crud-resource workflow (entity → relation → repository → actions → views → tests → review)
 ```
 
@@ -61,7 +61,7 @@ build-crud-resource workflow (entity → relation → repository → actions →
 
 Always start with the data layer when building something new.
 
-```
+```text
 1. define-entity        # What does the data look like?
 2. write-migration      # How is it stored?
 3. define-relation      # How do we query it?
@@ -76,7 +76,7 @@ Always start with the data layer when building something new.
 
 When adding an endpoint to an existing resource, start from the HTTP layer.
 
-```
+```text
 1. create-action        # Define the endpoint
 2. validate-params      # Validate input
 3. inject-dependencies  # Wire in existing repositories
@@ -90,7 +90,7 @@ When adding an endpoint to an existing resource, start from the HTTP layer.
 
 When cleaning up existing code, alternate between review and refactor.
 
-```
+```text
 1. review-code          # Identify issues
 2. refactor-code        # Fix one category at a time
 3. write-request-spec   # Add missing tests
@@ -103,7 +103,7 @@ When cleaning up existing code, alternate between review and refactor.
 
 When user input is complex, lead with validation.
 
-```
+```text
 1. validate-params      # Define input constraints
 2. handle-result-pattern  # Model success/failure paths
 3. create-action        # Wire validation into the endpoint
@@ -115,7 +115,7 @@ When user input is complex, lead with validation.
 
 When modularizing a growing application.
 
-```
+```text
 1. create-new-slice     # Generate the slice
 2. define-routes        # Mount routes under a prefix
 3. configure-slice      # Add slice-specific settings/providers
@@ -163,7 +163,7 @@ When modularizing a growing application.
 - You need to skip steps (e.g., adding an endpoint to existing data)
 
 **Example**: Adding a search endpoint to an existing `Users` resource:
-```
+```text
 create-action → validate-params → inject-dependencies → write-request-spec
 ```
 (No need for `define-entity`, `define-relation`, etc. — they already exist.)
@@ -196,7 +196,7 @@ use_skill build-crud-resource
 
 When working with an AI agent, reference skills explicitly:
 
-```
+```text
 "I need to add a users table. @write-migration then @define-relation."
 
 "Build a full CRUD resource for posts. @build-crud-resource"
@@ -210,47 +210,47 @@ When working with an AI agent, reference skills explicitly:
 
 ### Anti-Pattern 1: Skipping the Data Layer
 
-```
+```text
 ❌ create-action → write-request-spec
      (No entity, no repository — testing raw hashes)
 ```
 
-```
+```text
 ✅ define-entity → define-relation → create-repository → create-action → write-request-spec
 ```
 
 ### Anti-Pattern 2: Testing After Everything
 
-```
+```text
 ❌ Implement all code → Write tests → Hope they pass
 ```
 
-```
+```text
 ✅ plan-tests → write-request-spec (failing) → implement → verify pass
 ```
 
 ### Anti-Pattern 3: Over-Skilling
 
-```
+```text
 ❌ write-migration → define-relation → define-entity → create-repository
    → validate-params → handle-errors → handle-result-pattern → inject-dependencies
    → create-action → create-view → write-request-spec → review-code
    (for a simple index endpoint that lists users)
 ```
 
-```
+```text
 ✅ create-action → inject-dependencies → write-request-spec
    (for a simple index endpoint with existing data layer)
 ```
 
 ### Anti-Pattern 4: Wrong Layer Jumping
 
-```
+```text
 ❌ write-migration → create-action
      (Skipping relation, entity, and repository)
 ```
 
-```
+```text
 ✅ write-migration → define-relation → define-entity → create-repository → create-action
 ```
 
@@ -262,7 +262,7 @@ When working with an AI agent, reference skills explicitly:
 
 **User request**: "Add a blog post resource with title, body, and published_at."
 
-```
+```text
 @build-crud-resource
   1. @define-entity        → Post entity with title, body, published_at
   2. @write-migration      → create_table(:posts)
@@ -280,7 +280,7 @@ When working with an AI agent, reference skills explicitly:
 
 **User request**: "Add a search endpoint that filters users by email."
 
-```
+```text
   1. @create-action       → Users::Search
   2. @validate-params     → require :q param
   3. @inject-dependencies → inject user_repo
@@ -293,7 +293,7 @@ When working with an AI agent, reference skills explicitly:
 
 **User request**: "Add login/logout to the app."
 
-```
+```text
 @setup-authentication
   1. @register-provider   → Register auth provider in container
   2. @inject-dependencies → Inject auth service into actions
@@ -307,7 +307,7 @@ When working with an AI agent, reference skills explicitly:
 
 **User request**: "Send welcome emails asynchronously."
 
-```
+```text
 @add-background-jobs
   1. @register-provider   → Register Sidekiq/GoodJob provider
   2. @inject-dependencies → Inject job adapter into actions

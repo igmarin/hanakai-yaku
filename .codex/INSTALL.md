@@ -3,6 +3,7 @@
 ## Manual Installation
 
 1. Clone this repository:
+
    ```bash
    git clone https://gitlab.com/igmarin/hanami-skills.git
    ```

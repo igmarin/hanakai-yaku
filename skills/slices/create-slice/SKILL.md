@@ -42,7 +42,7 @@ Use this skill when creating and configuring Hanami 2.x Slices.
 
 1. **Generate a Slice** using the Hanami CLI:
 
-   ```
+   ```bash
    hanami generate slice api
    ```
 

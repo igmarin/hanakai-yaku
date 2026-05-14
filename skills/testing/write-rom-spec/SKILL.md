@@ -41,7 +41,7 @@ Use this skill when writing specs for ROM Relations and Repositories in Hanami 2
 
 ## HARD-GATE
 
-```
+```text
 DO NOT write implementation code before a failing test exists.
 ALWAYS run the test and verify it fails for the right reason before implementing.
 ```

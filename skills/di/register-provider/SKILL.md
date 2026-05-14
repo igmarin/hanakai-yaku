@@ -41,7 +41,7 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 
 1. **Generate a provider** using the Hanami CLI:
 
-   ```
+   ```bash
    hanami generate provider mailer
    ```
 
@@ -172,7 +172,7 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 | Related Skill | When to chain |
 |---|---|
 | **inject-dependencies** | Provided components are injected via `Deps[]`. Understand `Deps` before writing providers. |
-| **settings** | Providers read configuration from `target[:settings]`. Define settings before writing providers. |
+| **manage-settings** | Providers read configuration from `target[:settings]`. Define settings before writing providers. |
 | **create-action** | Actions inject provided services via `Deps[]`. |
 | **create-repository** | The database provider registers ROM, which Repositories depend on. |
 | **integrate-api-client** | Complex API clients may need a dedicated skill for auth/patterns. |

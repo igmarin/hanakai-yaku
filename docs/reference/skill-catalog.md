@@ -21,19 +21,19 @@ Complete catalog of all skills and workflows in the `hanami-skills` repository.
 | `define-routes` | routing | Define routes | hanami/hanami-router |
 | `create-slice` | slices | Create modular Slices | hanami/hanami |
 | `configure-slice` | slices | Configure Slices | hanami/hanami |
-| `plan-tests` | testing | Choose the right test type | hanami/hanami-rspec |
-| `write-request-spec` | testing | Write RSpec request specs | hanami/hanami-rspec |
-| `write-action-spec` | testing | Write isolated Action specs | hanami/hanami-rspec |
-| `write-rom-spec` | testing | Write ROM relation/repository specs | hanami/hanami-rspec |
+| `plan-tests` | testing | Choose the right test type | rspec/rspec, hanami/hanami |
+| `write-request-spec` | testing | Write RSpec request specs | rspec/rspec, hanami/hanami |
+| `write-action-spec` | testing | Write isolated Action specs | rspec/rspec, hanami/hanami |
+| `write-rom-spec` | testing | Write ROM relation/repository specs | rspec/rspec, hanami/hanami |
 | `create-app` | cli | Scaffold new Hanami applications | hanami/hanami |
 | `generate-components` | cli | Generate components | hanami/hanami-cli |
 | `manage-database` | cli | Run database CLI commands | hanami/hanami-cli |
 | `run-development` | cli | Development server and console | hanami/hanami-cli |
 | `handle-result-pattern` | dry-monads | Use dry-monads Success/Failure | dry-rb/dry-monads |
-| `manage-settings` | manage-settings | Manage application manage-settings | hanami/hanami |
-| `review-code` | review-code | Review Hanami 2.x code | hanami/hanami |
-| `review-security` | review-security | Review security concerns | hanami/hanami |
-| `refactor-code` | refactor-code | Refactor Hanami 2.x code | hanami/hanami |
+| `manage-settings` | cross-cutting | Manage application settings | hanami/hanami |
+| `review-code` | cross-cutting | Review Hanami 2.x code | hanami/hanami |
+| `review-security` | cross-cutting | Review security concerns | hanami/hanami |
+| `refactor-code` | cross-cutting | Refactor Hanami 2.x code | hanami/hanami |
 
 ## Workflows
 

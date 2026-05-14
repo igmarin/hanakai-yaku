@@ -14,7 +14,7 @@ tags:
   - review
 ---
 
-# code-review
+# review-code
 
 Use this skill when reviewing Hanami 2.x code for quality and convention adherence.
 

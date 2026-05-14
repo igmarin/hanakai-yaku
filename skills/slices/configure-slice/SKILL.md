@@ -155,8 +155,8 @@ Use this skill when configuring Hanami 2.x Slices.
 | Related Skill | When to chain |
 |---|---|
 | **create-slice** | Configuration follows slice creation. Understand slices before configuring. |
-| **providers** | Slice-specific providers are registered in slice configuration. |
-| **settings** | Slice-level settings are defined in the Slice class. |
+| **register-provider** | Slice-specific providers are registered in slice configuration. |
+| **manage-settings** | Slice-level settings are defined in the Slice class. |
 | **inject-dependencies** | Configured components are injected via `Deps[]`. |
 | **create-new-slice** (workflow) | Full workflow includes configuration step. |
 

@@ -91,7 +91,7 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
 | **write-request-spec** | Step 2: For full-stack HTTP behavior. |
 | **write-action-spec** | Step 2: For isolated Action logic. |
 | **write-rom-spec** | Step 2: For Relation/Repository testing. |
-| **code-review** | Step 4: Review the implementation. |
+| **review-code** | Step 4: Review the implementation. |
 
 ---
 

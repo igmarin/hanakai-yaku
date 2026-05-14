@@ -86,6 +86,7 @@ Also: Add `retry_on` and `discard_on` patterns if this were a background job (pe
 Several APIs documented may not match actual Hanami 2.x behavior:
 
 #### 3a. `Hanami::DB::Relation` may not exist
+
 **Files:** `skills/db/define-relation/SKILL.md`, `skills/db/create-repository/SKILL.md`
 
 ```ruby
@@ -95,6 +96,7 @@ class Users < Hanami::DB::Relation
 In Hanami 2.x, ROM relations typically inherit from `ROM::Relation[:users]` or are configured via `ROM::Configuration`. `Hanami::DB::Relation` may be a Hanami 2.2+ addition or may not exist. **Verify this class exists in the target Hanami version.**
 
 #### 3b. `slice :api, at: "/api" do ... end` block syntax
+
 **File:** `skills/slices/create-slice/SKILL.md:66`
 
 ```ruby
@@ -106,6 +108,7 @@ end
 The block syntax for `slice` in `config/app.rb` may not accept a configuration block directly. Slices are typically registered with `slice :name, at: "/path"` and configured in `slices/<name>/config/slice.rb`. **Verify the exact API.**
 
 #### 3c. `export ["repositories.users"]` syntax
+
 **File:** `skills/slices/create-slice/SKILL.md:120`
 
 ```ruby
@@ -115,6 +118,7 @@ export ["repositories.users"]
 This may need to be `export ["repositories.users"]` or `export("repositories.users")`. The array syntax with bare strings inside a class method may not parse correctly. **Verify.**
 
 #### 3d. `response.render(view, **exposures)` — double-splat usage
+
 **File:** `skills/actions/create-action/SKILL.md:78`
 
 ```ruby

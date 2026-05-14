@@ -96,6 +96,7 @@ Use this skill when defining routes in Hanami 2.x.
    ```
 
    Access in Views or Actions:
+
    ```ruby
    routes.path(:user, id: 1)  # => "/users/1"
    routes.url(:users)          # => "http://example.com/users"

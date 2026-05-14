@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
+require "tmpdir"
 require_relative "spec_helper"
 require_relative "../skill_catalog"
 
 RSpec.describe SkillCatalog do
-  let(:fixture_dir) { File.expand_path("fixtures", __dir__) }
+  let(:fixture_dir) { Dir.mktmpdir("skill_catalog_spec") }
   let(:catalog) { described_class.new(skills_root: File.join(fixture_dir, "skills"), workflows_root: File.join(fixture_dir, "workflows")) }
 
   before do

@@ -28,7 +28,7 @@ Use this skill when creating Hanami 2.x Views.
 |---|---|
 | Create a View | Class inherits from `Hanami::View` in `app/views/` |
 | Define exposures | Use `expose :name` to declare what the template receives |
-| Expose with transformation | `expose :user { |user| UserPresenter.new(user) }` |
+| Expose with transformation | `expose :user { \|user\| UserPresenter.new(user) }` |
 | Render a template | View automatically looks up `templates/<path>.html.erb` |
 | Pass context | `expose :current_user, as: :current_user` |
 | Define a layout | `layout "application"` in the View class |

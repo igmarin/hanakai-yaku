@@ -40,7 +40,7 @@ Use this skill when writing isolated unit specs for Hanami 2.x Actions.
 
 ## HARD-GATE
 
-```
+```text
 DO NOT write implementation code before a failing test exists.
 ALWAYS run the test and verify it fails for the right reason before implementing.
 ```

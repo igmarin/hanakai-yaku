@@ -2,14 +2,37 @@
 
 require "yaml"
 
+# Scans skills/ and workflows/ directories, parses SKILL.md frontmatter,
+# and exposes a searchable catalog of available skills.
 class SkillCatalog
+  # @!attribute [r] name
+  # @!attribute [r] description
+  # @!attribute [r] category
+  # @!attribute [r] ecosystem_sources
   CatalogEntry = Data.define(:name, :description, :category, :ecosystem_sources)
+
+  # @!attribute [r] name
+  # @!attribute [r] content
+  # @!attribute [r] metadata
   SkillContent = Data.define(:name, :content, :metadata)
+
+  # @!attribute [r] name
+  # @!attribute [r] version
+  # @!attribute [r] license
+  # @!attribute [r] description
+  # @!attribute [r] ecosystem_sources
+  # @!attribute [r] tags
+  # @!attribute [r] file_path
+  # @!attribute [r] category
+  # @!attribute [r] is_workflow
   SkillMetadata = Data.define(:name, :version, :license, :description, :ecosystem_sources, :tags, :file_path, :category, :is_workflow)
 
+  # Raised when a requested skill name is not present in the catalog.
   class SkillNotFoundError < StandardError
     attr_reader :requested_name, :available_names
 
+    # @param requested_name [String] the skill name that was not found
+    # @param available_names [Array<String>] all known skill names in the catalog
     def initialize(requested_name, available_names)
       @requested_name = requested_name
       @available_names = available_names
@@ -17,26 +40,41 @@ class SkillCatalog
     end
   end
 
+  # Raised when two SKILL.md files declare the same frontmatter name.
   class DuplicateSkillNameError < StandardError
+    # @param name [String] the duplicated skill name
+    # @param path1 [String] first file path where the name was found
+    # @param path2 [String] second file path where the name was found
     def initialize(name, path1, path2)
       super("Duplicate skill name '#{name}' found in:\n  #{path1}\n  #{path2}")
     end
   end
 
+  # Raised when a SKILL.md file is missing a required frontmatter field.
   class InvalidSkillError < StandardError
+    # @param field [String] the missing or invalid frontmatter key
+    # @param file_path [String] path to the offending SKILL.md
     def initialize(field, file_path)
       super("Invalid skill: missing required frontmatter field '#{field}' in #{file_path}")
     end
   end
 
-  attr_reader :skills_root, :workflows_root
+  # @return [String]
+  attr_reader :skills_root
+  # @return [String]
+  attr_reader :workflows_root
 
+  # @param skills_root [String] directory containing atomic skills
+  # @param workflows_root [String] directory containing workflows
   def initialize(skills_root:, workflows_root:)
     @skills_root = skills_root
     @workflows_root = workflows_root
     @catalog = build_catalog
   end
 
+  # Returns all discovered skills and workflows as lightweight catalog entries.
+  #
+  # @return [Array<CatalogEntry>]
   def list
     @catalog.values.map do |metadata|
       CatalogEntry.new(
@@ -48,6 +86,11 @@ class SkillCatalog
     end
   end
 
+  # Loads the full content of a skill by its canonical name.
+  #
+  # @param name [String] canonical skill name from frontmatter
+  # @return [SkillContent]
+  # @raise [SkillNotFoundError] if the name is not in the catalog
   def fetch(name)
     metadata = @catalog[name]
     raise SkillNotFoundError.new(name, @catalog.keys.sort) unless metadata
@@ -60,6 +103,11 @@ class SkillCatalog
     )
   end
 
+  # Yields each metadata entry in the catalog.
+  #
+  # @yieldparam name [String] skill name
+  # @yieldparam metadata [SkillMetadata] skill metadata
+  # @return [Enumerator] if no block is given
   def each
     return enum_for(:each) unless block_given?
 

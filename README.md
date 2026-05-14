@@ -13,14 +13,13 @@ hanami-skills/
 ├── skills/           # 29 atomic skills organized by category
 │   ├── actions/      # Action anatomy, JSON API, params validation, halt/errors
 │   ├── cli/          # hanami new, generate-components, db commands, dev runtime
-│   ├── review-code/  # Code review conventions
+│   ├── cross-cutting/ # manage-settings, review-code
 │   ├── db/           # Sequel migrations, ROM relations, repositories, structs/entities
 │   ├── di/           # Deps mixin, register-provider
 │   ├── dry-monads/   # Result pattern
 │   ├── refactor-code/  # Refactoring conventions
 │   ├── routing/      # Routes DSL
 │   ├── review-security/  # Security review conventions
-│   ├── manage-settings/     # Application manage-settings
 │   ├── slices/       # Slice anatomy, configuration
 │   ├── testing/      # Test planning, request specs, action unit specs, ROM specs
 │   └── views/        # View objects, view parts
@@ -62,11 +61,11 @@ Exposes:
 
 ### Direct File Reference
 
-Reference skills by canonical name or file path:
+Reference skills by canonical name from frontmatter:
 
-- `skills/db/write-migration/SKILL.md`
-- `skills/actions/create-action/SKILL.md`
-- `workflows/tdd-loop/SKILL.md`
+- `write-migration`
+- `create-action`
+- `tdd-loop`
 
 ### GitHub CLI
 

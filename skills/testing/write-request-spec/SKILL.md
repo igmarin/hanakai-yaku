@@ -41,7 +41,7 @@ Use this skill when writing RSpec request specs for Hanami 2.x Actions.
 
 ## HARD-GATE
 
-```
+```text
 DO NOT write implementation code before a failing test exists.
 ALWAYS run the test and verify it fails for the right reason before implementing.
 IF the test fails for a setup reason, diagnose and fix the setup before proceeding.

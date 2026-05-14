@@ -62,7 +62,7 @@ Use this skill when injecting dependencies into Hanami 2.x components.
 
 2. **The container key is derived from the file path**:
 
-   ```
+   ```text
    app/repos/user_repo.rb     → "repos.user_repo"
    app/views/users/index.rb   → "views.users.index"
    app/relations/users.rb     → "relations.users"

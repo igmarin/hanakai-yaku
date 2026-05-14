@@ -28,9 +28,9 @@ Use this skill when using the dry-monads Result pattern in Hanami 2.x.
 |---|---|
 | Wrap a success | `Success(value)` |
 | Wrap a failure | `Failure(error_message)` or `Failure(error_object)` |
-| Chain on success | `result.bind { |value| next_operation(value) }` |
-| Transform success value | `result.fmap { |value| value.upcase }` |
-| Handle failure | `result.or { |error| fallback_operation(error) }` |
+| Chain on success | `result.bind { \|value\| next_operation(value) }` |
+| Transform success value | `result.fmap { \|value\| value.upcase }` |
+| Handle failure | `result.or { \|error\| fallback_operation(error) }` |
 | Extract value | `result.value!` (raises on Failure) |
 | Check status | `result.success?` / `result.failure?` |
 | Pattern match | `case result; in Success(v); ...; in Failure(e); ...; end` |
@@ -192,7 +192,7 @@ Use this skill when using the dry-monads Result pattern in Hanami 2.x.
 | **create-action** | Actions call service objects and handle `Success`/`Failure`. |
 | **handle-errors** | `Failure` results map to HTTP error responses (422, 404, etc.). |
 | **validation-contract** | Validation results are often `Success`/`Failure` from dry-validation. |
-| **refactoring** | Extract business logic from Actions into `Success`/`Failure` service objects. |
+| **refactor-code** | Extract business logic from Actions into `Success`/`Failure` service objects. |
 
 ---
 

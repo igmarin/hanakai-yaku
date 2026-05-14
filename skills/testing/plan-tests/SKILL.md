@@ -37,7 +37,7 @@ Use this skill when deciding which type of test to write for a Hanami 2.x featur
 
 ## HARD-GATE
 
-```
+```text
 DO NOT write implementation code before a failing test exists.
 ALWAYS run the test and verify it fails for the right reason before implementing.
 ```

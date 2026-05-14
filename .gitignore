@@ -10,6 +10,7 @@
 mcp_server/Gemfile.lock
 mcp_server/.bundle/
 mcp_server/.rspec_status
+mcp_server/spec/.rspec_status
 
 # IDE
 .idea/

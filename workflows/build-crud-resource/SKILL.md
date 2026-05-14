@@ -117,7 +117,7 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
 | **create-action** | Step 4: Create Actions. |
 | **create-view** | Step 5: Create Views. |
 | **write-request-spec** | Step 6: Write tests. |
-| **code-review** | Step 7: Review the implementation. |
+| **review-code** | Step 7: Review the implementation. |
 
 ---
 
