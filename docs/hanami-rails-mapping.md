@@ -10,7 +10,7 @@ This document provides a comprehensive mapping of Rails concepts to Hanami 2.x e
 | `app/models/` | `app/relations/` + `app/repos/` + `app/entities/` |
 | `app/views/` | `app/views/` + `app/templates/` |
 | `app/helpers/` | View Parts (`app/views/parts/`) |
-| `config/initializers/` | `config/providers/` |
+| `config/initializers/` | `config/register-provider/` |
 | `config/routes.rb` | `config/routes.rb` |
 | `db/migrate/` | `db/migrate/` |
 | `lib/` | `lib/` or slice-specific directories |
@@ -107,11 +107,11 @@ This document provides a comprehensive mapping of Rails concepts to Hanami 2.x e
 | Rails | Hanami 2.x |
 |---|---|
 | `config/application.rb` | `config/app.rb` |
-| `config/environments/` | `HANAMI_ENV` + settings |
+| `config/environments/` | `HANAMI_ENV` + manage-settings |
 | `config/database.yml` | `DATABASE_URL` env var |
 | `config/credentials.yml.enc` | Settings with env vars |
 | `dotenv-rails` | Built-in `.env` support |
-| `Rails.application.config` | `Hanami.app[:settings]` |
+| `Rails.application.config` | `Hanami.app[:manage-settings]` |
 
 ## CLI
 

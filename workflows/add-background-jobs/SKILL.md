@@ -27,7 +27,7 @@ Use this workflow when integrating background jobs in Hanami 2.x.
 
 | Step | Skill | Handoff Condition |
 |---|---|---|
-| 1. Register job adapter | `providers` | Job adapter registered in container |
+| 1. Register job adapter | `register-provider` | Job adapter registered in container |
 | 2. Inject into Action | `inject-dependencies` | Job adapter injectable via `Deps` |
 | 3. Enqueue from Action | `create-action` | Action enqueues job correctly |
 | 4. Write job specs | `write-action-spec` | Job class tested in isolation |
@@ -36,7 +36,7 @@ Use this workflow when integrating background jobs in Hanami 2.x.
 
 ## Core Process
 
-1. **[Register Job Adapter]** — Load skill: `providers`
+1. **[Register Job Adapter]** — Load skill: `register-provider`
    - Choose adapter: Sidekiq, GoodJob, or custom
    - Create `config/providers/background_jobs.rb`
    - Register the adapter client in the `start` block

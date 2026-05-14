@@ -31,7 +31,7 @@ Use this workflow when creating an API-only Slice in Hanami 2.x.
 | 2. Define Actions | `create-action` | Actions for all API endpoints exist |
 | 3. Configure routes | `define-routes` | Routes mounted at `/api` |
 | 4. Write tests | `write-request-spec` | All endpoints return correct JSON |
-| 5. Review | `code-review` | No violations found |
+| 5. Review | `review-code` | No violations found |
 
 ---
 
@@ -61,7 +61,7 @@ Use this workflow when creating an API-only Slice in Hanami 2.x.
    - Test error cases (400, 401, 404, 422)
    - Handoff condition: All tests pass
 
-5. **[Review]** — Load skill: `code-review`
+5. **[Review]** — Load skill: `review-code`
    - Check Action responsibility
    - Check JSON serialization consistency
    - Check error response shapes

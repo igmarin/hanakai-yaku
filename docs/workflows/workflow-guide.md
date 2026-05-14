@@ -10,7 +10,7 @@ The core development loop for all Hanami 2.x features.
 2. **Write** — Write a failing test that describes the desired behavior
 3. **Verify** — Run the test and confirm it fails for the right reason
 4. **Implement** — Write the minimal code to make the test pass
-5. **Review** — Run code-review skill to check for violations
+5. **Review** — Run review-code skill to check for violations
 
 **When to use**: Every code-producing task.
 

@@ -28,7 +28,7 @@ Use this workflow when implementing authentication in Hanami 2.x.
 | Step | Skill | Handoff Condition |
 |---|---|---|
 | 1. Setup DI | `inject-dependencies` | Auth service injectable via `Deps` |
-| 2. Register provider | `providers` | Auth service registered in container |
+| 2. Register provider | `register-provider` | Auth service registered in container |
 | 3. Create Actions | `create-action` | Login, logout, protected endpoints |
 | 4. Handle errors | `handle-errors` | 401/403 responses for auth failures |
 
@@ -42,7 +42,7 @@ Use this workflow when implementing authentication in Hanami 2.x.
    - Inject it into Actions that need auth
    - Handoff condition: Auth service accessible via `Deps["authentication"]`
 
-2. **[Register Provider]** — Load skill: `providers`
+2. **[Register Provider]** — Load skill: `register-provider`
    - Create `config/providers/authentication.rb`
    - Register the auth service in the `start` block
    - Handoff condition: Auth service is registered and injectable

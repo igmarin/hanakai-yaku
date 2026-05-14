@@ -12,13 +12,13 @@ The repository contains 29 atomic skills and 8 workflows covering:
 
 - **Database layer**: Sequel migrations, ROM Relations, Repositories, Structs/Entities
 - **Actions layer**: Action anatomy, JSON API, params validation, halt/errors
-- **DI layer**: Deps mixin, providers
+- **DI layer**: Deps mixin, register-provider
 - **Views layer**: View objects, view parts
 - **Routing**: Routes DSL
 - **Slices**: Slice anatomy, configuration
 - **Testing**: Test planning, request specs, action unit specs, ROM specs
-- **CLI**: `hanami new`, generators, db commands, dev runtime
-- **Cross-cutting**: dry-monads result pattern, settings, code review, security review, refactoring
+- **CLI**: `hanami new`, generate-components, db commands, dev runtime
+- **Cross-cutting**: dry-monads result pattern, manage-settings, code review, security review, refactor-code
 
 ## How to Discover Skills
 

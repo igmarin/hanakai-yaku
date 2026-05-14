@@ -33,7 +33,7 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
 | 4. Create Actions | `create-action` | Index, Show, Create, Update, Destroy Actions exist |
 | 5. Create Views | `create-view` | Views render for HTML endpoints |
 | 6. Write tests | `write-request-spec` | All endpoints have passing request specs |
-| 7. Review | `code-review` | No violations found |
+| 7. Review | `review-code` | No violations found |
 
 ---
 
@@ -75,7 +75,7 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
    - Run full test suite
    - Handoff condition: All tests pass
 
-7. **[Review]** — Load skill: `code-review`
+7. **[Review]** — Load skill: `review-code`
    - Check Action responsibility
    - Check DI usage
    - Check Repository encapsulation

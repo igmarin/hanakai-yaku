@@ -12,15 +12,15 @@ A curated library of atomic skills and callable workflows for the Hanami 2.x Rub
 hanami-skills/
 ├── skills/           # 29 atomic skills organized by category
 │   ├── actions/      # Action anatomy, JSON API, params validation, halt/errors
-│   ├── cli/          # hanami new, generators, db commands, dev runtime
-│   ├── code-review/  # Code review conventions
+│   ├── cli/          # hanami new, generate-components, db commands, dev runtime
+│   ├── review-code/  # Code review conventions
 │   ├── db/           # Sequel migrations, ROM relations, repositories, structs/entities
-│   ├── di/           # Deps mixin, providers
+│   ├── di/           # Deps mixin, register-provider
 │   ├── dry-monads/   # Result pattern
-│   ├── refactoring/  # Refactoring conventions
+│   ├── refactor-code/  # Refactoring conventions
 │   ├── routing/      # Routes DSL
-│   ├── security-review/  # Security review conventions
-│   ├── settings/     # Application settings
+│   ├── review-security/  # Security review conventions
+│   ├── manage-settings/     # Application manage-settings
 │   ├── slices/       # Slice anatomy, configuration
 │   ├── testing/      # Test planning, request specs, action unit specs, ROM specs
 │   └── views/        # View objects, view parts
@@ -36,6 +36,7 @@ hanami-skills/
 ├── mcp_server/       # Ruby MCP server
 ├── docs/             # Documentation
 │   ├── reference/    # Skill catalog, integration matrix
+│   ├── using-skills-guide.md  # How to compose skills into workflows
 │   └── workflows/    # Workflow guide
 ├── CLAUDE.md         # Claude Code configuration
 ├── AGENTS.md         # OpenAI Codex configuration
@@ -79,13 +80,13 @@ gh skill install igmarin/hanami-skills write-migration
 |---|---|
 | Database | `write-migration`, `define-relation`, `create-repository`, `define-entity` |
 | Actions | `create-action`, `build-json-api`, `validate-params`, `handle-errors` |
-| DI | `inject-dependencies`, `providers` |
+| DI | `inject-dependencies`, `register-provider` |
 | Views | `create-view`, `decorate-with-parts` |
 | Routing | `define-routes` |
 | Slices | `create-slice`, `configure-slice` |
 | Testing | `plan-tests`, `write-request-spec`, `write-action-spec`, `write-rom-spec` |
-| CLI | `create-app`, `generators`, `manage-database`, `run-development` |
-| Cross-cutting | `handle-result-pattern`, `settings`, `code-review`, `security-review`, `refactoring` |
+| CLI | `create-app`, `generate-components`, `manage-database`, `run-development` |
+| Cross-cutting | `handle-result-pattern`, `manage-settings`, `review-code`, `review-security`, `refactor-code` |
 
 ## Workflows
 

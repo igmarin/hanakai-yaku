@@ -1,5 +1,5 @@
 ---
-name: handle-handle-result-pattern
+name: handle-result-pattern
 version: "1.0.0"
 license: MIT
 description: >

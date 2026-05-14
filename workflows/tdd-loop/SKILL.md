@@ -29,7 +29,7 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
 | 1. Plan tests | `plan-tests` | Test plan written, right test type chosen |
 | 2. Write failing test | `write-request-spec` or `write-action-spec` | Test exists and fails for the right reason |
 | 3. Implement | — | Test passes |
-| 4. Review | `code-review` | No violations found |
+| 4. Review | `review-code` | No violations found |
 
 ---
 
@@ -53,7 +53,7 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
    - Refactor only after the test passes
    - Handoff condition: Test passes
 
-4. **[Review]** — Load skill: `code-review`
+4. **[Review]** — Load skill: `review-code`
    - Check for Action responsibility violations
    - Check for DI usage
    - Check for query encapsulation
