@@ -40,7 +40,7 @@ end
 def validate_frontmatter(skill)
   errors = []
 
-  required_fields = %w[name license description ecosystem_sources]
+  required_fields = %w[name version license description ecosystem_sources]
   required_fields.each do |field|
     value = skill[:frontmatter][field]
     if value.nil? || (value.respond_to?(:empty?) && value.empty?)
@@ -100,7 +100,8 @@ end
 if File.exist?("docs/reference/skill-catalog.md")
   catalog_content = File.read("docs/reference/skill-catalog.md")
   all_skills.each do |skill|
-    unless catalog_content.include?(skill[:name])
+    # Use word boundary matching to avoid substring false positives
+    unless catalog_content.match?(/\b#{Regexp.escape(skill[:name])}\b/)
       errors << "Skill '#{skill[:name]}' missing from docs/reference/skill-catalog.md"
     end
   end

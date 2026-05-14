@@ -79,8 +79,8 @@ Use this workflow when integrating background jobs in Hanami 2.x.
          include Sidekiq::Worker
 
          def perform(user_id)
-           user = MyApp::App["repos.user_repo"].by_id(user_id).one
-           MyApp::App["mailer"].deliver(to: user.email, subject: "Welcome!")
+           user = user_repo.by_id(user_id).one
+           mailer.deliver(to: user.email, subject: "Welcome!")
          end
        end
      end
@@ -135,7 +135,7 @@ Use this workflow when integrating background jobs in Hanami 2.x.
 
 | Related Skill | When to chain |
 |---|---|
-| **providers** | Step 1: Register job adapter. |
+| **register-provider** | Step 1: Register job adapter. |
 | **inject-dependencies** | Step 2: Inject adapter into Actions. |
 | **create-action** | Step 3: Enqueue jobs from Actions. |
 | **write-action-spec** | Step 4: Test job classes. |

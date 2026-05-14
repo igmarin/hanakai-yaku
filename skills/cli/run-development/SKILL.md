@@ -136,7 +136,7 @@ Use this skill when running Hanami 2.x development commands.
 | Related Skill | When to chain |
 |---|---|
 | **create-app** | Development commands are used after creating the app. |
-| **cli/manage-database** | Database commands may be needed before starting the dev server. |
+| **manage-database** | Database commands may be needed before starting the dev server. |
 | **define-relation** | Use the console to explore and test Relation queries. |
 | **create-repository** | Use the console to test Repository methods interactively. |
 

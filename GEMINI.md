@@ -57,7 +57,7 @@ No exceptions. Tests gate implementation.
 
 When working with Gemini CLI, use `/skill-name` syntax to explicitly invoke a skill:
 
-```
+```text
 /write-migration — How do I add a column to an existing table?
 /tdd-loop — I need to implement a new user registration feature
 ```

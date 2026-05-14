@@ -119,6 +119,9 @@ class SkillCatalog
   rescue Psych::SyntaxError => e
     warn "Warning: malformed YAML in #{file_path}: #{e.message}"
     nil
+  rescue Errno::ENOENT, Errno::EACCES, Errno::EPERM => e
+    warn "Warning: cannot read #{file_path}: #{e.message}"
+    nil
   end
 
   def extract_frontmatter(content)
@@ -128,7 +131,8 @@ class SkillCatalog
     return nil if frontmatter.nil? || frontmatter.strip.empty?
 
     YAML.safe_load(frontmatter, permitted_classes: [], permitted_symbols: [], aliases: true)
-  rescue Psych::SyntaxError
+  rescue Psych::SyntaxError => e
+    warn "Warning: malformed YAML: #{e.message}"
     nil
   end
 
@@ -144,6 +148,14 @@ class SkillCatalog
       if value.nil? || (value.respond_to?(:empty?) && value.empty?)
         raise InvalidSkillError.new(field, file_path)
       end
+    end
+
+    unless metadata.ecosystem_sources.is_a?(Array)
+      raise InvalidSkillError.new("ecosystem_sources must be an Array", file_path)
+    end
+
+    unless metadata.tags.is_a?(Array)
+      raise InvalidSkillError.new("tags must be an Array", file_path)
     end
   end
 

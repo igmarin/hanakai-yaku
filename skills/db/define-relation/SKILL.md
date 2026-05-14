@@ -90,7 +90,7 @@ Use this skill when defining ROM Relations that map to database tables in Hanami
 
 7. **Keep Relations in sync with migrations**. When a migration adds, removes, or renames columns, update the Relation schema if not using `infer: true`.
 
-8. **Test Relations** with in-memory ROM setup (`skills/testing/write-rom-spec`).
+8. **Test Relations** with in-memory ROM setup (`write-rom-spec`).
 
 ---
 

@@ -15,7 +15,7 @@ tags:
   - vulnerabilities
 ---
 
-# security-review
+# review-security
 
 Use this skill when reviewing Hanami 2.x code for security concerns.
 

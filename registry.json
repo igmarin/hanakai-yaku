@@ -2,7 +2,7 @@
   "name": "hanami-skills-mcp",
   "display_name": "Hanami Agent Skills MCP",
   "description": "MCP server for Hanami 2.x development skills",
-  "repository": "https://github.com/igmarin/hanami-skills",
+  "repository": "https://gitlab.com/igmarin/hanami-skills",
   "server_path": "mcp_server/server.rb",
   "gemfile_path": "mcp_server/Gemfile",
   "transport": "stdio"

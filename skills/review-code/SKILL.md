@@ -187,7 +187,7 @@ Use this skill when reviewing Hanami 2.x code for quality and convention adheren
 | **create-repository** | Verify query encapsulation in Repositories. |
 | **create-view** | Verify View simplicity and no DB access. |
 | **write-request-spec** | Verify test coverage for all endpoints. |
-| **security-review** | Cross-reference security concerns during code review. |
+| **review-security** | Cross-reference security concerns during code review. |
 
 ---
 

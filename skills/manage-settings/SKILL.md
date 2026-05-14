@@ -151,7 +151,7 @@ Use this skill when managing Hanami 2.x application settings.
 
 | Related Skill | When to chain |
 |---|---|
-| **providers** | Providers read settings via `target[:settings]`. Define settings before writing providers. |
+| **register-provider** | Providers read settings via `target[:settings]`. Define settings before writing providers. |
 | **inject-dependencies** | Settings can be injected via `Deps["settings"]`. |
 | **configure-slice** | Slices can define their own settings. |
 | **create-app** | Generated apps include `config/settings.rb`. Define settings after scaffolding. |

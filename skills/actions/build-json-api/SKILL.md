@@ -139,8 +139,8 @@ Use this skill when building JSON API endpoints in Hanami 2.x Actions.
    {
      data: users.map { |u| UserSerializer.new(u).to_h },
      meta: {
-       page: params[:page] || 1,
-       per_page: params[:per_page] || 20,
+       page: request.params[:page] || 1,
+       per_page: request.params[:per_page] || 20,
        total: user_repo.count
      }
    }.to_json

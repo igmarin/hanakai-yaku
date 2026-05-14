@@ -87,7 +87,7 @@ Use this skill when creating Hanami 2.x Views.
    end
    ```
 
-5. **Use Parts** for decorator-style logic (`skills/views/decorate-with-parts`):
+5. **Use Parts** for decorator-style logic (`decorate-with-parts`):
 
    ```ruby
    class Show < MyApp::View

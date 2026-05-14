@@ -100,7 +100,7 @@ Use this skill when creating or reviewing Hanami 2.x Actions.
    - `422` for validation errors
    - `500` for server errors (avoid explicitly; let the framework handle)
 
-7. **Use `request.params`** for input. Params are validated by the Action's Params DSL (`skills/actions/validate-params`).
+7. **Use `request.params`** for input. Params are validated by the Action's Params DSL (`validate-params`).
 
 8. **Never access the container directly in Actions**. Always use `Deps` injection.
 

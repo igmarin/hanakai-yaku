@@ -126,9 +126,11 @@ Use this skill when using the dry-monads Result pattern in Hanami 2.x.
 
    ```ruby
    result = validate_params(params)
-     .bind { |valid| find_user(valid[:id]) }
-     .bind { |user| update_user(user, valid[:attrs]) }
-     .fmap { |user| format_user(user) }
+  result.bind { |valid|
+    find_user(valid[:id]).bind { |user|
+      update_user(user, valid[:attrs])
+    }
+  }.fmap { |user| format_user(user) }
    ```
 
 5. **Use `Do notation`** for sequential operations:

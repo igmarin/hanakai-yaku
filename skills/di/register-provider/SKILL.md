@@ -15,7 +15,7 @@ tags:
   - external-services
 ---
 
-# providers
+# register-provider
 
 Use this skill when registering external dependencies (database, mailer, cache, third-party APIs) in the Hanami 2.x DI container.
 

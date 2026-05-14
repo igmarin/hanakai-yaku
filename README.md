@@ -8,7 +8,7 @@ A curated library of atomic skills and callable workflows for the Hanami 2.x Rub
 
 ## Repository Structure
 
-```
+```text
 hanami-skills/
 ├── skills/           # 29 atomic skills organized by category
 │   ├── actions/      # Action anatomy, JSON API, params validation, halt/errors

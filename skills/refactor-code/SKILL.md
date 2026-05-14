@@ -218,7 +218,7 @@ Use this skill when refactoring Hanami 2.x code to improve structure and maintai
 |---|---|
 | **create-action** | Identify extraction candidates in Actions. |
 | **inject-dependencies** | Register and inject extracted components via `Deps`. |
-| **dry-monads/handle-result-pattern** | Service objects often return `Success`/`Failure`. |
+| **handle-result-pattern** | Service objects often return `Success`/`Failure`. |
 | **create-repository** | Extract complex queries to Repository methods. |
 | **plan-tests** | Write characterization tests before refactoring. |
 | **write-request-spec** | Verify full stack behavior after refactoring. |

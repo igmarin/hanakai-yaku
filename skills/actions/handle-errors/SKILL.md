@@ -154,7 +154,7 @@ Use this skill when handling errors and halting requests in Hanami 2.x Actions.
 | **create-action** | Error handling is part of Action implementation. Master Action structure first. |
 | **validate-params** | Invalid params trigger automatic halts. Understand the Params DSL before handling errors. |
 | **build-json-api** | JSON APIs return JSON error responses with consistent shapes. |
-| **security-review** | Error handling should not leak sensitive information or system details. |
+| **review-security** | Error handling should not leak sensitive information or system details. |
 | **write-request-spec** (testing) | Test error responses (404, 422, 500) in request specs. |
 
 ---

@@ -159,7 +159,7 @@ Use this skill when injecting dependencies into Hanami 2.x components.
 | **create-action** | Actions inject Repositories and Views via `Deps`. |
 | **create-repository** | Repositories are injected into Actions using their container key. |
 | **create-view** | Views are injected into Actions using their container key. |
-| **providers** | Providers register external dependencies that are then injected via `Deps`. |
+| **register-provider** | Providers register external dependencies that are then injected via `Deps`. |
 | **write-action-spec** (testing) | Test Actions by stubbing injected dependencies. |
 
 ---

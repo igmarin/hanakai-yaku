@@ -131,7 +131,7 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
 | "I'll return raw hashes from the Repository" | Configure `auto_struct true` and return Entity objects. Raw hashes leak implementation details. |
 | "I'll create one giant Repository for all tables" | One Repository per entity/bounded context. `UserRepo`, `PostRepo`, not `AppRepo`. |
 | "I'll skip transactions for multi-step writes" | Use `transaction` blocks to ensure atomicity. Partial writes corrupt data. |
-| "I'll call `save!` and rescue exceptions" | ROM uses immutable structs. Use `create` and `update` which return Success/Failure (or check return values). |
+| "I'll call `save!` and rescue exceptions" | ROM uses immutable structs. Use `create` and `update` which return ROM structs/entities (or check return values). Explicitly wrap in `Success`/`Failure` if you need monadic results. |
 
 ---
 
@@ -153,7 +153,7 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
 | **define-relation** | Repository wraps a Relation. Define the Relation first, then the Repository. |
 | **define-entity** | Repository returns Entity objects. Define the Entity schema to match. |
 | **create-action** | Actions inject Repositories via `Deps` and pass data to Views. |
-| **dry-monads/handle-result-pattern** | Complex Repository operations return `Success`/`Failure` for explicit error handling. |
+| **handle-result-pattern** | Complex Repository operations return `Success`/`Failure` for explicit error handling. |
 | **write-rom-spec** (testing) | Test Repository methods with in-memory ROM. |
 
 ---

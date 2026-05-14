@@ -186,7 +186,7 @@ Use this skill when validating and coercing request parameters in Hanami 2.x Act
 | **create-action** | Params are defined inside Actions. Master Action structure first. |
 | **handle-errors** | Invalid params trigger automatic halts. Handle errors gracefully. |
 | **build-json-api** | JSON request bodies are parsed and validated through the Params DSL. |
-| **dry-monads/handle-result-pattern** | Validated params are passed to interactors that return Success/Failure. |
+| **handle-result-pattern** | Validated params are passed to interactors that return Success/Failure. |
 
 ---
 

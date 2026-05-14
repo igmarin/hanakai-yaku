@@ -68,10 +68,10 @@ Use this skill when writing or running Sequel database migrations in Hanami 2.x.
    Hanami.app["db.rom"].relations[:users].schema.to_h
    ```
 
-6. **Update the ROM Relation** (`skills/db/define-relation`) to reflect any new
+6. **Update the ROM Relation** (`define-relation`) to reflect any new
    or removed columns. The Relation schema must stay in sync with the database.
 
-7. **Update Entities and Structs** (`skills/db/define-entity`) if
+6. **Update Entities and Structs** (`define-entity`) if
    attribute lists change.
 
 8. **Run the test suite** to confirm nothing is broken.

@@ -24,6 +24,10 @@ server.tool("list_skills") do |_args|
 end
 
 server.tool("use_skill") do |args|
+  unless args.is_a?(Hash) && args[:name].is_a?(String)
+    return { error: "Invalid arguments. Expected: { name: '<skill-name>' }" }
+  end
+
   name = args[:name]
   begin
     skill = catalog.fetch(name)
@@ -61,7 +65,9 @@ catalog.each do |metadata|
     begin
       skill = catalog.fetch(metadata.name)
       skill.content
-    rescue StandardError => e
+    rescue Errno::ENOENT, Errno::EACCES, Errno::EPERM => e
+      $stderr.puts("[ERROR] Failed to load skill #{metadata.name}: #{e.message}")
+      $stderr.puts(e.backtrace.first(5).join("\n"))
       "Error loading skill #{metadata.name}: #{e.message}"
     end
   end

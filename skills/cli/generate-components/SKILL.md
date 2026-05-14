@@ -13,7 +13,7 @@ tags:
   - scaffolding
 ---
 
-# generators
+# generate-components
 
 Use this skill when generating Hanami 2.x components via the CLI.
 

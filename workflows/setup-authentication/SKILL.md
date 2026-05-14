@@ -89,7 +89,7 @@ Use this workflow when implementing authentication in Hanami 2.x.
 | Related Skill | When to chain |
 |---|---|
 | **inject-dependencies** | Step 1: Inject auth service via `Deps`. |
-| **providers** | Step 2: Register auth service in container. |
+| **register-provider** | Step 2: Register auth service in container. |
 | **create-action** | Step 3: Create login/logout/protected Actions. |
 | **handle-errors** | Step 4: Handle 401/403 responses. |
 | **security-review** | Cross-reference security concerns. |

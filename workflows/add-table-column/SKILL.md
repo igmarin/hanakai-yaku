@@ -29,7 +29,7 @@ Use this workflow when adding a column to an existing table in Hanami 2.x.
 | Step | Skill | Handoff Condition |
 |---|---|---|
 | 1. Generate migration | `write-migration` | Migration file created |
-| 2. Run migration | `cli/manage-database` | Migration applied successfully |
+| 2. Run migration | `manage-database` | Migration applied successfully |
 | 3. Update Relation | `define-relation` | Relation schema includes new column |
 | 4. Update Entity | `define-entity` | Entity has new attribute |
 | 5. Update Repository | `create-repository` | Repository methods use new column if needed |
@@ -44,7 +44,7 @@ Use this workflow when adding a column to an existing table in Hanami 2.x.
    - Write `alter_table(:users) { add_column :bio, :text, null: true }`
    - Handoff condition: Migration file exists and is valid
 
-2. **[Run Migration]** — Load skill: `cli/manage-database`
+2. **[Run Migration]** — Load skill: `manage-database`
    - `hanami db migrate`
    - Verify schema change in database
    - Handoff condition: Schema updated in database
@@ -96,7 +96,7 @@ Use this workflow when adding a column to an existing table in Hanami 2.x.
 | Related Skill | When to chain |
 |---|---|
 | **write-migration** | Step 1: Create migration. |
-| **cli/manage-database** | Step 2: Run migration. |
+| **manage-database** | Step 2: Run migration. |
 | **define-relation** | Step 3: Update Relation schema. |
 | **define-entity** | Step 4: Update Entity attributes. |
 | **create-repository** | Step 5: Update Repository methods. |

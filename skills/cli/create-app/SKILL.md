@@ -149,9 +149,9 @@ Use this skill when creating a new Hanami 2.x application.
 
 | Related Skill | When to chain |
 |---|---|
-| **cli/generators** | After creating the app, use generators to scaffold Actions, Views, and Slices. |
-| **cli/manage-database** | Use `hanami db` commands to manage the database. |
-| **cli/run-development** | Use `hanami dev` and `hanami console` for development. |
+| **generate-components** | After creating the app, use generators to scaffold Actions, Views, and Slices. |
+| **manage-database** | Use `hanami db` commands to manage the database. |
+| **run-development** | Use `hanami dev` and `hanami console` for development. |
 | **create-slice** | Extract bounded contexts into slices as the app grows. |
 
 ---

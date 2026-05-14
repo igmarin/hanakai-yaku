@@ -4,11 +4,11 @@
   "title": "Hanami Agent Skills",
   "description": "Hanami 2.x development skills, docs, and workflows exposed through MCP stdio.",
   "repository": {
-    "url": "https://github.com/igmarin/hanami-skills",
-    "source": "github",
+    "url": "https://gitlab.com/igmarin/hanami-skills",
+    "source": "gitlab",
     "subfolder": "mcp_server"
   },
-  "version": "0.0.0",
+  "version": "1.0.0",
   "packages": [
     {
       "registryType": "oci",

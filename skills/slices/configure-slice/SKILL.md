@@ -117,7 +117,7 @@ Use this skill when configuring Hanami 2.x Slices.
    ```ruby
    class Slice < Hanami::Slice
      # Use a different database for this slice
-     config.database_url = ENV["API_DATABASE_URL"]
+     config.database_url = target[:settings].database_url
    end
    ```
 
