@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "hanami-skills": {
+      "type": "stdio",
+      "command": "bundle",
+      "args": [
+        "exec",
+        "ruby",
+        "mcp_server/server.rb"
+      ],
+      "env": {
+        "BUNDLE_GEMFILE": "mcp_server/Gemfile"
+      }
+    }
+  }
+}

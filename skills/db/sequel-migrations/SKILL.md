@@ -3,10 +3,9 @@ name: sequel-migrations
 version: "1.0.0"
 license: MIT
 description: >
-  Write and run Sequel database migrations in Hanami 2.x. Covers create_table,
-  add_column, drop_column, alter_table, primary_key, column types, and migration
-  lifecycle commands. Use when creating tables, modifying schemas, or rolling back
-  changes in a Hanami 2.x project.
+  Use when creating or modifying database schemas in Hanami 2.x with Sequel.
+  Covers create_table, add_column, drop_column, alter_table, primary_key, indexes,
+  and migration lifecycle commands.
 ecosystem_sources:
   - jeremyevans/sequel
   - hanami/hanami
@@ -19,8 +18,9 @@ tags:
 
 # sequel-migrations
 
-Sequel migration DSL for Hanami 2.x. The migration DSL is provided by
-`jeremyevans/sequel` — **not** ActiveRecord. Do not use ActiveRecord syntax here.
+Use this skill when writing or running Sequel database migrations in Hanami 2.x.
+
+**Core principle:** Sequel migration DSL is provided by `jeremyevans/sequel` — **not** ActiveRecord. Never use ActiveRecord syntax here.
 
 ---
 
@@ -41,7 +41,7 @@ Sequel migration DSL for Hanami 2.x. The migration DSL is provided by
 
 ---
 
-## Core Process
+## Core Rules
 
 1. **Generate the migration file** using the Hanami CLI:
 
@@ -54,8 +54,7 @@ Sequel migration DSL for Hanami 2.x. The migration DSL is provided by
 2. **Open the generated file** and write the migration body inside the
    `Sequel.migration` block. Prefer `change { }` for reversible operations.
 
-3. **Define the schema change** using the Sequel DSL (see Examples below).
-   Always specify column types explicitly — do not rely on inference.
+3. **Define the schema change** using the Sequel DSL. Always specify column types explicitly — do not rely on inference.
 
 4. **Run the migration**:
 
@@ -76,6 +75,62 @@ Sequel migration DSL for Hanami 2.x. The migration DSL is provided by
    attribute lists change.
 
 8. **Run the test suite** to confirm nothing is broken.
+
+---
+
+## Common Mistakes
+
+| Mistake | Reality |
+|---|---|
+| "I'll use ActiveRecord syntax like `add_column :users, :email, :string`" | Sequel uses `alter_table(:users) { add_column :email, :text }`. The column type is a Sequel generic type (`:text`, `:integer`), not a Rails type (`:string`, `:bigint`). |
+| "I don't need `null: false` — Sequel handles that" | Sequel does **not** add `NOT NULL` by default. Always declare `null: false` for required columns. Omitting it allows NULL values silently. |
+| "I'll use `change { }` for `drop_column` and `rename_column`" | These operations are **not** automatically reversible by Sequel. Use explicit `up { } / down { }` blocks. |
+| "I changed the schema but forgot to update ROM Relations" | After adding or removing columns, the ROM Relation schema must be updated. If using `schema :table, infer: true`, the schema is re-inferred at boot, but explicit attribute declarations will be stale. |
+| "I'll run migrations without checking `HANAMI_ENV`" | `hanami db migrate` uses `DATABASE_URL` from the current environment. Always confirm `HANAMI_ENV` is set correctly before running in staging or production. |
+| "I'll use `:timestamp` without timezone" | Use `:timestamptz` (PostgreSQL) rather than `:timestamp` to avoid timezone-naive storage bugs. |
+
+---
+
+## Red Flags
+
+- ActiveRecord syntax appearing in migration files
+- Missing `null: false` on required columns
+- Using `change { }` for `drop_column` or `rename_column`
+- Migration files with duplicate timestamps
+- Schema changes without corresponding ROM Relation updates
+- `:timestamp` instead of `:timestamptz` for time columns
+
+---
+
+## Integration
+
+| Related Skill | When to chain |
+|---|---|
+| **rom-relations** | After every migration that adds, removes, or renames columns — update the Relation schema |
+| **rom-structs-entities** | When column changes affect the Entity attribute list |
+| **rom-repositories** | When new columns require new query methods or write operations |
+| **add-table-column** (workflow) | Use the full workflow when adding a column end-to-end: migration → Relation → Entity → Repository → tests |
+| **hanami-db-commands** | For `hanami db create`, `hanami db rollback`, and `hanami db seed` CLI reference |
+
+---
+
+## Rails → Hanami
+
+| Rails (ActiveRecord) | Hanami 2.x (Sequel) |
+|---|---|
+| `create_table :users do \|t\|` | `create_table(:users) do` |
+| `t.string :email, null: false` | `column :email, :text, null: false` |
+| `t.integer :count, default: 0` | `column :count, :integer, default: 0` |
+| `t.timestamps` | `column :created_at, :timestamptz, null: false` + `column :updated_at, :timestamptz, null: false` |
+| `t.references :user, foreign_key: true` | `foreign_key :user_id, :users, null: false` |
+| `add_column :users, :bio, :text` | `alter_table(:users) { add_column :bio, :text }` |
+| `remove_column :users, :bio` | `alter_table(:users) { drop_column :bio }` |
+| `add_index :users, :email, unique: true` | `alter_table(:users) { add_index :email, unique: true }` |
+| `change_column_null :users, :email, false` | `alter_table(:users) { set_column_not_null :email }` |
+| `rename_column :users, :username, :handle` | `alter_table(:users) { rename_column :username, :handle }` |
+| `rails db:migrate` | `hanami db migrate` |
+| `rails db:rollback` | `hanami db rollback` |
+| Migration class inherits `ActiveRecord::Migration[7.1]` | `Sequel.migration do ... end` (no class inheritance) |
 
 ---
 
@@ -124,13 +179,12 @@ Sequel.migration do
 end
 ```
 
-### Drop a column
+### Drop a column (irreversible — use up/down)
 
 ```ruby
 # db/migrate/20240603100000_remove_legacy_token_from_users.rb
 
 Sequel.migration do
-  # drop_column is NOT automatically reversible — use up/down
   up do
     alter_table(:users) do
       drop_column :legacy_token
@@ -153,14 +207,12 @@ end
 Sequel.migration do
   change do
     create_table(:memberships) do
-      # foreign_key creates the column AND the FK constraint
       foreign_key :user_id,         :users,         null: false
       foreign_key :organization_id, :organizations, null: false
 
       column :role,       :text, null: false, default: "member"
       column :created_at, :timestamptz, null: false
 
-      # composite primary key
       primary_key [:user_id, :organization_id]
     end
   end
@@ -175,29 +227,8 @@ end
 Sequel.migration do
   change do
     alter_table(:posts) do
-      # add_index :column_or_columns, options
       add_index :published_at
       add_index [:author_id, :published_at], name: :posts_author_published_idx
-    end
-  end
-end
-```
-
-### Rename a column (irreversible pattern)
-
-```ruby
-# db/migrate/20240606070000_rename_username_to_handle.rb
-
-Sequel.migration do
-  up do
-    alter_table(:users) do
-      rename_column :username, :handle
-    end
-  end
-
-  down do
-    alter_table(:users) do
-      rename_column :handle, :username
     end
   end
 end
@@ -223,68 +254,3 @@ end
 # :uuid          → UUID (PostgreSQL only)
 # :blob          → BYTEA / BLOB
 ```
-
----
-
-## Pitfalls
-
-**Using ActiveRecord syntax** — `add_column :users, :email, :string` is
-ActiveRecord. Sequel uses `alter_table(:users) { add_column :email, :text }`.
-The column type is a Sequel generic type (`:text`, `:integer`), not a Rails type
-(`:string`, `:bigint`).
-
-**Omitting `null: false` constraints** — Sequel does not add `NOT NULL` by
-default. Always declare `null: false` for required columns; omitting it allows
-NULL values silently.
-
-**Using `change { }` for irreversible operations** — `drop_column` and
-`rename_column` cannot be automatically reversed by Sequel. Use explicit
-`up { } / down { }` blocks for these operations.
-
-**Forgetting to update the ROM Relation** — After adding or removing columns,
-the ROM Relation schema must be updated. If using `schema :table, infer: true`,
-the schema is re-inferred at boot, but explicit attribute declarations in the
-Relation will be stale.
-
-**Running migrations in the wrong environment** — `hanami db migrate` uses
-`DATABASE_URL` from the current environment. Confirm `HANAMI_ENV` is set
-correctly before running in staging or production.
-
-**Timestamp columns without timezone** — Use `:timestamptz` (PostgreSQL) rather
-than `:timestamp` to avoid timezone-naive storage bugs.
-
-**Duplicate migration timestamps** — Two migration files with the same timestamp
-prefix will cause a load error. Always use `hanami generate migration` to get a
-unique timestamp.
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| `rom-relations` | After every migration that adds, removes, or renames columns — update the Relation schema |
-| `rom-structs-entities` | When column changes affect the Entity attribute list |
-| `rom-repositories` | When new columns require new query methods or write operations |
-| `add-table-column` (workflow) | Use the full workflow when adding a column end-to-end: migration → Relation → Entity → Repository → tests |
-| `hanami-db-commands` | For `hanami db create`, `hanami db rollback`, and `hanami db seed` CLI reference |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Sequel) |
-|---|---|
-| `create_table :users do \|t\|` | `create_table(:users) do` |
-| `t.string :email, null: false` | `column :email, :text, null: false` |
-| `t.integer :count, default: 0` | `column :count, :integer, default: 0` |
-| `t.timestamps` | `column :created_at, :timestamptz, null: false` + `column :updated_at, :timestamptz, null: false` |
-| `t.references :user, foreign_key: true` | `foreign_key :user_id, :users, null: false` |
-| `add_column :users, :bio, :text` | `alter_table(:users) { add_column :bio, :text }` |
-| `remove_column :users, :bio` | `alter_table(:users) { drop_column :bio }` |
-| `add_index :users, :email, unique: true` | `alter_table(:users) { add_index :email, unique: true }` |
-| `change_column_null :users, :email, false` | `alter_table(:users) { set_column_not_null :email }` |
-| `rename_column :users, :username, :handle` | `alter_table(:users) { rename_column :username, :handle }` |
-| `rails db:migrate` | `hanami db migrate` |
-| `rails db:rollback` | `hanami db rollback` |
-| Migration class inherits `ActiveRecord::Migration[7.1]` | `Sequel.migration do ... end` (no class inheritance) |

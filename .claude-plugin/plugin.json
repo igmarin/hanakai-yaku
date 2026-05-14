@@ -1,0 +1,13 @@
+{
+  "name": "hanami-skills",
+  "version": "1.0.0",
+  "description": "Hanami 2.x development skills for Claude Code",
+  "author": "igmarin",
+  "skills": [
+    {
+      "name": "hanami-skills",
+      "description": "Curated Hanami 2.x skills and workflows",
+      "entry": "SKILL.md"
+    }
+  ]
+}

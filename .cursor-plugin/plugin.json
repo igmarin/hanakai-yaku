@@ -1,0 +1,7 @@
+{
+  "name": "hanami-skills",
+  "version": "1.0.0",
+  "description": "Hanami 2.x development skills for Cursor",
+  "author": "igmarin",
+  "entry": "SKILL.md"
+}

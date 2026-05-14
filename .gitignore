@@ -1,2 +1,18 @@
 .DS_Store
 .kiro/
+
+# Ruby
+*.gem
+.bundle/
+.ruby-lsp/
+
+# MCP Server
+mcp_server/Gemfile.lock
+mcp_server/.bundle/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+Thumbs.db

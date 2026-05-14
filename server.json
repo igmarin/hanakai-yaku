@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.igmarin/hanami-skills-mcp",
+  "title": "Hanami Agent Skills",
+  "description": "Hanami 2.x development skills, docs, and workflows exposed through MCP stdio.",
+  "repository": {
+    "url": "https://github.com/igmarin/hanami-skills",
+    "source": "github",
+    "subfolder": "mcp_server"
+  },
+  "version": "0.0.0",
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "docker.io/igmarin/hanami-skills-mcp:0.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
