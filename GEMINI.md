@@ -4,27 +4,69 @@ This file provides equivalent instructions to `CLAUDE.md` for Gemini CLI.
 
 ## Repository Purpose
 
-`hanami-skills` is a curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework.
+`hanami-skills` is a curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework. It teaches AI coding agents (and developers) how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions.
 
 ## Skill Catalog
 
-29 atomic skills and 8 workflows covering database, actions, DI, views, routing, slices, testing, CLI, and cross-cutting concerns.
+The repository contains 29 atomic skills and 8 workflows covering:
+
+- **Database layer**: Sequel migrations, ROM Relations, Repositories, Structs/Entities
+- **Actions layer**: Action anatomy, JSON API, params validation, halt/errors
+- **DI layer**: Deps mixin, providers
+- **Views layer**: View objects, view parts
+- **Routing**: Routes DSL
+- **Slices**: Slice anatomy, configuration
+- **Testing**: Test planning, request specs, action unit specs, ROM specs
+- **CLI**: `hanami new`, generators, db commands, dev runtime
+- **Cross-cutting**: dry-monads result pattern, settings, code review, security review, refactoring
 
 ## How to Discover Skills
 
-1. **MCP Server**: Use `list_skills` to discover, `use_skill` to load
-2. **Direct file reference**: Read `SKILL.md` files by path
+1. **MCP Server** (preferred): The `hanami-skills` MCP server exposes `list_skills` and `use_skill` tools. Load skills on demand to keep context small.
+2. **Direct file reference**: Reference skills by canonical `name` from frontmatter. File paths: `skills/{category}/{skill-name}/SKILL.md` or `workflows/{workflow-name}/SKILL.md`.
 3. **GitHub CLI**: `gh skill install igmarin/hanami-skills <skill-name>`
 
 ## How to Invoke a Skill
 
-Reference by canonical `name`:
-- `sequel-migrations`, `rom-relations`, `action-anatomy`, `tdd-workflow`
+Reference skills by their canonical `name` from YAML frontmatter:
 
-Paths:
-- `skills/{category}/{name}/SKILL.md`
-- `workflows/{name}/SKILL.md`
+- `write-migration`
+- `define-relation`
+- `create-action`
+- `tdd-loop`
+- `build-crud-resource`
 
-## TDD Gate
+File paths (for direct reference):
+- `skills/db/write-migration/SKILL.md`
+- `skills/actions/create-action/SKILL.md`
+- `workflows/tdd-loop/SKILL.md`
 
-Write failing test → verify failure → implement → verify pass → refactor. Mandatory for all code-producing tasks.
+## TDD Gate Enforcement
+
+For all code-producing tasks, enforce the TDD Gate:
+
+1. Write a failing test
+2. Run the test and verify it fails for the right reason
+3. Implement the minimal code to make it pass
+4. Run the test and verify it passes
+5. Refactor if needed
+
+No exceptions. Tests gate implementation.
+
+## Gemini-Specific Conventions
+
+When working with Gemini CLI, use `/skill-name` syntax to explicitly invoke a skill:
+
+```
+/write-migration — How do I add a column to an existing table?
+/tdd-loop — I need to implement a new user registration feature
+```
+
+Or simply describe the task and the agent will load the appropriate skill automatically via MCP.
+
+## Progressive Disclosure
+
+When loading skills:
+1. **Discovery**: Load only the name and description of each skill
+2. **Activation**: When a task matches a skill's description, read the full SKILL.md
+3. **Execution**: Follow the instructions, optionally executing bundled code or loading referenced files

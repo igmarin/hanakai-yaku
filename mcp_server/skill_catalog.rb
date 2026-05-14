@@ -133,9 +133,14 @@ class SkillCatalog
   end
 
   def validate_metadata!(metadata, file_path)
-    required_fields = %w[name license description ecosystem_sources]
-    required_fields.each do |field|
-      value = metadata.send(field.to_sym)
+    field_values = {
+      "name" => metadata.name,
+      "license" => metadata.license,
+      "description" => metadata.description,
+      "ecosystem_sources" => metadata.ecosystem_sources
+    }
+
+    field_values.each do |field, value|
       if value.nil? || (value.respond_to?(:empty?) && value.empty?)
         raise InvalidSkillError.new(field, file_path)
       end

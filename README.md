@@ -25,14 +25,14 @@ hanami-skills/
 │   ├── testing/      # Test planning, request specs, action unit specs, ROM specs
 │   └── views/        # View objects, view parts
 ├── workflows/        # 8 callable workflows
-│   ├── tdd-workflow/
-│   ├── crud-resource-workflow/
-│   ├── api-slice-workflow/
-│   ├── authentication-workflow/
+│   ├── tdd-loop/
+│   ├── build-crud-resource/
+│   ├── build-api-slice/
+│   ├── setup-authentication/
 │   ├── add-table-column/
-│   ├── new-slice/
+│   ├── create-new-slice/
 │   ├── validation-contract/
-│   └── background-jobs/
+│   └── add-background-jobs/
 ├── mcp_server/       # Ruby MCP server
 ├── docs/             # Documentation
 │   ├── reference/    # Skill catalog, integration matrix
@@ -63,42 +63,42 @@ Exposes:
 
 Reference skills by canonical name or file path:
 
-- `skills/db/sequel-migrations/SKILL.md`
-- `skills/actions/action-anatomy/SKILL.md`
-- `workflows/tdd-workflow/SKILL.md`
+- `skills/db/write-migration/SKILL.md`
+- `skills/actions/create-action/SKILL.md`
+- `workflows/tdd-loop/SKILL.md`
 
 ### GitHub CLI
 
 ```bash
-gh skill install igmarin/hanami-skills sequel-migrations
+gh skill install igmarin/hanami-skills write-migration
 ```
 
 ## Skill Categories
 
 | Category | Skills |
 |---|---|
-| Database | `sequel-migrations`, `rom-relations`, `rom-repositories`, `rom-structs-entities` |
-| Actions | `action-anatomy`, `action-json-api`, `action-params-validation`, `action-halt-errors` |
-| DI | `deps-mixin`, `providers` |
-| Views | `view-objects`, `view-parts` |
-| Routing | `routes-dsl` |
-| Slices | `slice-anatomy`, `slice-configuration` |
-| Testing | `test-planning`, `request-specs`, `action-unit-specs`, `rom-specs` |
-| CLI | `hanami-new`, `generators`, `db-commands`, `dev-runtime` |
-| Cross-cutting | `result-pattern`, `settings`, `code-review`, `security-review`, `refactoring` |
+| Database | `write-migration`, `define-relation`, `create-repository`, `define-entity` |
+| Actions | `create-action`, `build-json-api`, `validate-params`, `handle-errors` |
+| DI | `inject-dependencies`, `providers` |
+| Views | `create-view`, `decorate-with-parts` |
+| Routing | `define-routes` |
+| Slices | `create-slice`, `configure-slice` |
+| Testing | `plan-tests`, `write-request-spec`, `write-action-spec`, `write-rom-spec` |
+| CLI | `create-app`, `generators`, `manage-database`, `run-development` |
+| Cross-cutting | `handle-result-pattern`, `settings`, `code-review`, `security-review`, `refactoring` |
 
 ## Workflows
 
 | Workflow | Description |
 |---|---|
-| `tdd-workflow` | TDD feature development loop |
-| `crud-resource-workflow` | Full CRUD resource implementation |
-| `api-slice-workflow` | API-only slice creation |
-| `authentication-workflow` | Authentication integration |
+| `tdd-loop` | TDD feature development loop |
+| `build-crud-resource` | Full CRUD resource implementation |
+| `build-api-slice` | API-only slice creation |
+| `setup-authentication` | Authentication integration |
 | `add-table-column` | Schema migration workflow |
-| `new-slice` | New slice creation |
+| `create-new-slice` | New slice creation |
 | `validation-contract` | dry-validation contract implementation |
-| `background-jobs` | Background job integration |
+| `add-background-jobs` | Background job integration |
 
 ## TDD Gate
 

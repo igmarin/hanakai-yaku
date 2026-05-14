@@ -3,13 +3,17 @@
 
 require "yaml"
 
-def scan_skills(root)
+def scan_skills(root, errors)
   return [] unless File.directory?(root)
 
-  Dir.glob(File.join(root, "**", "SKILL.md")).map do |file_path|
+  Dir.glob(File.join(root, "**", "SKILL.md")).filter_map do |file_path|
     content = File.read(file_path)
     frontmatter = extract_frontmatter(content)
-    next nil unless frontmatter
+
+    unless frontmatter
+      errors << "Missing or invalid frontmatter in #{file_path}"
+      next
+    end
 
     {
       name: frontmatter["name"],
@@ -17,9 +21,9 @@ def scan_skills(root)
       frontmatter: frontmatter
     }
   rescue Psych::SyntaxError => e
-    puts "ERROR: malformed YAML in #{file_path}: #{e.message}"
-    exit 1
-  end.compact
+    errors << "malformed YAML in #{file_path}: #{e.message}"
+    nil
+  end
 end
 
 def extract_frontmatter(content)
@@ -72,11 +76,11 @@ def validate_sections(content, file_path)
   errors
 end
 
-skills = scan_skills("skills")
-workflows = scan_skills("workflows")
-all_skills = skills + workflows
-
 errors = []
+
+skills = scan_skills("skills", errors)
+workflows = scan_skills("workflows", errors)
+all_skills = skills + workflows
 
 # Check for duplicate names
 names = all_skills.map { |s| s[:name] }
@@ -92,9 +96,19 @@ all_skills.each do |skill|
   errors.concat(validate_sections(File.read(skill[:file_path]), skill[:file_path]))
 end
 
+# Check catalog sync: every skill should be listed in docs/reference/skill-catalog.md
+if File.exist?("docs/reference/skill-catalog.md")
+  catalog_content = File.read("docs/reference/skill-catalog.md")
+  all_skills.each do |skill|
+    unless catalog_content.include?(skill[:name])
+      errors << "Skill '#{skill[:name]}' missing from docs/reference/skill-catalog.md"
+    end
+  end
+end
+
 if errors.any?
-  puts "VALIDATION FAILED:"
-  errors.each { |error| puts "  - #{error}" }
+  warn "VALIDATION FAILED:"
+  errors.each { |error| warn "  - #{error}" }
   exit 1
 else
   puts "Validation passed: #{all_skills.length} skills/workflows checked."

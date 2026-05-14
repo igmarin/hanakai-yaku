@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require "rspec"
-require "fileutils"
+require_relative "spec_helper"
 require_relative "../skill_catalog"
 
 RSpec.describe SkillCatalog do

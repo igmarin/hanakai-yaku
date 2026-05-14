@@ -6,44 +6,44 @@ This document shows which skills chain to which other skills.
 
 | Skill | Chains To |
 |---|---|
-| `sequel-migrations` | `rom-relations`, `rom-structs-entities`, `rom-repositories`, `hanami-db-commands` |
-| `rom-relations` | `rom-repositories`, `rom-structs-entities`, `rom-specs` |
-| `rom-repositories` | `rom-relations`, `rom-structs-entities`, `action-anatomy`, `result-pattern`, `rom-specs` |
-| `rom-structs-entities` | `rom-relations`, `rom-repositories`, `view-objects` |
-| `action-anatomy` | `view-objects`, `action-params-validation`, `action-halt-errors`, `deps-mixin`, `request-specs` |
-| `action-json-api` | `action-anatomy`, `action-params-validation`, `request-specs` |
-| `action-params-validation` | `action-anatomy`, `action-halt-errors`, `result-pattern` |
-| `action-halt-errors` | `action-anatomy`, `action-params-validation`, `security-review`, `request-specs` |
-| `deps-mixin` | `action-anatomy`, `rom-repositories`, `view-objects`, `providers` |
-| `providers` | `deps-mixin`, `settings`, `action-anatomy` |
-| `view-objects` | `action-anatomy`, `view-parts`, `rom-repositories`, `request-specs` |
-| `view-parts` | `view-objects` |
-| `routes-dsl` | `action-anatomy`, `slice-anatomy`, `request-specs` |
-| `slice-anatomy` | `routes-dsl`, `slice-configuration`, `deps-mixin`, `request-specs` |
-| `slice-configuration` | `slice-anatomy`, `deps-mixin`, `providers`, `settings` |
-| `test-planning` | `request-specs`, `action-unit-specs`, `rom-specs` |
-| `request-specs` | `action-anatomy`, `rom-repositories`, `view-objects`, `action-halt-errors` |
-| `action-unit-specs` | `action-anatomy`, `deps-mixin` |
-| `rom-specs` | `rom-relations`, `rom-repositories`, `rom-structs-entities` |
-| `hanami-new` | `generators`, `db-commands`, `dev-runtime`, `slice-anatomy` |
-| `generators` | `action-anatomy`, `view-objects`, `slice-anatomy`, `sequel-migrations` |
-| `db-commands` | `sequel-migrations`, `rom-relations` |
-| `dev-runtime` | `rom-relations`, `rom-repositories` |
-| `result-pattern` | `deps-mixin`, `action-anatomy`, `action-halt-errors` |
-| `settings` | `providers`, `deps-mixin` |
-| `code-review` | `action-anatomy`, `deps-mixin`, `rom-repositories`, `view-objects`, `request-specs` |
-| `security-review` | `action-params-validation`, `action-halt-errors`, `settings` |
-| `refactoring` | `action-anatomy`, `deps-mixin`, `result-pattern`, `rom-repositories`, `request-specs` |
+| `write-migration` | `define-relation`, `define-entity`, `create-repository`, `hanami-manage-database` |
+| `define-relation` | `create-repository`, `define-entity`, `write-rom-spec` |
+| `create-repository` | `define-relation`, `define-entity`, `create-action`, `handle-result-pattern`, `write-rom-spec` |
+| `define-entity` | `define-relation`, `create-repository`, `create-view` |
+| `create-action` | `create-view`, `validate-params`, `handle-errors`, `inject-dependencies`, `write-request-spec` |
+| `build-json-api` | `create-action`, `validate-params`, `write-request-spec` |
+| `validate-params` | `create-action`, `handle-errors`, `handle-result-pattern` |
+| `handle-errors` | `create-action`, `validate-params`, `security-review`, `write-request-spec` |
+| `inject-dependencies` | `create-action`, `create-repository`, `create-view`, `providers` |
+| `providers` | `inject-dependencies`, `settings`, `create-action` |
+| `create-view` | `create-action`, `decorate-with-parts`, `create-repository`, `write-request-spec` |
+| `decorate-with-parts` | `create-view` |
+| `define-routes` | `create-action`, `create-slice`, `write-request-spec` |
+| `create-slice` | `define-routes`, `configure-slice`, `inject-dependencies`, `write-request-spec` |
+| `configure-slice` | `create-slice`, `inject-dependencies`, `providers`, `settings` |
+| `plan-tests` | `write-request-spec`, `write-action-spec`, `write-rom-spec` |
+| `write-request-spec` | `create-action`, `create-repository`, `create-view`, `handle-errors` |
+| `write-action-spec` | `create-action`, `inject-dependencies` |
+| `write-rom-spec` | `define-relation`, `create-repository`, `define-entity` |
+| `create-app` | `generators`, `manage-database`, `run-development`, `create-slice` |
+| `generators` | `create-action`, `create-view`, `create-slice`, `write-migration` |
+| `manage-database` | `write-migration`, `define-relation` |
+| `run-development` | `define-relation`, `create-repository` |
+| `handle-result-pattern` | `inject-dependencies`, `create-action`, `handle-errors` |
+| `settings` | `providers`, `inject-dependencies` |
+| `code-review` | `create-action`, `inject-dependencies`, `create-repository`, `create-view`, `write-request-spec` |
+| `security-review` | `validate-params`, `handle-errors`, `settings` |
+| `refactoring` | `create-action`, `inject-dependencies`, `handle-result-pattern`, `create-repository`, `write-request-spec` |
 
 ## Workflows → Skills
 
 | Workflow | Skills |
 |---|---|
-| `tdd-workflow` | test-planning, request-specs, action-unit-specs, code-review |
-| `crud-resource-workflow` | rom-structs-entities, rom-relations, rom-repositories, action-anatomy, view-objects, request-specs, code-review |
-| `api-slice-workflow` | slice-anatomy, action-anatomy, routes-dsl, request-specs, code-review |
-| `authentication-workflow` | deps-mixin, providers, action-anatomy, action-halt-errors |
-| `add-table-column` | sequel-migrations, rom-relations, rom-structs-entities, rom-repositories, request-specs |
-| `new-slice` | slice-anatomy, routes-dsl, slice-configuration, deps-mixin, request-specs |
-| `validation-contract` | deps-mixin, action-params-validation, result-pattern, action-unit-specs |
-| `background-jobs` | providers, deps-mixin, action-anatomy, action-unit-specs |
+| `tdd-loop` | plan-tests, write-request-spec, write-action-spec, code-review |
+| `build-crud-resource` | define-entity, define-relation, create-repository, create-action, create-view, write-request-spec, code-review |
+| `build-api-slice` | create-slice, create-action, define-routes, write-request-spec, code-review |
+| `setup-authentication` | inject-dependencies, providers, create-action, handle-errors |
+| `add-table-column` | write-migration, define-relation, define-entity, create-repository, write-request-spec |
+| `create-new-slice` | create-slice, define-routes, configure-slice, inject-dependencies, write-request-spec |
+| `validation-contract` | inject-dependencies, validate-params, handle-result-pattern, write-action-spec |
+| `add-background-jobs` | providers, inject-dependencies, create-action, write-action-spec |

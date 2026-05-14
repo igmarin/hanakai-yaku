@@ -30,16 +30,16 @@ The repository contains 29 atomic skills and 8 workflows covering:
 
 Reference skills by their canonical `name` from YAML frontmatter:
 
-- `sequel-migrations`
-- `rom-relations`
-- `action-anatomy`
-- `tdd-workflow`
-- `crud-resource-workflow`
+- `write-migration`
+- `define-relation`
+- `create-action`
+- `tdd-loop`
+- `build-crud-resource`
 
 File paths (for direct reference):
-- `skills/db/sequel-migrations/SKILL.md`
-- `skills/actions/action-anatomy/SKILL.md`
-- `workflows/tdd-workflow/SKILL.md`
+- `skills/db/write-migration/SKILL.md`
+- `skills/actions/create-action/SKILL.md`
+- `workflows/tdd-loop/SKILL.md`
 
 ## TDD Gate Enforcement
 

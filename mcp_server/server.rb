@@ -46,7 +46,10 @@ server.tool("use_skill") do |args|
       error: e.message,
       available_names: e.available_names
     }
-  rescue StandardError => e
+  rescue Errno::ENOENT, Errno::EACCES, Errno::EPERM => e
+    # Log filesystem errors with message and backtrace per AGENTS.md conventions
+    $stderr.puts("[ERROR] #{e.message}")
+    $stderr.puts(e.backtrace.first(5).join("\n"))
     {
       error: "Skill content unavailable: #{name} - #{e.message}"
     }

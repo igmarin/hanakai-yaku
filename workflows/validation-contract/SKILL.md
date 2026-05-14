@@ -4,7 +4,7 @@ version: "1.0.0"
 license: MIT
 description: >
   Use when implementing validation with dry-validation in Hanami 2.x. Chains
-  deps-mixin, action-params-validation, dry-monads/result-pattern, and action-unit-specs.
+  inject-dependencies, validate-params, dry-monads/handle-result-pattern, and write-action-spec.
 ecosystem_sources:
   - dry-rb/dry-validation
   - hanami/hanami-controller
@@ -28,10 +28,10 @@ Use this workflow when implementing complex validation with dry-validation in Ha
 | Step | Skill | Handoff Condition |
 |---|---|---|
 | 1. Define Contract | — | Contract class with rules exists |
-| 2. Register in DI | `deps-mixin` | Contract injectable via `Deps` |
-| 3. Inject into Action | `action-params-validation` | Action uses Contract for validation |
-| 4. Handle results | `dry-monads/result-pattern` | Action handles Success/Failure |
-| 5. Write tests | `action-unit-specs` | Contract tested in isolation |
+| 2. Register in DI | `inject-dependencies` | Contract injectable via `Deps` |
+| 3. Inject into Action | `validate-params` | Action uses Contract for validation |
+| 4. Handle results | `dry-monads/handle-result-pattern` | Action handles Success/Failure |
+| 5. Write tests | `write-action-spec` | Contract tested in isolation |
 
 ---
 
@@ -61,11 +61,11 @@ Use this workflow when implementing complex validation with dry-validation in Ha
    end
    ```
 
-2. **[Register in DI]** — Load skill: `deps-mixin`
+2. **[Register in DI]** — Load skill: `inject-dependencies`
    - Register Contract in container
    - Handoff condition: Contract accessible via `Deps["contracts.user"]`
 
-3. **[Inject into Action]** — Load skill: `action-params-validation`
+3. **[Inject into Action]** — Load skill: `validate-params`
    - Inject Contract into Action
    - Call Contract instead of inline `params` block for complex validation
    - Handoff condition: Action uses Contract for validation
@@ -85,12 +85,12 @@ Use this workflow when implementing complex validation with dry-validation in Ha
    end
    ```
 
-4. **[Handle Results]** — Load skill: `dry-monads/result-pattern`
+4. **[Handle Results]** — Load skill: `dry-monads/handle-result-pattern`
    - Return `Success`/`Failure` from service objects
    - Handle `Failure` in Action with appropriate HTTP status
    - Handoff condition: Validation errors map to correct HTTP responses
 
-5. **[Write Tests]** — Load skill: `action-unit-specs`
+5. **[Write Tests]** — Load skill: `write-action-spec`
    - Test Contract in isolation with valid and invalid input
    - Test Action with stubbed Contract results
    - Handoff condition: All tests pass
@@ -122,10 +122,10 @@ Use this workflow when implementing complex validation with dry-validation in Ha
 
 | Related Skill | When to chain |
 |---|---|
-| **deps-mixin** | Step 2: Register and inject Contract. |
-| **action-params-validation** | Step 3: Use Contract in Action. |
-| **dry-monads/result-pattern** | Step 4: Handle Success/Failure. |
-| **action-unit-specs** | Step 5: Test Contract and Action. |
+| **inject-dependencies** | Step 2: Register and inject Contract. |
+| **validate-params** | Step 3: Use Contract in Action. |
+| **dry-monads/handle-result-pattern** | Step 4: Handle Success/Failure. |
+| **write-action-spec** | Step 5: Test Contract and Action. |
 
 ---
 
