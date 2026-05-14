@@ -70,6 +70,15 @@ server.define_tool(
   MCP::Tool::Response.new([{ type: "text", text: entries.to_json }])
 end
 
+# Define the use_skill tool
+#
+# This tool fetches the full content of a specific skill by its canonical name,
+# including the SKILL.md content and all metadata fields.
+#
+# @param server_context [MCP::ServerContext] The server context for the request
+# @param args [Hash] Arguments containing the skill name
+# @option args [String] "name" The canonical name of the skill to load
+# @return [MCP::Tool::Response] JSON response containing skill content and metadata
 server.define_tool(
   name: "use_skill",
   description: "Fetch the full content of a specific skill by name",
@@ -124,6 +133,16 @@ server.define_tool(
   end
 end
 
+# Define the resources read handler
+#
+# This handler serves skill://* resources, returning the full SKILL.md content
+# for the requested skill. Resources are read-only and provide direct access
+# to skill files via the MCP resource protocol.
+#
+# @param params [Hash] Request parameters containing the resource URI
+# @option params [String] :uri The skill:// URI to read
+# @param server_context [MCP::ServerContext] The server context for the request
+# @return [Array<Hash>] Array containing the resource content with URI, mimeType, and text
 server.resources_read_handler do |params, server_context:|
   uri = params[:uri].to_s
   name = uri.sub(%r{^skill://}, "")
@@ -152,5 +171,11 @@ server.resources_read_handler do |params, server_context:|
   end
 end
 
+# Initialize the stdio transport and start the MCP server
+#
+# This creates a stdio-based transport that communicates with MCP clients
+# via standard input/output, then opens the transport to begin serving requests.
+#
+# @return [MCP::Server::Transports::StdioTransport] The initialized transport
 transport = MCP::Server::Transports::StdioTransport.new(server)
 transport.open

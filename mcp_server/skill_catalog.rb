@@ -4,27 +4,51 @@ require "yaml"
 
 # Scans skills/ and workflows/ directories, parses SKILL.md frontmatter,
 # and exposes a searchable catalog of available skills.
+#
+# This class provides a unified interface for discovering and loading Hanami skills
+# and workflows. It scans the specified directories for SKILL.md files, parses their
+# YAML frontmatter, and builds an in-memory catalog indexed by skill name.
+#
+# The catalog supports both atomic skills (in skills/) and workflows (in workflows/),
+# distinguishing them via the category field. It validates frontmatter to ensure
+# required fields are present and detects duplicate skill names.
+#
+# @example Basic usage
+#   catalog = SkillCatalog.new(skills_root: "skills", workflows_root: "workflows")
+#   catalog.list # => [#<CatalogEntry name="write-migration" ...>, ...]
+#   skill = catalog.fetch("write-migration")
+#   skill.content # => Full SKILL.md content
+#
+# @see CatalogEntry Lightweight entry for listing
+# @see SkillContent Full skill content with metadata
+# @see SkillMetadata Parsed frontmatter data
 class SkillCatalog
-  # @!attribute [r] name
-  # @!attribute [r] description
-  # @!attribute [r] category
-  # @!attribute [r] ecosystem_sources
+  # Lightweight catalog entry for listing skills without loading full content.
+  #
+  # @!attribute [r] name [String] The canonical skill name from frontmatter
+  # @!attribute [r] description [String] Brief description of the skill
+  # @!attribute [r] category [String] Either "skills" or "workflows"
+  # @!attribute [r] ecosystem_sources [Array<String>] List of external dependencies
   CatalogEntry = Data.define(:name, :description, :category, :ecosystem_sources)
 
-  # @!attribute [r] name
-  # @!attribute [r] content
-  # @!attribute [r] metadata
+  # Full skill content including the SKILL.md file content and metadata.
+  #
+  # @!attribute [r] name [String] The canonical skill name from frontmatter
+  # @!attribute [r] content [String] The full SKILL.md file content
+  # @!attribute [r] metadata [SkillMetadata] Parsed frontmatter metadata
   SkillContent = Data.define(:name, :content, :metadata)
 
-  # @!attribute [r] name
-  # @!attribute [r] version
-  # @!attribute [r] license
-  # @!attribute [r] description
-  # @!attribute [r] ecosystem_sources
-  # @!attribute [r] tags
-  # @!attribute [r] file_path
-  # @!attribute [r] category
-  # @!attribute [r] is_workflow
+  # Parsed frontmatter metadata from a SKILL.md file.
+  #
+  # @!attribute [r] name [String] The canonical skill name (required)
+  # @!attribute [r] version [String] Skill version (defaults to "1.0.0")
+  # @!attribute [r] license [String] License identifier (defaults to "MIT")
+  # @!attribute [r] description [String] Brief description (required)
+  # @!attribute [r] ecosystem_sources [Array<String>] External dependencies (required)
+  # @!attribute [r] tags [Array<String>] Keyword tags for categorization
+  # @!attribute [r] file_path [String] Absolute path to the SKILL.md file
+  # @!attribute [r] category [String] Either "skills" or "workflows"
+  # @!attribute [r] is_workflow [Boolean] True if this is a workflow, false for atomic skill
   SkillMetadata = Data.define(:name, :version, :license, :description, :ecosystem_sources, :tags, :file_path, :category, :is_workflow)
 
   # Raised when a requested skill name is not present in the catalog.
@@ -117,6 +141,9 @@ class SkillCatalog
 
   private
 
+  # Builds the in-memory catalog by scanning both skills and workflows directories.
+  #
+  # @return [Hash<String, SkillMetadata>] Catalog indexed by skill name
   def build_catalog
     catalog = {}
 
@@ -131,6 +158,11 @@ class SkillCatalog
     catalog
   end
 
+  # Scans a directory recursively for SKILL.md files and parses their metadata.
+  #
+  # @param root [String] Root directory to scan
+  # @param category [String] Category label ("skills" or "workflows")
+  # @return [Array<SkillMetadata>] Array of parsed metadata entries
   def scan_directory(root, category)
     return [] unless File.directory?(root)
 
@@ -144,6 +176,11 @@ class SkillCatalog
     metadata_list
   end
 
+  # Parses a single SKILL.md file and extracts its metadata.
+  #
+  # @param file_path [String] Path to the SKILL.md file
+  # @param category [String] Category label ("skills" or "workflows")
+  # @return [SkillMetadata, nil] Parsed metadata, or nil if parsing fails
   def parse_skill_file(file_path, category)
     content = File.read(file_path)
     frontmatter = extract_frontmatter(content)
@@ -171,6 +208,10 @@ class SkillCatalog
     nil
   end
 
+  # Extracts YAML frontmatter from a SKILL.md file content.
+  #
+  # @param content [String] Full file content
+  # @return [Hash, nil] Parsed YAML frontmatter, or nil if not present/invalid
   def extract_frontmatter(content)
     return nil unless content.start_with?("---")
 
@@ -183,6 +224,11 @@ class SkillCatalog
     nil
   end
 
+  # Validates that required frontmatter fields are present and correctly typed.
+  #
+  # @param metadata [SkillMetadata] The metadata to validate
+  # @param file_path [String] Path to the SKILL.md file (for error messages)
+  # @raise [InvalidSkillError] if validation fails
   def validate_metadata!(metadata, file_path)
     field_values = {
       "name" => metadata.name,
@@ -206,6 +252,11 @@ class SkillCatalog
     end
   end
 
+  # Adds a metadata entry to the catalog, checking for duplicates.
+  #
+  # @param catalog [Hash<String, SkillMetadata>] The catalog to modify
+  # @param metadata [SkillMetadata] The metadata to add
+  # @raise [DuplicateSkillNameError] if the skill name already exists
   def add_to_catalog(catalog, metadata)
     if catalog.key?(metadata.name)
       existing = catalog[metadata.name]
