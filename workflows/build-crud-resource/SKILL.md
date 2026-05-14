@@ -28,12 +28,13 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
 | Step | Skill | Handoff Condition |
 |---|---|---|
 | 1. Define Entity | `define-entity` | Entity class exists with typed attributes |
-| 2. Define Relation | `define-relation` | Relation schema matches database |
-| 3. Define Repository | `create-repository` | Repository exposes CRUD methods |
-| 4. Create Actions | `create-action` | Index, Show, Create, Update, Destroy Actions exist |
-| 5. Create Views | `create-view` | Views render for HTML endpoints |
-| 6. Write tests | `write-request-spec` | All endpoints have passing request specs |
-| 7. Review | `review-code` | No violations found |
+| 2. Run Migration | `write-migration` | Migration applied and schema up-to-date |
+| 3. Define Relation | `define-relation` | Relation schema matches database |
+| 4. Define Repository | `create-repository` | Repository exposes CRUD methods |
+| 5. Create Actions | `create-action` | Index, Show, Create, Update, Destroy Actions exist |
+| 6. Create Views | `create-view` | Views render for HTML endpoints |
+| 7. Write tests | `write-request-spec` | All endpoints have passing request specs |
+| 8. Review | `review-code` | No violations found |
 
 ---
 
@@ -44,18 +45,23 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
    - Use dry-types for coercion and constraints
    - Handoff condition: Entity class exists and is valid
 
-2. **[Define Relation]** — Load skill: `define-relation`
+2. **[Run Migration]** — Load skill: `write-migration`
+   - Generate migration file matching the Entity attributes
+   - Run `hanami db migrate` to apply the schema change
+   - Handoff condition: Migration applied and schema up-to-date
+
+3. **[Define Relation]** — Load skill: `define-relation`
    - Create Relation with `schema :table_name, infer: true`
    - Add query methods if needed (`active`, `by_email`, etc.)
    - Handoff condition: Relation queries work in console
 
-3. **[Define Repository]** — Load skill: `create-repository`
+4. **[Define Repository]** — Load skill: `create-repository`
    - Create Repository wrapping the Relation
    - Implement CRUD methods: `all`, `by_id`, `create`, `update`, `delete`
    - Configure `auto_struct true` and `struct_namespace`
    - Handoff condition: Repository methods return Entities
 
-4. **[Create Actions]** — Load skill: `create-action`
+5. **[Create Actions]** — Load skill: `create-action`
    - Generate Actions: Index, Show, Create, Update, Destroy
    - Inject Repository via `Deps`
    - Implement `#handle` for each endpoint
@@ -63,19 +69,19 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
    - Use `handle-errors` for error responses
    - Handoff condition: All Actions respond to HTTP requests
 
-5. **[Create Views]** — Load skill: `create-view`
+6. **[Create Views]** — Load skill: `create-view`
    - Create Views for HTML endpoints (Index, Show)
    - Define `expose` for each data point
    - Create templates in `app/templates/`
    - Handoff condition: Views render without errors
 
-6. **[Write Tests]** — Load skill: `write-request-spec`
+7. **[Write Tests]** — Load skill: `write-request-spec`
    - Write request specs for all CRUD endpoints
    - Test happy paths and error cases (404, 422)
    - Run full test suite
    - Handoff condition: All tests pass
 
-7. **[Review]** — Load skill: `review-code`
+8. **[Review]** — Load skill: `review-code`
    - Check Action responsibility
    - Check DI usage
    - Check Repository encapsulation
@@ -112,12 +118,13 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
 | Related Skill | When to chain |
 |---|---|
 | **define-entity** | Step 1: Define the Entity. |
-| **define-relation** | Step 2: Define the Relation. |
-| **create-repository** | Step 3: Define the Repository. |
-| **create-action** | Step 4: Create Actions. |
-| **create-view** | Step 5: Create Views. |
-| **write-request-spec** | Step 6: Write tests. |
-| **review-code** | Step 7: Review the implementation. |
+| **write-migration** | Step 2: Run the migration. |
+| **define-relation** | Step 3: Define the Relation. |
+| **create-repository** | Step 4: Define the Repository. |
+| **create-action** | Step 5: Create Actions. |
+| **create-view** | Step 6: Create Views. |
+| **write-request-spec** | Step 7: Write tests. |
+| **review-code** | Step 8: Review the implementation. |
 
 ---
 
