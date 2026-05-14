@@ -24,7 +24,7 @@ The repository contains 29 atomic skills and 8 workflows covering:
 
 1. **MCP Server** (preferred): The `hanami-skills` MCP server exposes `list_skills` and `use_skill` tools. Load skills on demand to keep context small.
 2. **Direct file reference**: Reference skills by canonical `name` from frontmatter.
-3. **GitHub CLI**: `gh skill install igmarin/hanami-skills <skill-name>`
+3. **GitHub CLI**: `gh skill install igmarin/hanami-skills <canonical-name>`
 
 ## How to Invoke a Skill
 
