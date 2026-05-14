@@ -1,0 +1,206 @@
+---
+name: result-pattern
+version: "1.0.0"
+license: MIT
+description: >
+  Use when using dry-monads Result pattern in Hanami 2.x. Covers Success/Failure
+  wrapping, bind/fmap chaining, and use in service objects registered in the DI container.
+ecosystem_sources:
+  - dry-rb/dry-monads
+tags:
+  - dry-monads
+  - result
+  - monads
+  - service-objects
+---
+
+# result-pattern
+
+Use this skill when using the dry-monads Result pattern in Hanami 2.x.
+
+**Core principle:** Explicitly model success and failure. Return `Success` or `Failure` from operations that can fail, then chain them with `bind` and `fmap`.
+
+---
+
+## Quick Reference
+
+| Scenario | Approach |
+|---|---|
+| Wrap a success | `Success(value)` |
+| Wrap a failure | `Failure(error_message)` or `Failure(error_object)` |
+| Chain on success | `result.bind { |value| next_operation(value) }` |
+| Transform success value | `result.fmap { |value| value.upcase }` |
+| Handle failure | `result.or { |error| fallback_operation(error) }` |
+| Extract value | `result.value!` (raises on Failure) |
+| Check status | `result.success?` / `result.failure?` |
+| Pattern match | `case result; in Success(v); ...; in Failure(e); ...; end` |
+
+---
+
+## Core Rules
+
+1. **Use `dry-monads` in service objects** registered in the DI container:
+
+   ```ruby
+   # app/operations/create_user.rb
+   # frozen_string_literal: true
+
+   require "dry/monads"
+   require "dry/monads/do"
+
+   module MyApp
+     module Operations
+       class CreateUser
+         include Dry::Monads[:result]
+         include Dry::Monads::Do.for(:call)
+
+         include Deps["repos.user_repo"]
+
+         def call(attrs)
+           validated = yield validate(attrs)
+           user = yield create_user(validated)
+
+           Success(user)
+         end
+
+         private
+
+         def validate(attrs)
+           return Failure("Email is required") if attrs[:email].nil? || attrs[:email].empty?
+           return Failure("Name is required") if attrs[:first_name].nil? || attrs[:first_name].empty?
+
+           Success(attrs)
+         end
+
+         def create_user(attrs)
+           user = user_repo.create(attrs)
+           Success(user)
+         rescue StandardError => e
+           Failure("Database error: #{e.message}")
+         end
+       end
+     end
+   end
+   ```
+
+2. **Register the service object** in the container:
+
+   ```ruby
+   # config/providers/operations.rb
+   Hanami.app.register_provider(:operations) do
+     start do
+       register("operations.create_user", MyApp::Operations::CreateUser.new)
+     end
+   end
+   ```
+
+3. **Inject and call the service object** in an Action:
+
+   ```ruby
+   # app/actions/users/create.rb
+   module MyApp
+     module Actions
+       module Users
+         class Create < MyApp::Action
+           include Deps["operations.create_user"]
+
+           def handle(request, response)
+             result = create_user.call(request.params[:user])
+
+             case result
+             in Dry::Monads::Success(user)
+               response.status = 201
+               response.body = user.to_json
+             in Dry::Monads::Failure(error)
+               response.status = 422
+               response.body = { error: error }.to_json
+             end
+           end
+         end
+       end
+     end
+   end
+   ```
+
+4. **Chain operations** with `bind`:
+
+   ```ruby
+   result = validate_params(params)
+     .bind { |valid| find_user(valid[:id]) }
+     .bind { |user| update_user(user, valid[:attrs]) }
+     .fmap { |user| format_user(user) }
+   ```
+
+5. **Use `Do notation`** for sequential operations:
+
+   ```ruby
+   def call(attrs)
+     validated = yield validate(attrs)
+     user = yield create_user(validated)
+     notify = yield send_welcome_email(user)
+
+     Success(user)
+   end
+   ```
+
+6. **Model failures as data**, not exceptions:
+
+   ```ruby
+   # GOOD: Return Failure with structured error
+   Failure({ code: :email_taken, message: "Email already registered" })
+
+   # BAD: Raise exception for expected failures
+   raise EmailTakenError, "Email already registered"
+   ```
+
+7. **Keep service objects focused**. One operation = one class. Do not create monolithic operation classes.
+
+---
+
+## Common Mistakes
+
+| Mistake | Reality |
+|---|---|
+| "I'll raise exceptions for expected failures" | Use `Failure` for expected errors (validation, not found). Reserve exceptions for truly exceptional cases. |
+| "I'll unwrap Results with `value!` without checking" | `value!` raises on `Failure`. Use pattern matching or `bind`/`fmap` instead. |
+| "I'll put business logic in Actions instead of service objects" | Actions are HTTP handlers. Complex business logic belongs in service objects that return `Success`/`Failure`. |
+| "I'll forget to register the service object in the container" | Service objects must be registered in the DI container to be injected into Actions. |
+| "I'll return `nil` or `false` instead of `Failure`" | Always return explicit `Success` or `Failure`. `nil` and `false` are ambiguous. |
+| "I'll create deeply nested `bind` chains" | Use `Do` notation for sequential operations. Deep `bind` chains are hard to read. |
+
+---
+
+## Red Flags
+
+- Exceptions for expected errors
+- `value!` without checking status
+- Business logic in Actions
+- Service objects not registered in DI container
+- Returning `nil` or `false` instead of `Failure`
+- Deeply nested `bind` chains
+- Monolithic service objects
+
+---
+
+## Integration
+
+| Related Skill | When to chain |
+|---|---|
+| **deps-mixin** | Service objects are injected into Actions via `Deps[]`. |
+| **action-anatomy** | Actions call service objects and handle `Success`/`Failure`. |
+| **action-halt-errors** | `Failure` results map to HTTP error responses (422, 404, etc.). |
+| **validation-contract** | Validation results are often `Success`/`Failure` from dry-validation. |
+| **refactoring** | Extract business logic from Actions into `Success`/`Failure` service objects. |
+
+---
+
+## Rails → Hanami
+
+| Rails (ActiveRecord) | Hanami 2.x (Result Pattern) |
+|---|---|
+| `User.create!(attrs)` (raises on failure) | `create_user.call(attrs)` → `Success(user)` or `Failure(error)` |
+| `ActiveRecord::RecordInvalid` | `Failure({ code: :validation_failed, errors: ... })` |
+| `rescue_from ActiveRecord::RecordNotFound` | Pattern match `Failure` in Action and `halt 404` |
+| `if user.save; ...; else; ...; end` | `case result; in Success(v); ...; in Failure(e); ...; end` |
+| Service objects (manual) | `dry-monads` service objects with `Success`/`Failure` |
+| `before_action` for setup | `Do` notation for sequential operations |
