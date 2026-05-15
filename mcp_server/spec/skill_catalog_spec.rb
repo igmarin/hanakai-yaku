@@ -2,7 +2,7 @@
 
 require "tmpdir"
 require_relative "spec_helper"
-require_relative "../skill_catalog"
+require_relative "../lib/skill_catalog/catalog"
 
 RSpec.describe SkillCatalog do
   let(:fixture_dir) { Dir.mktmpdir("skill_catalog_spec") }
@@ -133,7 +133,7 @@ RSpec.describe SkillCatalog do
     it "raises SkillNotFoundError for unknown skill" do
       expect {
         catalog.fetch("nonexistent")
-      }.to raise_error(SkillCatalog::SkillNotFoundError) do |error|
+      }.to raise_error(::SkillNotFoundError) do |error|
         expect(error.requested_name).to eq("nonexistent")
         expect(error.available_names).to include("test-skill", "test-workflow")
       end
@@ -161,7 +161,7 @@ RSpec.describe SkillCatalog do
     it "raises DuplicateSkillNameError" do
       expect {
         described_class.new(skills_root: File.join(fixture_dir, "skills"), workflows_root: File.join(fixture_dir, "workflows"))
-      }.to raise_error(SkillCatalog::DuplicateSkillNameError)
+      }.to raise_error(::DuplicateSkillNameError)
     end
   end
 
@@ -181,7 +181,7 @@ RSpec.describe SkillCatalog do
     it "raises InvalidSkillError for missing required fields" do
       expect {
         described_class.new(skills_root: File.join(fixture_dir, "skills"), workflows_root: File.join(fixture_dir, "workflows"))
-      }.to raise_error(SkillCatalog::InvalidSkillError)
+      }.to raise_error(::InvalidSkillError)
     end
   end
 

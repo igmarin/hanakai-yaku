@@ -2,7 +2,8 @@
 
 require "tmpdir"
 require_relative "spec_helper"
-require_relative "../server"
+require_relative "../lib/skill_catalog/catalog"
+require "mcp"
 require "json"
 
 RSpec.describe "MCP Server" do
@@ -184,14 +185,14 @@ RSpec.describe "MCP Server" do
       catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
       expect {
         catalog.fetch("nonexistent")
-      }.to raise_error(SkillCatalog::SkillNotFoundError)
+      }.to raise_error(::SkillNotFoundError)
     end
 
     it "SkillNotFoundError includes available names" do
       catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
       begin
         catalog.fetch("nonexistent")
-      rescue SkillCatalog::SkillNotFoundError => e
+      rescue ::SkillNotFoundError => e
         expect(e.available_names).to include("test-skill", "test-workflow")
       end
     end
