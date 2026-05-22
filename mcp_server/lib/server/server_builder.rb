@@ -14,7 +14,7 @@ module Server
     def self.build(catalog:)
       resources = build_resources(catalog)
       server = MCP::Server.new(
-        name: "hanami-skills",
+        name: "hanakai-yaku",
         version: "1.0.0",
         resources: resources
       )
@@ -47,7 +47,7 @@ module Server
     def self.define_list_skills_tool(server, catalog)
       server.define_tool(
         name: "list_skills",
-        description: "List all available Hanami skills with their metadata",
+        description: "List all available Hanakai Yaku (Skills) with their metadata",
         annotations: {
           read_only_hint: true,
           title: "List Skills"

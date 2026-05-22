@@ -6,7 +6,7 @@ This guide explains how to compose atomic skills into workflows, choose the righ
 
 ## Philosophy: Skills as Building Blocks
 
-Each skill in `hanami-skills` is **atomic** — it covers one specific task completely. Workflows are **orchestrations** — they sequence skills in a meaningful order.
+Each skill in `hanakai-yaku` is **atomic** — it covers one specific task completely. Workflows are **orchestrations** — they sequence skills in a meaningful order.
 
 **Analogy**: Skills are musical notes. Workflows are songs. You can play a song (workflow) or improvise by combining notes (ad-hoc skill chaining).
 

@@ -1,10 +1,10 @@
-# Hanami Skills — Claude Code Configuration
+# Hanakai Yaku (Skills) — Claude Code Configuration
 
-This file instructs Claude Code on how to discover and invoke skills from the `hanami-skills` repository.
+This file instructs Claude Code on how to discover and invoke skills from the `hanakai-yaku` repository.
 
 ## Repository Purpose
 
-`hanami-skills` is a curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework. It teaches AI agents how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions.
+`hanakai-yaku` is a curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework. It teaches AI agents how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions.
 
 ## Skill Catalog
 
@@ -22,9 +22,9 @@ The repository contains 29 atomic skills and 8 workflows covering:
 
 ## How to Discover Skills
 
-1. **MCP Server** (preferred): The `hanami-skills` MCP server exposes `list_skills` and `use_skill` tools. Load skills on demand to keep context small.
+1. **MCP Server** (preferred): The `hanakai-yaku` MCP server exposes `list_skills` and `use_skill` tools. Load skills on demand to keep context small.
 2. **Direct file reference**: Reference skills by canonical `name` from frontmatter.
-3. **GitHub CLI**: `gh skill install igmarin/hanami-skills <canonical-name>`
+3. **GitHub CLI**: `gh skill install igmarin/hanakai-yaku <canonical-name>`
 
 ## How to Invoke a Skill
 

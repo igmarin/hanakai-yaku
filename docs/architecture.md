@@ -5,7 +5,7 @@ This document explains the repository layout and the rationale for each director
 ## Directory Structure
 
 ```text
-hanami-skills/
+hanakai-yaku/
 ├── skills/              # Atomic skill documents
 ├── workflows/           # Orchestrator workflow documents
 ├── mcp_server/          # Ruby MCP server

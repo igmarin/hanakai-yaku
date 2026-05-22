@@ -1,11 +1,11 @@
 {
-  "name": "hanami-skills",
+  "name": "hanakai-yaku",
   "version": "1.0.0",
   "description": "Hanami 2.x development skills for Claude Code",
   "author": "igmarin",
   "skills": [
     {
-      "name": "hanami-skills",
+      "name": "hanakai-yaku",
       "description": "Curated Hanami 2.x skills and workflows",
       "entry": "SKILL.md"
     }

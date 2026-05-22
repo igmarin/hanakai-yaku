@@ -1,6 +1,6 @@
 # Skill Quality Guide
 
-Quality standards for all skills in the `hanami-skills` repository.
+Quality standards for all skills in the `hanakai-yaku` repository.
 
 ## Frontmatter Completeness
 

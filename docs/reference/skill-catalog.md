@@ -1,6 +1,6 @@
 # Skill Catalog
 
-Complete catalog of all skills and workflows in the `hanami-skills` repository.
+Complete catalog of all skills and workflows in the `hanakai-yaku` repository.
 
 ## Atomic Skills
 

@@ -1,15 +1,15 @@
-# Hanami Skills
+# Hanakai Yaku (Skills)
 
 A curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework.
 
 ## Purpose
 
-`hanami-skills` teaches AI coding agents (and developers) how to build Hanami 2.x applications using production-minded conventions. It covers the full stack: database layer (Sequel, ROM), HTTP layer (Actions, Views, Routing), dependency injection, testing, and workflows.
+`hanakai-yaku` teaches AI coding agents (and developers) how to build Hanami 2.x applications using production-minded conventions. It covers the full stack: database layer (Sequel, ROM), HTTP layer (Actions, Views, Routing), dependency injection, testing, and workflows.
 
 ## Repository Structure
 
 ```text
-hanami-skills/
+hanakai-yaku/
 ├── skills/           # 29 atomic skills organized by category
 │   ├── actions/      # Action anatomy, JSON API, params validation, halt/errors
 │   ├── cli/          # hanami new, generate-components, db commands, dev runtime
@@ -70,7 +70,7 @@ Reference skills by canonical name from frontmatter:
 ### GitHub CLI
 
 ```bash
-gh skill install igmarin/hanami-skills write-migration
+gh skill install igmarin/hanakai-yaku write-migration
 ```
 
 ## Skill Categories

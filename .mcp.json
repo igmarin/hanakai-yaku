@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "hanami-skills": {
+    "hanakai-yaku-skills": {
       "type": "stdio",
       "command": "bundle",
       "args": [

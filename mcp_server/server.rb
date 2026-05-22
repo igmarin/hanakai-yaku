@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# MCP stdio server for the hanami-skills repository.
+# MCP stdio server for the hanakai-yaku repository.
 #
-# This server implements the Model Context Protocol (MCP) to expose Hanami skills
+# This server implements the Model Context Protocol (MCP) to expose Hanakai Yaku (Skills)
 # as tools and resources. It provides two main tools:
 #
 # - `list_skills`: Lists all available skills with their metadata

@@ -1,6 +1,6 @@
 # Workflow Guide
 
-This document provides narrative descriptions of each workflow in the `hanami-skills` repository.
+This document provides narrative descriptions of each workflow in the `hanakai-yaku` repository.
 
 ## TDD Workflow
 

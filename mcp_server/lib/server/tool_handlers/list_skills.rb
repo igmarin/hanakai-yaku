@@ -4,7 +4,7 @@ module Server
   module ToolHandlers
     # Handler for the list_skills tool
     module ListSkills
-      # Returns a list of all available Hanami skills with their metadata
+      # Returns a list of all available Hanakai Yaku (Skills) with their metadata
       #
       # @param catalog [SkillCatalog] The skill catalog instance
       # @param server_context [MCP::ServerContext] The server context for the request

@@ -1,6 +1,6 @@
-# Hanami Skills — MCP Server
+# Hanakai Yaku (Skills) — MCP Server
 
-A Ruby MCP server that exposes the `hanami-skills` library to AI tools via the Model Context Protocol.
+A Ruby MCP server that exposes the `hanakai-yaku` library to AI tools via the Model Context Protocol.
 
 ## What it exposes
 
@@ -25,13 +25,13 @@ Add to `~/.claude/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "hanami-skills": {
+    "hanakai-yaku": {
       "type": "stdio",
       "command": "bundle",
       "args": ["exec", "ruby", "mcp_server/server.rb"],
-      "cwd": "/ABSOLUTE/PATH/TO/hanami-skills",
+      "cwd": "/ABSOLUTE/PATH/TO/hanakai-yaku",
       "env": {
-        "BUNDLE_GEMFILE": "/ABSOLUTE/PATH/TO/hanami-skills/mcp_server/Gemfile"
+        "BUNDLE_GEMFILE": "/ABSOLUTE/PATH/TO/hanakai-yaku/mcp_server/Gemfile"
       }
     }
   }
@@ -45,13 +45,13 @@ Add to `~/.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "hanami-skills": {
+    "hanakai-yaku": {
       "type": "stdio",
       "command": "bundle",
       "args": ["exec", "ruby", "mcp_server/server.rb"],
-      "cwd": "/ABSOLUTE/PATH/TO/hanami-skills",
+      "cwd": "/ABSOLUTE/PATH/TO/hanakai-yaku",
       "env": {
-        "BUNDLE_GEMFILE": "/ABSOLUTE/PATH/TO/hanami-skills/mcp_server/Gemfile"
+        "BUNDLE_GEMFILE": "/ABSOLUTE/PATH/TO/hanakai-yaku/mcp_server/Gemfile"
       }
     }
   }
@@ -65,13 +65,13 @@ Add to `~/.codeium/windsurf/mcp_config.json`:
 ```json
 {
   "mcpServers": {
-    "hanami-skills": {
+    "hanakai-yaku": {
       "type": "stdio",
       "command": "bundle",
       "args": ["exec", "ruby", "mcp_server/server.rb"],
-      "cwd": "/ABSOLUTE/PATH/TO/hanami-skills",
+      "cwd": "/ABSOLUTE/PATH/TO/hanakai-yaku",
       "env": {
-        "BUNDLE_GEMFILE": "/ABSOLUTE/PATH/TO/hanami-skills/mcp_server/Gemfile"
+        "BUNDLE_GEMFILE": "/ABSOLUTE/PATH/TO/hanakai-yaku/mcp_server/Gemfile"
       }
     }
   }

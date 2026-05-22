@@ -1,4 +1,4 @@
-# Contributing to hanami-skills
+# Contributing to hanakai-yaku
 
 Thank you for your interest in contributing! This document describes how to add a new skill to the repository.
 

@@ -11,7 +11,7 @@ require_relative "errors"
 # Scans skills/ and workflows/ directories, parses SKILL.md frontmatter,
 # and exposes a searchable catalog of available skills.
 #
-# This class provides a unified interface for discovering and loading Hanami skills
+# This class provides a unified interface for discovering and loading Hanakai Yaku (Skills)
 # and workflows. It scans the specified directories for SKILL.md files, parses their
 # YAML frontmatter, and builds an in-memory catalog indexed by skill name.
 #

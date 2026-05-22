@@ -1,10 +1,10 @@
-# Hanami Skills — Gemini CLI Configuration
+# Hanakai Yaku (Skills) — Gemini CLI Configuration
 
 This file provides equivalent instructions to `CLAUDE.md` for Gemini CLI.
 
 ## Repository Purpose
 
-`hanami-skills` is a curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework. It teaches AI coding agents (and developers) how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions.
+`hanakai-yaku` is a curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework. It teaches AI coding agents (and developers) how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions.
 
 ## Skill Catalog
 
@@ -22,9 +22,9 @@ The repository contains 29 atomic skills and 8 workflows covering:
 
 ## How to Discover Skills
 
-1. **MCP Server** (preferred): The `hanami-skills` MCP server exposes `list_skills` and `use_skill` tools. Load skills on demand to keep context small.
+1. **MCP Server** (preferred): The `hanakai-yaku` MCP server exposes `list_skills` and `use_skill` tools. Load skills on demand to keep context small.
 2. **Direct file reference**: Reference skills by canonical `name` from frontmatter.
-3. **GitHub CLI**: `gh skill install igmarin/hanami-skills <canonical-name>`
+3. **GitHub CLI**: `gh skill install igmarin/hanakai-yaku <canonical-name>`
 
 ## How to Invoke a Skill
 

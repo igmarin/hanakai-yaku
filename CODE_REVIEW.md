@@ -1,4 +1,4 @@
-# Code Review: hanami-skills Repository
+# Code Review: hanakai-yaku Repository
 
 **Review Date:** 2026-05-14
 **Scope:** Full repository review — MCP server, skill content, tests, validation, documentation
