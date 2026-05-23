@@ -19,11 +19,11 @@ require_relative "lib/server/server_builder"
 require_relative "lib/server/resource_handler"
 
 skills_root = File.expand_path("../skills", __dir__)
-workflows_root = File.expand_path("../workflows", __dir__)
+agents_root = File.expand_path("../agents", __dir__)
 
 # Initialize the skill catalog with root directories
 # @return [SkillCatalog] The catalog instance for skill discovery and loading
-catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
 
 # Build and configure the MCP server with tools and resources
 # @return [MCP::Server] The configured MCP server instance

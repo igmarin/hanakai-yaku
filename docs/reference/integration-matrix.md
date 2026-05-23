@@ -35,7 +35,7 @@ This document shows which skills chain to which other skills.
 | `review-security` | `validate-params`, `handle-errors`, `manage-settings` |
 | `refactor-code` | `create-action`, `inject-dependencies`, `handle-result-pattern`, `create-repository`, `write-request-spec` |
 
-## Workflows → Skills
+## agents → Skills
 
 | Workflow | Skills |
 |---|---|

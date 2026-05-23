@@ -6,7 +6,7 @@ A Ruby MCP server that exposes the `hanakai-yaku` library to AI tools via the Mo
 
 | Type | Name | Description |
 |---|---|---|
-| Tool | `list_skills` | Returns names, descriptions, and categories of all skills and workflows |
+| Tool | `list_skills` | Returns names, descriptions, and categories of all skills and agents |
 | Tool | `use_skill` | Returns the full SKILL.md content for a given skill name |
 | Resource | `skill://{name}` | Each skill and workflow is registered as an MCP Resource |
 

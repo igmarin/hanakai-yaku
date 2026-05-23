@@ -10,7 +10,7 @@ module Scanner
   # Scans a directory recursively for SKILL.md files and parses their metadata.
   #
   # @param root [String] Root directory to scan
-  # @param category [String] Category label ("skills" or "workflows")
+  # @param category [String] Category label ("skills" or "agents")
   # @return [Array<::SkillMetadata>] Array of parsed metadata entries
   def self.scan_directory(root, category)
     return [] unless File.directory?(root)
@@ -28,7 +28,7 @@ module Scanner
   # Parses a single SKILL.md file and extracts its metadata.
   #
   # @param file_path [String] Path to the SKILL.md file
-  # @param category [String] Category label ("skills" or "workflows")
+  # @param category [String] Category label ("skills" or "agents")
   # @return [::SkillMetadata, nil] Parsed metadata, or nil if parsing fails
   def self.parse_skill_file(file_path, category)
     content = File.read(file_path)
@@ -44,7 +44,7 @@ module Scanner
       tags: frontmatter["tags"] || [],
       file_path: file_path,
       category: category,
-      is_workflow: category == "workflows"
+      is_workflow: category == "agents"
     )
 
     ::Validator.validate_metadata!(metadata, file_path)

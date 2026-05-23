@@ -9,7 +9,7 @@ ecosystem_sources:
   - hanami/hanami
   - hanami/hanami-router
 tags:
-  - workflows
+  - agents
   - api
   - slices
   - json

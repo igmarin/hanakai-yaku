@@ -18,7 +18,7 @@ Skills must contain (in order):
 
 1. `# Title + Core Principle`
 2. `## Quick Reference`
-3. `## Core Rules` (skills) or `## Core Process` (workflows)
+3. `## Core Rules` (skills) or `## Core Process` (agents)
 4. `## Common Mistakes`
 5. `## Red Flags`
 6. `## Integration`

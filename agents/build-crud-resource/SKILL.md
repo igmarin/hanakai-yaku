@@ -9,7 +9,7 @@ ecosystem_sources:
   - hanami/hanami
   - rom-rb/rom
 tags:
-  - workflows
+  - agents
   - crud
   - resources
   - full-stack

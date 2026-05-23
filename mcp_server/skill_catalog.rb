@@ -2,19 +2,19 @@
 
 require "yaml"
 
-# Scans skills/ and workflows/ directories, parses SKILL.md frontmatter,
+# Scans skills/ and agents/ directories, parses SKILL.md frontmatter,
 # and exposes a searchable catalog of available skills.
 #
 # This class provides a unified interface for discovering and loading Hanakai Yaku (Skills)
-# and workflows. It scans the specified directories for SKILL.md files, parses their
+# and agents. It scans the specified directories for SKILL.md files, parses their
 # YAML frontmatter, and builds an in-memory catalog indexed by skill name.
 #
-# The catalog supports both atomic skills (in skills/) and workflows (in workflows/),
+# The catalog supports both atomic skills (in skills/) and agents (in agents/),
 # distinguishing them via the category field. It validates frontmatter to ensure
 # required fields are present and detects duplicate skill names.
 #
 # @example Basic usage
-#   catalog = SkillCatalog.new(skills_root: "skills", workflows_root: "workflows")
+#   catalog = SkillCatalog.new(skills_root: "skills", agents_root: "agents")
 #   catalog.list # => [#<CatalogEntry name="write-migration" ...>, ...]
 #   skill = catalog.fetch("write-migration")
 #   skill.content # => Full SKILL.md content
@@ -27,7 +27,7 @@ class SkillCatalog
   #
   # @!attribute [r] name [String] The canonical skill name from frontmatter
   # @!attribute [r] description [String] Brief description of the skill
-  # @!attribute [r] category [String] Either "skills" or "workflows"
+  # @!attribute [r] category [String] Either "skills" or "agents"
   # @!attribute [r] ecosystem_sources [Array<String>] List of external dependencies
   CatalogEntry = Data.define(:name, :description, :category, :ecosystem_sources)
 
@@ -47,7 +47,7 @@ class SkillCatalog
   # @!attribute [r] ecosystem_sources [Array<String>] External dependencies (required)
   # @!attribute [r] tags [Array<String>] Keyword tags for categorization
   # @!attribute [r] file_path [String] Absolute path to the SKILL.md file
-  # @!attribute [r] category [String] Either "skills" or "workflows"
+  # @!attribute [r] category [String] Either "skills" or "agents"
   # @!attribute [r] is_workflow [Boolean] True if this is a workflow, false for atomic skill
   SkillMetadata = Data.define(:name, :version, :license, :description, :ecosystem_sources, :tags, :file_path, :category, :is_workflow)
 
@@ -86,17 +86,17 @@ class SkillCatalog
   # @return [String]
   attr_reader :skills_root
   # @return [String]
-  attr_reader :workflows_root
+  attr_reader :agents_root
 
   # @param skills_root [String] directory containing atomic skills
-  # @param workflows_root [String] directory containing workflows
-  def initialize(skills_root:, workflows_root:)
+  # @param agents_root [String] directory containing agents
+  def initialize(skills_root:, agents_root:)
     @skills_root = skills_root
-    @workflows_root = workflows_root
+    @agents_root = agents_root
     @catalog = build_catalog
   end
 
-  # Returns all discovered skills and workflows as lightweight catalog entries.
+  # Returns all discovered skills and agents as lightweight catalog entries.
   #
   # @return [Array<CatalogEntry>]
   def list
@@ -141,7 +141,7 @@ class SkillCatalog
 
   private
 
-  # Builds the in-memory catalog by scanning both skills and workflows directories.
+  # Builds the in-memory catalog by scanning both skills and agents directories.
   #
   # @return [Hash<String, SkillMetadata>] Catalog indexed by skill name
   def build_catalog
@@ -151,7 +151,7 @@ class SkillCatalog
       add_to_catalog(catalog, metadata)
     end
 
-    scan_directory(workflows_root, "workflows").each do |metadata|
+    scan_directory(agents_root, "agents").each do |metadata|
       add_to_catalog(catalog, metadata)
     end
 
@@ -161,7 +161,7 @@ class SkillCatalog
   # Scans a directory recursively for SKILL.md files and parses their metadata.
   #
   # @param root [String] Root directory to scan
-  # @param category [String] Category label ("skills" or "workflows")
+  # @param category [String] Category label ("skills" or "agents")
   # @return [Array<SkillMetadata>] Array of parsed metadata entries
   def scan_directory(root, category)
     return [] unless File.directory?(root)
@@ -179,7 +179,7 @@ class SkillCatalog
   # Parses a single SKILL.md file and extracts its metadata.
   #
   # @param file_path [String] Path to the SKILL.md file
-  # @param category [String] Category label ("skills" or "workflows")
+  # @param category [String] Category label ("skills" or "agents")
   # @return [SkillMetadata, nil] Parsed metadata, or nil if parsing fails
   def parse_skill_file(file_path, category)
     content = File.read(file_path)
@@ -195,7 +195,7 @@ class SkillCatalog
       tags: frontmatter["tags"] || [],
       file_path: file_path,
       category: category,
-      is_workflow: category == "workflows"
+      is_workflow: category == "agents"
     )
 
     validate_metadata!(metadata, file_path)

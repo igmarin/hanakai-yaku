@@ -9,7 +9,7 @@ ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
 tags:
-  - workflows
+  - agents
   - slices
   - modularization
   - bounded-contexts

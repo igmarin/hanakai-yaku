@@ -7,11 +7,11 @@ This document explains the repository layout and the rationale for each director
 ```text
 hanakai-yaku/
 ├── skills/              # Atomic skill documents
-├── workflows/           # Orchestrator workflow documents
+├── agents/           # Orchestrator workflow documents
 ├── mcp_server/          # Ruby MCP server
 ├── docs/                # Documentation
 │   ├── reference/       # Catalog and integration matrix
-│   └── workflows/       # Workflow guide
+│   └── agents/       # Workflow guide
 ├── .claude-plugin/      # Claude Code plugin metadata
 ├── .codex/              # Codex installation instructions
 ├── .cursor-plugin/      # Cursor plugin metadata
@@ -34,9 +34,9 @@ Atomic, self-contained instruction documents. Each skill covers exactly one Hana
 
 **Key design decision:** One `SKILL.md` per directory. This allows each skill to optionally include `scripts/`, `references/`, or `assets/` subdirectories without cluttering the repository root.
 
-### `workflows/`
+### `agents/`
 
-Higher-level orchestrators that chain multiple skills into complete development loops. Workflows share the same `SKILL.md` format as skills but their Core Process section references constituent skills by canonical name.
+Higher-level orchestrators that chain multiple skills into complete development loops. agents share the same `SKILL.md` format as skills but their Core Process section references constituent skills by canonical name.
 
 ### `mcp_server/`
 

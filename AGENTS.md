@@ -4,13 +4,13 @@ This file provides equivalent instructions to `CLAUDE.md` for OpenAI Codex and c
 
 ## Repository Purpose
 
-`hanakai-yaku` is a curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework.
+`hanakai-yaku` is a curated library of atomic skills and callable agents for the Hanami 2.x Ruby framework.
 
 It teaches AI coding agents (and developers) how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions.
 
 ## Skill Catalog
 
-The repository contains 29 atomic skills and 8 workflows covering:
+The repository contains 29 atomic skills and 8 agents covering:
 
 - **Database layer**: Sequel migrations, ROM Relations, Repositories, Structs/Entities
 - **Actions layer**: Action anatomy, JSON API, params validation, halt/errors
@@ -42,7 +42,7 @@ File paths (for reference only):
 
 - `skills/db/write-migration/SKILL.md`
 - `skills/actions/create-action/SKILL.md`
-- `workflows/tdd-loop/SKILL.md`
+- `agents/tdd-loop/SKILL.md`
 
 ## TDD Gate Enforcement
 

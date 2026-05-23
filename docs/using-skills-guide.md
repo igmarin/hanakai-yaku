@@ -1,14 +1,14 @@
-# Using Skills in Workflows
+# Using Skills in agents
 
-This guide explains how to compose atomic skills into workflows, choose the right skill for a task, and chain skills together for common development scenarios.
+This guide explains how to compose atomic skills into agents, choose the right skill for a task, and chain skills together for common development scenarios.
 
 ---
 
 ## Philosophy: Skills as Building Blocks
 
-Each skill in `hanakai-yaku` is **atomic** — it covers one specific task completely. Workflows are **orchestrations** — they sequence skills in a meaningful order.
+Each skill in `hanakai-yaku` is **atomic** — it covers one specific task completely. agents are **orchestrations** — they sequence skills in a meaningful order.
 
-**Analogy**: Skills are musical notes. Workflows are songs. You can play a song (workflow) or improvise by combining notes (ad-hoc skill chaining).
+**Analogy**: Skills are musical notes. agents are songs. You can play a song (workflow) or improvise by combining notes (ad-hoc skill chaining).
 
 ---
 
@@ -144,7 +144,7 @@ When modularizing a growing application.
 
 ---
 
-## Workflows vs. Ad-Hoc Chaining
+## agents vs. Ad-Hoc Chaining
 
 ### Use a Workflow when...
 

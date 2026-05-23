@@ -10,7 +10,7 @@ ecosystem_sources:
   - rom-rb/rom
   - hanami/hanami
 tags:
-  - workflows
+  - agents
   - migrations
   - schema-changes
   - database

@@ -9,7 +9,7 @@ ecosystem_sources:
   - hanami/hanami
   - hanami/hanami-controller
 tags:
-  - workflows
+  - agents
   - authentication
   - auth
   - security

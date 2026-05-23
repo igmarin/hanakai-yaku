@@ -8,7 +8,7 @@ description: >
 ecosystem_sources:
   - hanami/hanami
 tags:
-  - workflows
+  - agents
   - tdd
   - testing
   - development

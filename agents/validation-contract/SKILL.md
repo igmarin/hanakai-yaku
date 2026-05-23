@@ -9,7 +9,7 @@ ecosystem_sources:
   - dry-rb/dry-validation
   - hanami/hanami-controller
 tags:
-  - workflows
+  - agents
   - validation
   - dry-validation
   - contracts

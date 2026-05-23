@@ -1,6 +1,6 @@
 # Skill Catalog
 
-Complete catalog of all skills and workflows in the `hanakai-yaku` repository.
+Complete catalog of all skills and agents in the `hanakai-yaku` repository.
 
 ## Atomic Skills
 
@@ -35,7 +35,7 @@ Complete catalog of all skills and workflows in the `hanakai-yaku` repository.
 | `review-security` | cross-cutting | Review security concerns | hanami/hanami |
 | `refactor-code` | cross-cutting | Refactor Hanami 2.x code | hanami/hanami |
 
-## Workflows
+## agents
 
 | Name | Description | Constituent Skills |
 |---|---|---|

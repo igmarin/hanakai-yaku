@@ -9,7 +9,7 @@ ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
 tags:
-  - workflows
+  - agents
   - add-background-jobs
   - sidekiq
   - good-job

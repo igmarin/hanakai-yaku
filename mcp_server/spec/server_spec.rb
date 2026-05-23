@@ -9,11 +9,11 @@ require "json"
 RSpec.describe "MCP Server" do
   let(:fixture_dir) { Dir.mktmpdir("mcp_server_spec") }
   let(:skills_root) { File.join(fixture_dir, "skills") }
-  let(:workflows_root) { File.join(fixture_dir, "workflows") }
+  let(:agents_root) { File.join(fixture_dir, "agents") }
 
   before do
     FileUtils.mkdir_p(File.join(skills_root, "db", "test-skill"))
-    FileUtils.mkdir_p(File.join(workflows_root, "test-workflow"))
+    FileUtils.mkdir_p(File.join(agents_root, "test-workflow"))
 
     File.write(
       File.join(skills_root, "db", "test-skill", "SKILL.md"),
@@ -38,7 +38,7 @@ RSpec.describe "MCP Server" do
     )
 
     File.write(
-      File.join(workflows_root, "test-workflow", "SKILL.md"),
+      File.join(agents_root, "test-workflow", "SKILL.md"),
       <<~SKILL
         ---
         name: test-workflow
@@ -66,13 +66,13 @@ RSpec.describe "MCP Server" do
 
   describe "SkillCatalog initialization" do
     it "initializes catalog with correct paths" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       expect(catalog.skills_root).to eq(skills_root)
-      expect(catalog.workflows_root).to eq(workflows_root)
+      expect(catalog.agents_root).to eq(agents_root)
     end
 
-    it "lists all skills and workflows" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+    it "lists all skills and agents" do
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       entries = catalog.list
       names = entries.map(&:name)
 
@@ -81,7 +81,7 @@ RSpec.describe "MCP Server" do
     end
 
     it "fetches skill content by name" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       skill = catalog.fetch("test-skill")
 
       expect(skill.name).to eq("test-skill")
@@ -92,7 +92,7 @@ RSpec.describe "MCP Server" do
 
   describe "MCP Resource generation" do
     it "creates resources for all skills" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       resources = catalog.list.map do |entry|
         MCP::Resource.new(
           uri: "skill://#{entry.name}",
@@ -110,7 +110,7 @@ RSpec.describe "MCP Server" do
 
   describe "list_skills tool response format" do
     it "returns JSON-serializable entries" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       entries = catalog.list.map do |entry|
         {
           name: entry.name,
@@ -131,7 +131,7 @@ RSpec.describe "MCP Server" do
 
   describe "use_skill tool response format" do
     it "returns skill content with metadata" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       skill = catalog.fetch("test-skill")
 
       result = {
@@ -161,7 +161,7 @@ RSpec.describe "MCP Server" do
 
   describe "resource read handler format" do
     it "returns resource with uri, mimeType, and text" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       skill = catalog.fetch("test-skill")
 
       resource = [{
@@ -182,14 +182,14 @@ RSpec.describe "MCP Server" do
 
   describe "error handling" do
     it "raises SkillNotFoundError for unknown skill" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       expect {
         catalog.fetch("nonexistent")
       }.to raise_error(::SkillNotFoundError)
     end
 
     it "SkillNotFoundError includes available names" do
-      catalog = SkillCatalog.new(skills_root: skills_root, workflows_root: workflows_root)
+      catalog = SkillCatalog.new(skills_root: skills_root, agents_root: agents_root)
       begin
         catalog.fetch("nonexistent")
       rescue ::SkillNotFoundError => e

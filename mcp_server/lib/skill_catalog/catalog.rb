@@ -8,19 +8,19 @@ require_relative "scanner"
 require_relative "validator"
 require_relative "errors"
 
-# Scans skills/ and workflows/ directories, parses SKILL.md frontmatter,
+# Scans skills/ and agents/ directories, parses SKILL.md frontmatter,
 # and exposes a searchable catalog of available skills.
 #
 # This class provides a unified interface for discovering and loading Hanakai Yaku (Skills)
-# and workflows. It scans the specified directories for SKILL.md files, parses their
+# and agents. It scans the specified directories for SKILL.md files, parses their
 # YAML frontmatter, and builds an in-memory catalog indexed by skill name.
 #
-# The catalog supports both atomic skills (in skills/) and workflows (in workflows/),
+# The catalog supports both atomic skills (in skills/) and agents (in agents/),
 # distinguishing them via the category field. It validates frontmatter to ensure
 # required fields are present and detects duplicate skill names.
 #
 # @example Basic usage
-#   catalog = SkillCatalog.new(skills_root: "skills", workflows_root: "workflows")
+#   catalog = SkillCatalog.new(skills_root: "skills", agents_root: "agents")
 #   catalog.list # => [#<CatalogEntry name="write-migration" ...>, ...]
 #   skill = catalog.fetch("write-migration")
 #   skill.content # => Full SKILL.md content
@@ -32,17 +32,17 @@ class SkillCatalog
   # @return [String]
   attr_reader :skills_root
   # @return [String]
-  attr_reader :workflows_root
+  attr_reader :agents_root
 
   # @param skills_root [String] directory containing atomic skills
-  # @param workflows_root [String] directory containing workflows
-  def initialize(skills_root:, workflows_root:)
+  # @param agents_root [String] directory containing agents
+  def initialize(skills_root:, agents_root:)
     @skills_root = skills_root
-    @workflows_root = workflows_root
+    @agents_root = agents_root
     @catalog = build_catalog
   end
 
-  # Returns all discovered skills and workflows as lightweight catalog entries.
+  # Returns all discovered skills and agents as lightweight catalog entries.
   #
   # @return [Array<::CatalogEntry>]
   def list
@@ -87,7 +87,7 @@ class SkillCatalog
 
   private
 
-  # Builds the in-memory catalog by scanning both skills and workflows directories.
+  # Builds the in-memory catalog by scanning both skills and agents directories.
   #
   # @return [Hash<String, ::SkillMetadata>] Catalog indexed by skill name
   def build_catalog
@@ -97,7 +97,7 @@ class SkillCatalog
       add_to_catalog(catalog, metadata)
     end
 
-    ::Scanner.scan_directory(workflows_root, "workflows").each do |metadata|
+    ::Scanner.scan_directory(agents_root, "agents").each do |metadata|
       add_to_catalog(catalog, metadata)
     end
 

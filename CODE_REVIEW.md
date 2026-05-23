@@ -286,7 +286,7 @@ end
 
 **File:** `bin/validate_skills:62-70`
 
-The validation script expects workflows to use `## Core Process`, but some workflow files I read (e.g., `workflows/tdd-loop/SKILL.md`) use `## Core Rules`. The validation currently PASSES, so either:
+The validation script expects agents to use `## Core Process`, but some workflow files I read (e.g., `agents/tdd-loop/SKILL.md`) use `## Core Rules`. The validation currently PASSES, so either:
 1. The workflow files were corrected during my editing, or
 2. The validation is checking correctly
 
@@ -386,7 +386,7 @@ end
 **Fix:** Add YARD to `list`, `fetch`, and error classes:
 
 ```ruby
-# Returns all skills and workflows as catalog entries
+# Returns all skills and agents as catalog entries
 # @return [Array<CatalogEntry>]
 def list
 ```
@@ -478,7 +478,7 @@ end
 
 ## Positive Findings
 
-1. **Content-first architecture is clean.** The separation of skills, workflows, docs, and tooling is well-executed.
+1. **Content-first architecture is clean.** The separation of skills, agents, docs, and tooling is well-executed.
 2. **Validation script catches real issues.** It successfully identified missing sections during development.
 3. **MCP server tests are meaningful.** They test actual behavior, not just structure.
 4. **Skill structure is consistent.** All 36 files follow the same heading hierarchy.

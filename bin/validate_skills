@@ -62,8 +62,8 @@ def validate_sections(content, file_path)
     end
   end
 
-  # Skills use "Core Rules", workflows use "Core Process"
-  if file_path.include?("workflows/")
+  # Skills use "Core Rules", agents use "Core Process"
+  if file_path.include?("agents/")
     unless content.include?("## Core Process")
       errors << "Missing required section '## Core Process' in #{file_path}"
     end
@@ -79,8 +79,8 @@ end
 errors = []
 
 skills = scan_skills("skills", errors)
-workflows = scan_skills("workflows", errors)
-all_skills = skills + workflows
+agents = scan_skills("agents", errors)
+all_skills = skills + agents
 
 # Check for duplicate names
 names = all_skills.map { |s| s[:name] }
@@ -112,6 +112,6 @@ if errors.any?
   errors.each { |error| warn "  - #{error}" }
   exit 1
 else
-  puts "Validation passed: #{all_skills.length} skills/workflows checked."
+  puts "Validation passed: #{all_skills.length} skills/agents checked."
   exit 0
 end

@@ -1,10 +1,10 @@
 # Hanakai Yaku (Skills)
 
-A curated library of atomic skills and callable workflows for the Hanami 2.x Ruby framework.
+A curated library of atomic skills and callable agents for the Hanami 2.x Ruby framework.
 
 ## Purpose
 
-`hanakai-yaku` teaches AI coding agents (and developers) how to build Hanami 2.x applications using production-minded conventions. It covers the full stack: database layer (Sequel, ROM), HTTP layer (Actions, Views, Routing), dependency injection, testing, and workflows.
+`hanakai-yaku` teaches AI coding agents (and developers) how to build Hanami 2.x applications using production-minded conventions. It covers the full stack: database layer (Sequel, ROM), HTTP layer (Actions, Views, Routing), dependency injection, testing, and agents.
 
 ## Repository Structure
 
@@ -23,7 +23,7 @@ hanakai-yaku/
 │   ├── slices/       # Slice anatomy, configuration
 │   ├── testing/      # Test planning, request specs, action unit specs, ROM specs
 │   └── views/        # View objects, view parts
-├── workflows/        # 8 callable workflows
+├── agents/        # 8 callable agents
 │   ├── tdd-loop/
 │   ├── build-crud-resource/
 │   ├── build-api-slice/
@@ -35,8 +35,8 @@ hanakai-yaku/
 ├── mcp_server/       # Ruby MCP server
 ├── docs/             # Documentation
 │   ├── reference/    # Skill catalog, integration matrix
-│   ├── using-skills-guide.md  # How to compose skills into workflows
-│   └── workflows/    # Workflow guide
+│   ├── using-skills-guide.md  # How to compose skills into agents
+│   └── agents/    # Workflow guide
 ├── CLAUDE.md         # Claude Code configuration
 ├── AGENTS.md         # OpenAI Codex configuration
 ├── GEMINI.md         # Gemini CLI configuration
@@ -87,7 +87,7 @@ gh skill install igmarin/hanakai-yaku write-migration
 | CLI | `create-app`, `generate-components`, `manage-database`, `run-development` |
 | Cross-cutting | `handle-result-pattern`, `manage-settings`, `review-code`, `review-security`, `refactor-code` |
 
-## Workflows
+## agents
 
 | Workflow | Description |
 |---|---|

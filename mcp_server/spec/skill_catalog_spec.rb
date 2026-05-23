@@ -6,11 +6,11 @@ require_relative "../lib/skill_catalog/catalog"
 
 RSpec.describe SkillCatalog do
   let(:fixture_dir) { Dir.mktmpdir("skill_catalog_spec") }
-  let(:catalog) { described_class.new(skills_root: File.join(fixture_dir, "skills"), workflows_root: File.join(fixture_dir, "workflows")) }
+  let(:catalog) { described_class.new(skills_root: File.join(fixture_dir, "skills"), agents_root: File.join(fixture_dir, "agents")) }
 
   before do
     FileUtils.mkdir_p(File.join(fixture_dir, "skills", "db", "test-skill"))
-    FileUtils.mkdir_p(File.join(fixture_dir, "workflows", "test-workflow"))
+    FileUtils.mkdir_p(File.join(fixture_dir, "agents", "test-workflow"))
 
     File.write(
       File.join(fixture_dir, "skills", "db", "test-skill", "SKILL.md"),
@@ -56,7 +56,7 @@ RSpec.describe SkillCatalog do
     )
 
     File.write(
-      File.join(fixture_dir, "workflows", "test-workflow", "SKILL.md"),
+      File.join(fixture_dir, "agents", "test-workflow", "SKILL.md"),
       <<~SKILL
         ---
         name: test-workflow
@@ -103,7 +103,7 @@ RSpec.describe SkillCatalog do
   end
 
   describe "#list" do
-    it "returns all skills and workflows" do
+    it "returns all skills and agents" do
       entries = catalog.list
       names = entries.map(&:name)
 
@@ -160,7 +160,7 @@ RSpec.describe SkillCatalog do
 
     it "raises DuplicateSkillNameError" do
       expect {
-        described_class.new(skills_root: File.join(fixture_dir, "skills"), workflows_root: File.join(fixture_dir, "workflows"))
+        described_class.new(skills_root: File.join(fixture_dir, "skills"), agents_root: File.join(fixture_dir, "agents"))
       }.to raise_error(::DuplicateSkillNameError)
     end
   end
@@ -180,7 +180,7 @@ RSpec.describe SkillCatalog do
 
     it "raises InvalidSkillError for missing required fields" do
       expect {
-        described_class.new(skills_root: File.join(fixture_dir, "skills"), workflows_root: File.join(fixture_dir, "workflows"))
+        described_class.new(skills_root: File.join(fixture_dir, "skills"), agents_root: File.join(fixture_dir, "agents"))
       }.to raise_error(::InvalidSkillError)
     end
   end
