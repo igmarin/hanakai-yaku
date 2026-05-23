@@ -3,8 +3,12 @@ name: create-app
 version: "1.0.0"
 license: MIT
 description: >
-  Use when scaffolding a new Hanami 2.x application. Covers generated directory
-  layout, environment detection, and initial configuration.
+  Use when starting a new Hanami 2.x project, running `hanami new`, or setting
+  up a project structure from scratch. Generates directory layout, configures
+  environment detection via HANAMI_ENV, sets up initial app configuration, and
+  establishes database connectivity via DATABASE_URL. Use when getting started
+  with Hanami, scaffolding a new app, or understanding app setup and project
+  structure for Hanami 2.x.
 ecosystem_sources:
   - hanami/hanami
   - hanami/hanami-cli
@@ -67,19 +71,17 @@ Use this skill when creating a new Hanami 2.x application.
    ├── slices/                # Modular slices (bounded contexts)
    ├── spec/                  # RSpec test files
    ├── Gemfile
-   ├── config.ru              # Rack entry point
+   ├── config.ru
    └── README.md
    ```
 
-3. **Key generated files**:
+3. **Key generated files** (non-obvious entries):
 
    | File | Purpose |
    |---|---|
    | `config/app.rb` | App class, slice registration, plugin config |
    | `config/routes.rb` | Root route and resource routing |
    | `config/settings.rb` | Typed environment variable declarations |
-   | `config.ru` | Rack entry point for `rackup` or Puma |
-   | `Gemfile` | Includes `hanami`, `hanami-router`, `rom`, `dry-system`, `puma` |
 
 4. **Environment detection**:
 
@@ -106,13 +108,15 @@ Use this skill when creating a new Hanami 2.x application.
    DATABASE_URL=postgres://localhost/my_app_development
    ```
 
-7. **Install dependencies**:
+7. **Install dependencies and set up the database**:
 
    ```bash
    bundle install
-   hanami db create
-   hanami db migrate
+   hanami db create      # Creates the database; confirm output shows no errors
+   hanami db migrate     # Applies migrations; verify with: hanami db version
    ```
+
+   If `hanami db create` fails, confirm `DATABASE_URL` is set correctly and the database server is running. If `hanami db migrate` reports errors, check `db/migrate/` for invalid migration files.
 
 8. **Run the development server**:
 
@@ -122,50 +126,12 @@ Use this skill when creating a new Hanami 2.x application.
 
 ---
 
-## Common Mistakes
+## Common Mistakes & Red Flags
 
-| Mistake | Reality |
+| Mistake / Red Flag | Reality |
 |---|---|
-| "I'll skip `hanami db create` and try to run migrations on a non-existent database" | Always create the database before running migrations. |
-| "I'll edit `config/app.rb` to add business logic" | `config/app.rb` is for framework configuration only. Business logic belongs in Actions, Repositories, or service objects. |
-| "I'll put routes in multiple files without using slices" | Keep routes in `config/routes.rb`. For large apps, extract bounded contexts into slices with their own routes. |
-| "I'll forget to set `DATABASE_URL` before running CLI commands" | Hanami reads `DATABASE_URL` from the environment. Set it in `.env` or export it. |
-| "I'll use `hanami new` without specifying a database" | The default may not match your needs. Explicitly choose `--database=postgres` or `--database=sqlite`. |
-
----
-
-## Red Flags
-
-- Missing `hanami db create` before migrations
-- Business logic in `config/app.rb`
-- Routes scattered across files without slice organization
-- Missing `DATABASE_URL` environment variable
-- Using default database without explicit choice
-- Modifying generated files that should remain standard
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| **generate-components** | After creating the app, use generators to scaffold Actions, Views, and Slices. |
-| **manage-database** | Use `hanami db` commands to manage the database. |
-| **run-development** | Use `hanami dev` and `hanami console` for development. |
-| **create-slice** | Extract bounded contexts into slices as the app grows. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (New App) |
-|---|---|
-| `rails new my_app` | `hanami new my_app --database=postgres` |
-| `config/application.rb` | `config/app.rb` |
-| `config/routes.rb` | `config/routes.rb` (same path) |
-| `app/controllers/` | `app/actions/` |
-| `app/views/` | `app/views/` + `app/templates/` |
-| `app/models/` | `app/relations/` + `app/repos/` + `app/entities/` |
-| `db/migrate/` | `db/migrate/` (same path) |
-| `config/database.yml` | `DATABASE_URL` environment variable |
-| `bin/rails` | `hanami` CLI |
+| Skipping `hanami db create` before running migrations | Always create the database first; migrations will fail on a non-existent database. |
+| Business logic in `config/app.rb` | `config/app.rb` is for framework configuration only; business logic belongs in Actions, Repositories, or service objects. |
+| Routes scattered across files without slice organization | Keep routes in `config/routes.rb`; extract bounded contexts into slices with their own routes for large apps. |
+| Using `hanami new` without specifying a database | The default may not match your needs; explicitly choose `--database=postgres` or `--database=sqlite`. |
+| Modifying generated files that should remain standard | Regenerating the app will overwrite manual changes to scaffolded files. |

@@ -4,5 +4,8 @@
 # Agent files are registered in agents.json, not tile.json
 agents/
 
+# Generated eval source — untracked staging output
+tessl-evals/
+
 # Local scratch / config
 tmp/

@@ -1,0 +1,36 @@
+{
+  "context": "Checks whether the final artifact follows the define-relation instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when defining ROM Relations that map to database tables in Hanami 2.x.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Create the Relation file** in the app or slice:",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Use `infer: true`** for new tables where the database schema is the source of truth. ROM will introspect the table at boot.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Define explicit schema** when you need custom type coercion or virtual attributes:",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Define associations** to navigate between Relations:",
+      "max_score": 16
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: **Never put business logic in Relations**. Relations filter and fetch data. Business decisions belong in Repositories, interactors, or service objects.",
+      "max_score": 16
+    }
+  ]
+}

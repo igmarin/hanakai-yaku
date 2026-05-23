@@ -7,7 +7,11 @@ on:
       - 'skills/**'
       - 'docs/**'
       - 'tile.json'
-      - '.tesslignore'
+      - 'tessl.json'
+      - 'scripts/generate-tessl-evals.rb'
+      - 'scripts/stage-tessl-evals.rb'
+      - 'scripts/validate-tessl-evals.rb'
+      - 'scripts/validate-plugins.sh'
       - '.github/workflows/tessl-publish.yml'
   workflow_dispatch:
 
@@ -27,6 +31,15 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
+
+      - name: Generate and validate Tessl eval source
+        run: |
+          ruby scripts/generate-tessl-evals.rb
+          bash scripts/validate-plugins.sh
+          ruby scripts/validate-tessl-evals.rb
+
+      - name: Stage Tessl evals
+        run: ruby scripts/stage-tessl-evals.rb
 
       - name: Set up Tessl
         uses: tesslio/setup-tessl@v2

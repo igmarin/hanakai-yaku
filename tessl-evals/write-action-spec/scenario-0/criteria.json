@@ -1,0 +1,26 @@
+{
+  "context": "Checks whether the final artifact follows the write-action-spec instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when writing isolated unit specs for Hanami 2.x Actions.",
+      "max_score": 25
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Use verified doubles** to catch interface mismatches:",
+      "max_score": 25
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Do not test the framework**. Do not assert that `render` was called or that `halt` works. Test your Action's logic.",
+      "max_score": 25
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Use `subject` sparingly**. Prefer explicit `action.call` for clarity.",
+      "max_score": 25
+    }
+  ]
+}

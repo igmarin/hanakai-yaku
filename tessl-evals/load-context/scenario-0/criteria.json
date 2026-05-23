@@ -1,0 +1,31 @@
+{
+  "context": "Checks whether the final artifact follows the load-context instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Load the minimum context needed to work safely in a Hanami codebase. Discover structure before proposing changes.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Verify:** Test framework, DI conventions, ROM setup.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Rule:** Never propose code without first running `load-context`.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: before completing load-context. You must know the app's structure.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: Load these files only when needed:",
+      "max_score": 20
+    }
+  ]
+}

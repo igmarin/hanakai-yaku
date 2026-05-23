@@ -1,0 +1,42 @@
+{
+  "target_skill": "define-relation",
+  "source_path": "skills/db/define-relation/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when defining ROM Relations that map to database tables in Hanami 2.x.",
+      "original_snippets": "Use this skill when defining ROM Relations that map to database tables in Hanami 2.x.",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Create the Relation file** in the app or slice:",
+      "original_snippets": "**Create the Relation file** in the app or slice:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use `infer: true`** for new tables where the database schema is the source of truth. ROM will introspect the table at boot.",
+      "original_snippets": "**Use `infer: true`** for new tables where the database schema is the source of truth. ROM will introspect the table at boot.",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Define explicit schema** when you need custom type coercion or virtual attributes:",
+      "original_snippets": "**Define explicit schema** when you need custom type coercion or virtual attributes:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Define associations** to navigate between Relations:",
+      "original_snippets": "**Define associations** to navigate between Relations:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Never put business logic in Relations**. Relations filter and fetch data. Business decisions belong in Repositories, interactors, or service objects.",
+      "original_snippets": "**Never put business logic in Relations**. Relations filter and fetch data. Business decisions belong in Repositories, interactors, or service objects.",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
+      "why_given": "preference"
+    }
+  ]
+}

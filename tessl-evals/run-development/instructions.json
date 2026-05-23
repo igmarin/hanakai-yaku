@@ -1,0 +1,18 @@
+{
+  "target_skill": "run-development",
+  "source_path": "skills/cli/run-development/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when running Hanami 2.x development commands.",
+      "original_snippets": "Use this skill when running Hanami 2.x development commands.",
+      "relevant_when": "When a user asks for Hanami work that should trigger run-development.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use the console for exploration**:",
+      "original_snippets": "**Use the console for exploration**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger run-development.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

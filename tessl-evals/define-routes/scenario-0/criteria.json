@@ -1,0 +1,31 @@
+{
+  "context": "Checks whether the final artifact follows the define-routes instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when defining routes in Hanami 2.x.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Define routes in `config/routes.rb`**:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Use `resources` for RESTful routes**:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Use `resource` for singular resources** (no index):",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Keep routes RESTful**. Avoid custom routes when RESTful ones suffice. Use `resources` and `resource`.",
+      "max_score": 20
+    }
+  ]
+}

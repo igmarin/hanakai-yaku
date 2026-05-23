@@ -1,7 +1,7 @@
 {
   "name": "igmarin/hanakai-yaku",
-  "version": "0.1.0",
-  "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, TDD, CLI, views, routing, and operations. Uses Markdown + Front-matter architecture.",
+  "version": "0.2.0",
+  "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, and validation. Uses Markdown + Front-matter architecture.",
   "docs": "docs/index.md",
   "skills": {
     "build-json-api": {
@@ -37,6 +37,9 @@
     "review-code": {
       "path": "skills/cross-cutting/review-code/SKILL.md"
     },
+    "create-changeset": {
+      "path": "skills/db/create-changeset/SKILL.md"
+    },
     "create-repository": {
       "path": "skills/db/create-repository/SKILL.md"
     },
@@ -58,6 +61,12 @@
     "handle-result-pattern": {
       "path": "skills/dry-monads/handle-result-pattern/SKILL.md"
     },
+    "create-operation": {
+      "path": "skills/dry-rb/create-operation/SKILL.md"
+    },
+    "create-validation-contract": {
+      "path": "skills/dry-rb/create-validation-contract/SKILL.md"
+    },
     "configure-providers": {
       "path": "skills/providers/configure-providers/SKILL.md"
     },
@@ -78,6 +87,15 @@
     },
     "create-slice": {
       "path": "skills/slices/create-slice/SKILL.md"
+    },
+    "extract-slice": {
+      "path": "skills/slices/extract-slice/SKILL.md"
+    },
+    "review-slice-boundaries": {
+      "path": "skills/slices/review-slice-boundaries/SKILL.md"
+    },
+    "test-slice": {
+      "path": "skills/slices/test-slice/SKILL.md"
     },
     "plan-tests": {
       "path": "skills/testing/plan-tests/SKILL.md"

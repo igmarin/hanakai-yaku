@@ -1,0 +1,48 @@
+{
+  "target_skill": "handle-result-pattern",
+  "source_path": "skills/dry-monads/handle-result-pattern/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when using the dry-monads Result pattern in Hanami 2.x.",
+      "original_snippets": "Use this skill when using the dry-monads Result pattern in Hanami 2.x.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use `dry-monads` in service objects** registered in the DI container:",
+      "original_snippets": "**Use `dry-monads` in service objects** registered in the DI container:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Register the service object** in the container:",
+      "original_snippets": "**Register the service object** in the container:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Inject and call the service object** in an Action:",
+      "original_snippets": "**Inject and call the service object** in an Action:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "class Create < MyApp::Action",
+      "original_snippets": "class Create < MyApp::Action",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use `Do notation`** for sequential operations:",
+      "original_snippets": "**Use `Do notation`** for sequential operations:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Keep service objects focused**. One operation = one class. Do not create monolithic operation classes.",
+      "original_snippets": "**Keep service objects focused**. One operation = one class. Do not create monolithic operation classes.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "preference"
+    }
+  ]
+}

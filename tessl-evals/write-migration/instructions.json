@@ -1,0 +1,48 @@
+{
+  "target_skill": "write-migration",
+  "source_path": "skills/db/write-migration/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when writing or running Sequel database migrations in Hanami 2.x.",
+      "original_snippets": "Use this skill when writing or running Sequel database migrations in Hanami 2.x.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-migration.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Core principle:** Sequel migration DSL is provided by `jeremyevans/sequel` — **not** ActiveRecord. Never use ActiveRecord syntax here.",
+      "original_snippets": "**Core principle:** Sequel migration DSL is provided by `jeremyevans/sequel` — **not** ActiveRecord. Never use ActiveRecord syntax here.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-migration.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "`Sequel.migration` block. Prefer `change { }` for reversible operations.",
+      "original_snippets": "`Sequel.migration` block. Prefer `change { }` for reversible operations.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-migration.",
+      "why_given": "reminder"
+    },
+    {
+      "instruction": "**Define the schema change** using the Sequel DSL. Always specify column types explicitly — do not rely on inference.",
+      "original_snippets": "**Define the schema change** using the Sequel DSL. Always specify column types explicitly — do not rely on inference.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-migration.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Verify** the schema change in the database or via `hanami console`:",
+      "original_snippets": "**Verify** the schema change in the database or via `hanami console`:",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-migration.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "or removed columns. The Relation schema must stay in sync with the database.",
+      "original_snippets": "or removed columns. The Relation schema must stay in sync with the database.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-migration.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Run the test suite** to confirm nothing is broken.",
+      "original_snippets": "**Run the test suite** to confirm nothing is broken.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-migration.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

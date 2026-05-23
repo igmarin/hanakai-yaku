@@ -3,8 +3,11 @@ name: create-repository
 version: "1.0.0"
 license: MIT
 description: >
-  Use when creating ROM Repositories in Hanami 2.x. Covers read/write operations,
-  entity mapping, transaction handling, and the Repository as your domain persistence layer.
+  Use when creating ROM Repositories in Hanami 2.x, including CRUD operations, defining custom
+  queries, configuring associations, setting up aggregate roots, entity mapping, transaction
+  handling, and implementing the Repository as your domain persistence layer. Relevant for
+  database access, rom-rb relations, sequel adapter setup, and wiring repositories into
+  actions via dependency injection.
 ecosystem_sources:
   - rom-rb/rom
   - rom-rb/rom-sql
@@ -19,8 +22,6 @@ tags:
 # create-repository
 
 Use this skill when creating ROM Repositories that encapsulate domain-level persistence logic in Hanami 2.x.
-
-**Core principle:** The Repository is the boundary between your domain and the database. It wraps Relations and exposes intent-revealing methods.
 
 ---
 
@@ -55,6 +56,8 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
      end
    end
    ```
+
+   **Verify registration:** After creating the file, confirm the repo is wired into the container by booting the app and checking `MyApp::App["repos.user_repo"]`. If it raises a key error, check the file path and module nesting.
 
 2. **Inject the Repository into Actions** using the Deps mixin:
 
@@ -93,19 +96,29 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-4. **Use transactions** for multi-step writes:
+4. **Use transactions** for multi-step writes, and handle failures explicitly. Always guard against `one` returning `nil` before mutating state:
 
    ```ruby
    def transfer_funds(from_id, to_id, amount)
      transaction do
        from_account = accounts.by_id(from_id).one
-       to_account = accounts.by_id(to_id).one
+       to_account   = accounts.by_id(to_id).one
+
+       # Guard against missing records before mutating state
+       return Failure(:account_not_found) if from_account.nil? || to_account.nil?
+       return Failure(:insufficient_funds) if from_account.balance < amount
 
        accounts.update(from_id, balance: from_account.balance - amount)
-       accounts.update(to_id, balance: to_account.balance + amount)
+       accounts.update(to_id,   balance: to_account.balance + amount)
+
+       Success(true)
      end
+   rescue => e
+     Failure(e.message)
    end
    ```
+
+   If you don't need monadic results, raise an explicit error inside the transaction block so ROM automatically rolls back.
 
 5. **Return Entities/Structs**, not raw hashes. Configure the Repository:
 
@@ -116,33 +129,9 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-6. **Never expose Relations directly**. The Repository is the public API. Views and Actions receive data from Repositories, not Relations.
+6. **Never expose Relations directly**. Actions receive data from Repositories, not Relations.
 
 7. **Keep Repositories focused**. One Repository per bounded context or entity. Do not create a single "God" Repository.
-
----
-
-## Common Mistakes
-
-| Mistake | Reality |
-|---|---|
-| "I'll let the Action call the Relation directly" | Actions receive data from Repositories. Relations are an implementation detail of the Repository. |
-| "I'll put SQL fragments in the Action" | All query logic belongs in Relations or Repositories. Actions are HTTP handlers only. |
-| "I'll return raw hashes from the Repository" | Configure `auto_struct true` and return Entity objects. Raw hashes leak implementation details. |
-| "I'll create one giant Repository for all tables" | One Repository per entity/bounded context. `UserRepo`, `PostRepo`, not `AppRepo`. |
-| "I'll skip transactions for multi-step writes" | Use `transaction` blocks to ensure atomicity. Partial writes corrupt data. |
-| "I'll call `save!` and rescue exceptions" | ROM uses immutable structs. Use `create` and `update` which return ROM structs/entities (or check return values). Explicitly wrap in `Success`/`Failure` if you need monadic results. |
-
----
-
-## Red Flags
-
-- Actions accessing Relations directly
-- SQL or query logic in Actions or Views
-- Repositories returning raw hashes instead of Entities
-- "God" Repositories that handle many unrelated entities
-- Multi-step writes without transaction blocks
-- Business rules mixed into Repository methods
 
 ---
 
@@ -155,19 +144,3 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
 | **create-action** | Actions inject Repositories via `Deps` and pass data to Views. |
 | **handle-result-pattern** | Complex Repository operations return `Success`/`Failure` for explicit error handling. |
 | **write-rom-spec** (testing) | Test Repository methods with in-memory ROM. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (ROM Repository) |
-|---|---|
-| `User.create!(attrs)` | `user_repo.create(attrs)` |
-| `User.find(id)` | `user_repo.by_id(id).one` |
-| `User.where(email: "a@b.com").first` | `user_repo.find_by_email("a@b.com")` |
-| `User.update(id, attrs)` | `user_repo.update(id, attrs)` |
-| `User.destroy(id)` | `user_repo.delete(id)` |
-| `User.all` | `user_repo.all` |
-| `User.where(active: true)` | `user_repo.active` (custom method) |
-| `User.transaction { ... }` | `user_repo.transaction { ... }` |
-| `User.includes(:posts)` | `user_repo.aggregate(:posts).all` |

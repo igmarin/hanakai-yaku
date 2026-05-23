@@ -5,7 +5,11 @@ on:
     paths:
       - 'skills/**'
       - 'tile.json'
-      - '.tesslignore'
+      - 'tessl.json'
+      - 'scripts/changed-tessl-skill-paths.rb'
+      - 'scripts/generate-tessl-evals.rb'
+      - 'scripts/validate-tessl-evals.rb'
+      - 'scripts/validate-plugins.sh'
       - '.github/workflows/tessl-review.yml'
 
 permissions:
@@ -26,23 +30,17 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Find changed tile.json skills
+      - name: Generate and validate Tessl eval source
+        run: |
+          ruby scripts/generate-tessl-evals.rb
+          bash scripts/validate-plugins.sh
+          ruby scripts/validate-tessl-evals.rb
+
+      - name: Find changed publishable skills
         id: changed
         run: |
           git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > changed-files.txt
-
-          # Extract skill paths from tile.json that have changed
-          ruby -rjson -e '
-            tile = JSON.parse(File.read("tile.json"))
-            changed = File.read("changed-files.txt").lines.map(&:strip)
-            tile.fetch("skills").each do |name, entry|
-              path = entry.fetch("path")
-              if changed.any? { |f| f.start_with?(File.dirname(path)) }
-                puts path
-              end
-            end
-          ' > changed-skill-paths.txt
-
+          ruby scripts/changed-tessl-skill-paths.rb < changed-files.txt > changed-skill-paths.txt
           if [ -s changed-skill-paths.txt ]; then
             echo "has_changed_skills=true" >> "$GITHUB_OUTPUT"
           else

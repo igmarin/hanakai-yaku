@@ -1,0 +1,18 @@
+{
+  "target_skill": "manage-settings",
+  "source_path": "skills/cross-cutting/manage-settings/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when managing Hanami 2.x application settings.",
+      "original_snippets": "Use this skill when managing Hanami 2.x application settings.",
+      "relevant_when": "When a user asks for Hanami work that should trigger manage-settings.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Define settings in `config/settings.rb`**:",
+      "original_snippets": "**Define settings in `config/settings.rb`**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger manage-settings.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

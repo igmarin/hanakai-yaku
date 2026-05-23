@@ -3,8 +3,10 @@ name: handle-errors
 version: "1.0.0"
 license: MIT
 description: >
-  Use when handling errors and halting requests in Hanami 2.x Actions. Covers
-  halt, exception handling, error responses, and status codes.
+  Use when handling errors, raising exceptions, or halting requests in Hanami 2.x Actions. Demonstrates
+  how to halt requests with specific HTTP status codes (404, 422, 500), rescue and catch exceptions in
+  actions, and return custom error responses. Use when implementing error handling patterns, exception
+  handling, or returning JSON error responses in Hanami actions.
 ecosystem_sources:
   - hanami/hanami-controller
 tags:
@@ -19,6 +21,33 @@ tags:
 Use this skill when handling errors and halting requests in Hanami 2.x Actions.
 
 **Core principle:** Fail fast and return meaningful error responses. Never swallow exceptions or leak internal details.
+
+---
+
+## Decision Tree
+
+```
+Request arrives at Action
+       |
+       v
+Params invalid? ──yes──> Automatic halt 422 (before #handle is called)
+       |
+      no
+       v
+Resource not found? ──yes──> halt 404, { error: "Not found" }.to_json
+       |
+      no
+       v
+Unauthorized / Forbidden? ──yes──> halt 401 or halt 403 with JSON error
+       |
+      no
+       v
+Unexpected exception? ──yes──> rescue StandardError → log → halt 500
+       |
+      no
+       v
+Success → set response.status + response.body
+```
 
 ---
 
@@ -81,18 +110,7 @@ Use this skill when handling errors and halting requests in Hanami 2.x Actions.
    halt 500, { error: "Internal server error" }.to_json
    ```
 
-5. **Use appropriate status codes**:
-
-   | Code | Meaning | When to use |
-   |---|---|---|
-   | 400 | Bad Request | Malformed request body |
-   | 401 | Unauthorized | Missing authentication |
-   | 403 | Forbidden | Insufficient permissions |
-   | 404 | Not Found | Resource does not exist |
-   | 422 | Unprocessable Entity | Validation errors |
-   | 500 | Internal Server Error | Unexpected exception |
-
-6. **Render error Views** for HTML endpoints:
+5. **Render error Views** for HTML endpoints:
 
    ```ruby
    def handle(request, response)
@@ -103,7 +121,7 @@ Use this skill when handling errors and halting requests in Hanami 2.x Actions.
    end
    ```
 
-7. **Invalid params halt automatically**. Do not manually check `request.params.valid?` unless you need custom behavior:
+6. **Invalid params halt automatically**. Do not manually check `request.params.valid?` unless you need custom behavior:
 
    ```ruby
    # Automatic halt with 422 happens before #handle is called
@@ -118,7 +136,7 @@ Use this skill when handling errors and halting requests in Hanami 2.x Actions.
    end
    ```
 
-8. **Test error responses** in request specs. Assert on status codes and error body shapes.
+7. **Test error responses** in request specs. Assert on status codes and error body shapes.
 
 ---
 
@@ -133,17 +151,13 @@ Use this skill when handling errors and halting requests in Hanami 2.x Actions.
 | "I'll manually validate params instead of using the DSL" | The Params DSL automatically halts on invalid input. Do not duplicate validation in `#handle`. |
 | "I'll use `halt` with HTML error messages in JSON APIs" | Match error response format to the endpoint format. JSON APIs return JSON errors. |
 
----
-
-## Red Flags
-
-- Exception messages exposed in HTTP responses
+**Red flags in code review:**
+- Exception messages or stack traces exposed in HTTP responses
 - Silent exception rescuing without logging
 - `rescue Exception` instead of `rescue StandardError`
 - Error responses without appropriate status codes
 - Manual param validation duplicating the Params DSL
 - Inconsistent error response shapes across endpoints
-- Stack traces sent to clients
 
 ---
 
@@ -156,16 +170,3 @@ Use this skill when handling errors and halting requests in Hanami 2.x Actions.
 | **build-json-api** | JSON APIs return JSON error responses with consistent shapes. |
 | **review-security** | Error handling should not leak sensitive information or system details. |
 | **write-request-spec** (testing) | Test error responses (404, 422, 500) in request specs. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Error Handling) |
-|---|---|
-| `rescue_from ActiveRecord::RecordNotFound, with: :not_found` | `rescue` in `#handle` or `halt 404` |
-| `head :not_found` | `halt 404, { error: "Not found" }.to_json` |
-| `render json: { error: "..." }, status: 422` | `halt 422, { error: "..." }.to_json` |
-| `Rails.logger.error(e.message)` | `Hanami.app[:logger].error(e.message)` |
-| `raise ActiveRecord::RecordInvalid` | Return `Failure` from interactor or `halt 422` |
-| `rescue_from StandardError` | `rescue StandardError` in `#handle` |

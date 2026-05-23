@@ -1,0 +1,26 @@
+{
+  "context": "Checks whether the final artifact follows the build-json-api instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when building JSON API endpoints in Hanami 2.x Actions.",
+      "max_score": 25
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Core principle:** JSON APIs must produce predictable, parseable output. Implement round-trip parse → serialize → parse verification for all serializers.",
+      "max_score": 25
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Use a dedicated serializer object** for complex APIs:",
+      "max_score": 25
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Verify round-trip parse → serialize → parse** for every serializer:",
+      "max_score": 25
+    }
+  ]
+}

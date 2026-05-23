@@ -1,0 +1,30 @@
+{
+  "target_skill": "decorate-with-parts",
+  "source_path": "skills/views/decorate-with-parts/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when creating View Parts for decorator-style logic in Hanami 2.x.",
+      "original_snippets": "Use this skill when creating View Parts for decorator-style logic in Hanami 2.x.",
+      "relevant_when": "When a user asks for Hanami work that should trigger decorate-with-parts.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Create the Part class**:",
+      "original_snippets": "**Create the Part class**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger decorate-with-parts.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use Part methods in templates**:",
+      "original_snippets": "**Use Part methods in templates**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger decorate-with-parts.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Do not generate HTML in Parts**. Parts return strings or booleans. Templates handle HTML:",
+      "original_snippets": "**Do not generate HTML in Parts**. Parts return strings or booleans. Templates handle HTML:",
+      "relevant_when": "When a user asks for Hanami work that should trigger decorate-with-parts.",
+      "why_given": "preference"
+    }
+  ]
+}

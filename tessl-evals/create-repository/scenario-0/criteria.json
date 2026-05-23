@@ -1,0 +1,36 @@
+{
+  "context": "Checks whether the final artifact follows the create-repository instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when creating ROM Repositories that encapsulate domain-level persistence logic in Hanami 2.x.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Create the Repository file** in the app or slice:",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Inject the Repository into Actions** using the Deps mixin:",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Use transactions** for multi-step writes:",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Never expose Relations directly**. The Repository is the public API. Views and Actions receive data from Repositories, not Relations.",
+      "max_score": 16
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: **Keep Repositories focused**. One Repository per bounded context or entity. Do not create a single \"God\" Repository.",
+      "max_score": 16
+    }
+  ]
+}

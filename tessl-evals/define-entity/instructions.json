@@ -1,0 +1,30 @@
+{
+  "target_skill": "define-entity",
+  "source_path": "skills/db/define-entity/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when defining ROM Structs and Entities in Hanami 2.x.",
+      "original_snippets": "Use this skill when defining ROM Structs and Entities in Hanami 2.x.",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-entity.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Create the Entity file** in the app or slice:",
+      "original_snippets": "**Create the Entity file** in the app or slice:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-entity.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use dry-types for coercion and constraints**:",
+      "original_snippets": "**Use dry-types for coercion and constraints**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-entity.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Register the Entity namespace** in the Repository:",
+      "original_snippets": "**Register the Entity namespace** in the Repository:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-entity.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

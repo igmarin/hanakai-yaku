@@ -3,9 +3,13 @@ name: define-entity
 version: "1.0.0"
 license: MIT
 description: >
-  Use when defining ROM Structs and Entities in Hanami 2.x. Covers immutability,
-  dry-types coercion, equality semantics, and the Entity as your domain value object.
-ecosystem_sources:
+  Use when defining ROM Struct attributes, configuring dry-types coercion for entity fields,
+  implementing value-based equality semantics, or setting up a domain model class in Hanami 2.x.
+  Handles creating entity classes, declaring typed attributes, enforcing immutability, configuring
+  the repository struct namespace, and syncing entity definitions with schema changes. Use when
+  working with ROM entity class definitions, persistence layer value objects, ROM relation mappings,
+  or any Hanami 2.x domain model backed by rom-rb.
+écosystem_sources:
   - rom-rb/rom
   - rom-rb/rom-sql
   - hanami/hanami-db
@@ -20,21 +24,6 @@ tags:
 # define-entity
 
 Use this skill when defining ROM Structs and Entities in Hanami 2.x.
-
-**Core principle:** Entities are immutable value objects. They represent domain data with typed attributes and value-based equality.
-
----
-
-## Quick Reference
-
-| Scenario | Approach |
-|---|---|
-| Define an Entity | `class User < Hanami::DB::Entity` with typed attributes |
-| Enable dry-types coercion | Include `Types` module and use `attribute :name, Types::String` |
-| Make an Entity immutable | ROM Structs are immutable by default; use `.new` to create, `.copy` to change |
-| Check equality | Entities compare by value: `user1 == user2` compares all attributes |
-| Return an Entity from a Repository | Configure `struct_namespace` and `auto_struct true` in the Repository |
-| Define a custom Struct | Use `ROM::Struct` for simple data containers without domain behavior |
 
 ---
 
@@ -82,7 +71,7 @@ Use this skill when defining ROM Structs and Entities in Hanami 2.x.
    user1 == user2 # => true
    ```
 
-5. **Keep Entities simple**. No business logic, no persistence methods, no validations. Entities are data with types.
+5. **Keep Entities simple**. No business logic, no persistence methods, no validations.
 
 6. **Register the Entity namespace** in the Repository:
 
@@ -93,7 +82,21 @@ Use this skill when defining ROM Structs and Entities in Hanami 2.x.
    end
    ```
 
-7. **Update Entities when the schema changes**. When a migration adds or removes columns, update the corresponding Entity attributes.
+7. **Update Entities when the schema changes**. When a migration adds or removes columns, update the corresponding Entity attributes. After updating, verify that the returned struct fields match the database columns with a quick REPL check:
+
+   ```ruby
+   # In a Hanami console (bundle exec hanami console)
+   user = MyApp::App[:user_repo].users.first
+   user.class            # => MyApp::Entities::User
+   user.class.attributes # confirm all expected attribute keys are present
+   user.respond_to?(:new_column) # => true after adding the attribute
+   ```
+
+   Or run the relevant unit/integration tests:
+
+   ```bash
+   bundle exec rspec spec/entities/user_spec.rb spec/repositories/user_repo_spec.rb
+   ```
 
 ---
 
@@ -101,47 +104,9 @@ Use this skill when defining ROM Structs and Entities in Hanami 2.x.
 
 | Mistake | Reality |
 |---|---|
-| "I'll add `save` and `destroy` methods to the Entity" | Entities are pure data. Persistence belongs in Repositories. |
-| "I'll make Entities mutable with attr_accessor" | ROM Structs are immutable by design. Mutability breaks value-based equality. |
-| "I'll put validation logic in the Entity" | Validations belong in Actions (Params) or dry-validation Contracts, not Entities. |
-| "I'll skip type declarations and use plain Ruby hashes" | Type coercion catches bugs at the boundary. Always declare attributes with types. |
-| "I'll compare Entities with `equal?` instead of `==`" | `equal?` checks object identity. `==` checks value equality — use `==`. |
-| "I'll define default values inline instead of using dry-types defaults" | Use `Types::String.default("value")` for explicit, testable defaults. |
-
----
-
-## Red Flags
-
-- Entities with persistence methods (`save`, `destroy`)
-- Mutable Entities with setters or `attr_accessor`
-- Validation logic inside Entity classes
-- Untyped attributes (plain hashes without dry-types)
-- Entities compared with `equal?` for business logic
-- Business rules or side effects in Entity constructors
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| **create-repository** | Repository returns Entity objects. Define the Entity, then configure the Repository. |
-| **define-relation** | Relation schema drives Entity attributes. Keep them in sync. |
-| **create-action** | Actions receive Entities from Repositories and pass them to Views. |
-| **create-view** | Views receive Entities as exposures. Entities are the data contract between layers. |
-| **write-migration** | Schema changes require Entity updates. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (ROM Entity) |
-|---|---|
-| `class User < ApplicationRecord` | `class User < Hanami::DB::Entity` |
-| `user.name = "New"` (mutable) | `updated = user.copy(name: "New")` (immutable) |
-| `user.save!` | `user_repo.update(user.id, name: "New")` |
-| `user.valid?` | Validations are in Actions/Contracts, not Entities |
-| `user.destroy` | `user_repo.delete(user.id)` |
-| `user == other_user` (identity by default) | `user == other_user` (value equality by default) |
-| `User.new(name: nil)` (nil allowed) | `User.new(name: nil)` (type coercion may raise or default) |
-| `after_save :do_something` | No callbacks. Use Repository methods or interactors. |
+| Calling `user.name = "new"` to mutate | Entities are frozen; use `user.copy(name: "new")` instead |
+| Forgetting to update the Entity after a migration | The struct will raise `ROM::Struct::UnknownAttributeError` for unmapped columns; always sync attributes with schema changes |
+| Adding business logic or validations inside the Entity | Entities are pure data containers; put validations in operations/actions and business logic in domain services |
+| Using plain Ruby `Struct` or `Data` instead of `Hanami::DB::Entity` | You lose dry-types coercion, `.copy`, and value-based equality automatically provided by ROM Struct |
+| Omitting `struct_namespace` in the Repository | ROM will return generic `ROM::Struct` instances instead of your typed Entity class |
+| Declaring optional attributes without a default or `Types::Nominal` | A `nil` value will raise a type error; use `Types::String.optional.meta(omittable: true)` or provide a default |

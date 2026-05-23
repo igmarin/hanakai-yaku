@@ -1,0 +1,36 @@
+{
+  "target_skill": "create-slice",
+  "source_path": "skills/slices/create-slice/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when creating and configuring Hanami 2.x Slices.",
+      "original_snippets": "Use this skill when creating and configuring Hanami 2.x Slices.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Register the Slice** in the app:",
+      "original_snippets": "**Register the Slice** in the app:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Define Slice routes** in `slices/<name>/config/routes.rb`:",
+      "original_snippets": "**Define Slice routes** in `slices/<name>/config/routes.rb`:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Keep Slices self-contained**. A Slice should be able to function independently. Minimize cross-slice dependencies.",
+      "original_snippets": "**Keep Slices self-contained**. A Slice should be able to function independently. Minimize cross-slice dependencies.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "reminder"
+    },
+    {
+      "instruction": "**Use Slices for bounded contexts**:",
+      "original_snippets": "**Use Slices for bounded contexts**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

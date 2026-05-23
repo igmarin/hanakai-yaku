@@ -3,8 +3,12 @@ name: build-json-api
 version: "1.0.0"
 license: MIT
 description: >
-  Use when building JSON API responses in Hanami 2.x Actions. Covers content
-  negotiation, serialization, round-trip parse → serialize → parse requirement.
+  Use when building JSON API responses, REST API endpoints, or Hanami action
+  responses in Hanami 2.x Actions. Covers setting content-type headers,
+  serializing Ruby objects to JSON, parsing incoming JSON request bodies,
+  content negotiation, and round-trip parse → serialize → parse verification.
+  Use when you need to render JSON, build a JSON endpoint, create an API
+  controller action, or handle JSON request/response cycles in Hanami 2.x.
 ecosystem_sources:
   - hanami/hanami-controller
 tags:
@@ -19,21 +23,6 @@ tags:
 Use this skill when building JSON API endpoints in Hanami 2.x Actions.
 
 **Core principle:** JSON APIs must produce predictable, parseable output. Implement round-trip parse → serialize → parse verification for all serializers.
-
----
-
-## Quick Reference
-
-| Scenario | Approach |
-|---|---|
-| Return JSON | `response.format = :json` |
-| Serialize an Entity | `response.body = user.to_h.to_json` or use a serializer object |
-| Serialize a collection | `response.body = users.map(&:to_h).to_json` |
-| Handle JSON request body | `request.params[:key]` (JSON body is parsed automatically) |
-| Content negotiation | Check `request.accept` or force `response.format = :json` |
-| Round-trip verification | Parse → Serialize → Parse produces equivalent result |
-| Set JSON Content-Type | `response.headers["Content-Type"] = "application/json"` |
-| Handle parse errors | Rescue `JSON::ParserError` and halt 400 |
 
 ---
 
@@ -114,7 +103,15 @@ Use this skill when building JSON API endpoints in Hanami 2.x Actions.
    assert_equal user.email, parsed[:email]
    ```
 
-5. **Handle request body parsing** automatically. Hanami parses JSON bodies into `request.params`:
+   **Round-trip verification workflow:**
+   1. Serialize the entity → call `.to_json`
+   2. Parse the result → `JSON.parse(serialized, symbolize_names: true)`
+   3. Assert each field matches the source entity
+   4. **If a field doesn't match:** check the serializer's `to_h` for that key (missing key, wrong type, unformatted timestamp, nil value)
+   5. Fix the serializer → re-run the round-trip → confirm all assertions pass
+   6. Repeat for every resource type exposed by the API
+
+5. **Handle request body parsing** — JSON bodies are available via `request.params`:
 
    ```ruby
    def handle(request, response)
@@ -156,50 +153,13 @@ Use this skill when building JSON API endpoints in Hanami 2.x Actions.
 
 ---
 
-## Common Mistakes
+## Checklist: Common Mistakes & Red Flags
 
-| Mistake | Reality |
-|---|---|
-| "I'll return the Entity's `to_h` directly without controlling the shape" | Always use a serializer or explicit hash construction. Entities may contain internal fields that should not be exposed. |
-| "I'll skip the round-trip verification" | Round-trip parse → serialize → parse is mandatory. It catches missing fields, type mismatches, and encoding issues. |
-| "I'll use `to_json` on the Repository result directly" | Repositories return Entities. Always serialize through a defined serializer. |
-| "I'll forget to set `response.format = :json`" | Without setting the format, the response Content-Type may default to HTML. |
-| "I'll return different shapes for the same resource in different endpoints" | Consistent serialization is critical for API consumers. Use the same serializer everywhere for a given resource. |
-| "I'll serialize `Time` objects without `iso8601`" | Always serialize timestamps to ISO 8601 strings. Raw `Time#to_json` behavior varies by JSON library. |
-
----
-
-## Red Flags
-
-- Entities serialized directly without a serializer
-- Missing round-trip verification in tests
-- Inconsistent JSON shapes for the same resource
-- Raw database hashes returned as JSON
-- Missing `response.format = :json`
-- Timestamps not in ISO 8601 format
-- Error responses that don't follow a consistent shape
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| **create-action** | JSON API responses are built within Actions. Master Action structure first. |
-| **validate-params** | JSON request bodies are validated through the Params DSL. |
-| **create-repository** | Actions fetch data from Repositories before serializing. |
-| **write-request-spec** (testing) | JSON APIs are tested with request specs asserting on response shape. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (JSON API) |
-|---|---|
-| `render json: @user` | `response.format = :json; response.body = UserSerializer.new(user).to_json` |
-| `UserSerializer.new(@user).serializable_hash` | `UserSerializer.new(user).to_h` |
-| `ActiveModel::Serializers::JSON` | Custom serializer class or `to_h` method |
-| `params.require(:user).permit(...)` | Params DSL block in Action |
-| `render json: { error: "Not found" }, status: 404` | `halt 404, { error: "Not found" }.to_json` |
-| `JSON.parse(request.body.read)` | `request.params` (automatically parsed) |
-| `jbuilder` / `rabl` | Custom serializer classes or `to_h` methods |
+- [ ] `response.format = :json` is set on every JSON action
+- [ ] Every entity is serialized through a dedicated serializer or explicit hash — never raw `to_h` or Repository result
+- [ ] Round-trip parse → serialize → parse verified for every serializer
+- [ ] Timestamps serialized to ISO 8601 via `.iso8601` — never raw `Time#to_json`
+- [ ] Error responses follow a consistent shape (`{ error: { message: ..., details: ... } }`)
+- [ ] Same serializer used for the same resource across all endpoints
+- [ ] No internal or sensitive entity fields leaked through uncontrolled serialization
+- [ ] `JSON::ParserError` rescued and returned as 400

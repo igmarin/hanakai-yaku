@@ -1,0 +1,31 @@
+{
+  "context": "Checks whether the final artifact follows the handle-errors instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when handling errors and halting requests in Hanami 2.x Actions.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Core principle:** Fail fast and return meaningful error responses. Never swallow exceptions or leak internal details.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Use `halt` for early returns**:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Never expose internal details** in error responses. Log the full exception internally, return a generic message externally:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Invalid params halt automatically**. Do not manually check `request.params.valid?` unless you need custom behavior:",
+      "max_score": 20
+    }
+  ]
+}

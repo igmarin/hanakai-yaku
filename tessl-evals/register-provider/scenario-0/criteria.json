@@ -1,0 +1,31 @@
+{
+  "context": "Checks whether the final artifact follows the register-provider instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when registering external dependencies (database, mailer, cache, third-party APIs) in the Hanami 2.x DI container.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Use the built-in database provider** (already configured by Hanami):",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Register third-party API clients** as providers:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Keep providers focused**. One external service = one provider. Do not create a monolithic provider.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Use `target[:settings]`** to access application settings within providers:",
+      "max_score": 20
+    }
+  ]
+}
