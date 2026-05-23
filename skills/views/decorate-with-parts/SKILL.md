@@ -3,8 +3,13 @@ name: decorate-with-parts
 version: "1.0.0"
 license: MIT
 description: >
-  Use when creating View Parts in Hanami 2.x. Covers decorator-style logic,
-  presentation helpers, and encapsulating complex view behavior.
+  Use when creating View Parts in Hanami 2.x, adding a part class, wrapping
+  exposures in Hanami::View::Part, formatting attributes for display, or adding
+  custom helper methods to view objects. Defines Part classes that encapsulate
+  presentation logic (formatted strings, predicates, delegated attributes),
+  exposes them via the `expose` macro, and keeps templates and Views free of
+  complex formatting. Use when working with view decoration, view objects,
+  template helpers, or the Ruby view layer in a Hanami application.
 ecosystem_sources:
   - hanami/hanami-view
 tags:
@@ -133,25 +138,9 @@ Use this skill when creating View Parts for decorator-style logic in Hanami 2.x.
 
 ## Common Mistakes
 
-| Mistake | Reality |
-|---|---|
-| "I'll put database queries in the Part" | Parts wrap already-fetched data. No queries. |
-| "I'll put business rules in the Part" | Parts are for presentation only. Business rules belong in interactors or service objects. |
-| "I'll generate HTML strings in the Part" | Parts return plain strings. Templates generate HTML. |
-| "I'll use Parts for every single exposure" | Use Parts only when the exposure needs presentation methods. Simple data can be exposed directly. |
-| "I'll forget to delegate common methods" | Delegate methods you use in templates to avoid `user_part.value.name` everywhere. |
-| "I'll create a Part that wraps multiple unrelated objects" | One Part per wrapped object. `UserPart` wraps a User, `PostPart` wraps a Post. |
-
----
-
-## Red Flags
-
-- Database queries in Part classes
-- Business logic in Part methods
-- HTML generation in Part methods
-- Parts wrapping multiple unrelated objects
-- Missing delegation for commonly accessed attributes
-- Parts used for simple data that doesn't need decoration
+- **No database queries in Parts.** Parts wrap already-fetched data; queries belong in repositories or actions.
+- **No HTML generation in Parts.** Parts return plain strings or booleans; templates produce HTML markup.
+- **No business logic in Parts.** Predicates based on simple attribute values are fine; authorization rules and domain decisions belong in interactors or service objects.
 
 ---
 
@@ -162,16 +151,3 @@ Use this skill when creating View Parts for decorator-style logic in Hanami 2.x.
 | **create-view** | Parts are used within Views. Master View structure first. |
 | **create-action** | Actions pass data to Views, which wrap them in Parts. |
 | **define-entity** | Parts often wrap Entity objects returned by Repositories. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (View Part) |
-|---|---|
-| `UserDecorator` (Draper gem) | `MyApp::Views::Parts::User` |
-| `user.decorate.name` | `user_part.display_name` |
-| `helper_method :formatted_date` | Part method `def formatted_date; ...; end` |
-| `app/decorators/user_decorator.rb` | `app/views/parts/user.rb` |
-| `delegate :name, to: :object` | `delegate :name, to: :value` |
-| Decorator with HTML helpers | Part returns strings; template generates HTML |

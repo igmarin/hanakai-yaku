@@ -3,8 +3,12 @@ name: create-slice
 version: "1.0.0"
 license: MIT
 description: >
-  Use when creating and configuring Slices in Hanami 2.x. Covers slice registration,
-  routes, inter-slice communication, and the slice as a modular sub-container.
+  Use when creating and configuring Slices in Hanami 2.x, including running `hanami generate slice`,
+  registering slices as modular sub-containers, configuring slice routes, setting up inter-slice
+  dependencies with import/export, and structuring a modular architecture with bounded contexts.
+  Covers slice directory generation, route configuration, cross-slice dependency management,
+  and slice-level container access. Use when building a sub-application, isolating a bounded
+  context, or wiring slice dependencies in a Hanami 2.x project.
 ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
@@ -18,8 +22,6 @@ tags:
 # create-slice
 
 Use this skill when creating and configuring Hanami 2.x Slices.
-
-**Core principle:** A Slice is a modular sub-container that encapsulates a bounded context. It has its own routes, actions, views, and dependencies.
 
 ---
 
@@ -46,14 +48,9 @@ Use this skill when creating and configuring Hanami 2.x Slices.
    hanami generate slice api
    ```
 
-   Creates:
-   - `slices/api/`
-   - `slices/api/config/routes.rb`
-   - `slices/api/actions/`
-   - `slices/api/views/`
-   - `slices/api/templates/`
-   - `slices/api/relations/` (optional)
-   - `slices/api/repos/` (optional)
+   Creates `slices/api/` with subdirectories including `config/routes.rb`, `actions/`, `views/`, and `templates/`.
+
+   **Verify:** Run `hanami routes` and confirm the new slice's routes appear in the output.
 
 2. **Register the Slice** in the app:
 
@@ -88,6 +85,8 @@ Use this skill when creating and configuring Hanami 2.x Slices.
    end
    ```
 
+   **Verify:** Run `hanami routes` and confirm `/api/users` and `/api/users/:id` are listed.
+
 4. **Access Slice Actions** from routes:
 
    ```ruby
@@ -109,6 +108,8 @@ Use this skill when creating and configuring Hanami 2.x Slices.
    end
    ```
 
+   **Verify:** Boot the app (`hanami console`) and resolve the imported component: `MyApp::Slices::Api::Container["main.repositories.users"]`.
+
 6. **Export Slice components** for use by other slices:
 
    ```ruby
@@ -124,38 +125,19 @@ Use this skill when creating and configuring Hanami 2.x Slices.
    end
    ```
 
+   **Verify:** In `hanami console`, confirm the consuming slice can resolve the exported key.
+
 7. **Keep Slices self-contained**. A Slice should be able to function independently. Minimize cross-slice dependencies.
 
-8. **Use Slices for bounded contexts**:
-
-   - `slice :api` — Public API endpoints
-   - `slice :admin` — Admin dashboard
-   - `slice :billing` — Billing and payments
-   - `slice :main` — Default/public web application
+8. **Use Slices for bounded contexts** — common examples include `slice :api` for public endpoints, `slice :admin` for dashboards, `slice :billing` for payments, and `slice :main` for the default web application.
 
 ---
 
 ## Common Mistakes
 
-| Mistake | Reality |
-|---|---|
-| "I'll put everything in the main slice" | Slices exist to modularize. Extract bounded contexts into dedicated slices. |
-| "I'll create circular dependencies between slices" | Slices should be acyclic. If Slice A imports from Slice B, Slice B should not import from Slice A. |
-| "I'll access another slice's container directly" | Use `import` and `export` for cross-slice communication. Never access `Hanami.app["slices.other.component"]` directly. |
-| "I'll forget to namespace Slice components correctly" | Slice components live under `MyApp::Slices::Api::`. File paths and namespaces must align. |
-| "I'll duplicate routes between slices" | Each slice has its own routes. The app mounts slices at prefixes. Do not duplicate route logic. |
-| "I'll share database tables across slices without clear ownership" | Each slice should own its tables. Shared tables create coupling. Use imports/exports for shared data access. |
-
----
-
-## Red Flags
-
-- Everything in the main slice with no modularization
-- Circular dependencies between slices
-- Direct cross-slice container access
-- Misaligned file paths and namespaces
-- Duplicate route definitions
-- Shared database tables without clear ownership
+- **Circular slice dependencies**: Slices should be acyclic. If Slice A imports from Slice B, Slice B must not import from Slice A.
+- **Direct container access across slices**: Use `import`/`export` for cross-slice communication. Never access `Hanami.app["slices.other.component"]` directly.
+- **Misaligned namespaces**: Slice components live under `MyApp::Slices::Api::`. File paths and module namespaces must align.
 
 ---
 
@@ -167,17 +149,3 @@ Use this skill when creating and configuring Hanami 2.x Slices.
 | **inject-dependencies** | Cross-slice dependencies use `import`/`export` and are injected via `Deps`. |
 | **configure-slice** | Configure slice-level settings and providers after creating the slice. |
 | **create-new-slice** (workflow) | Full workflow for creating and configuring a new slice. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Slice) |
-|---|---|
-| `namespace :api do ... end` in routes | `slice :api, at: "/api" do ... end` |
-| `engines` | Slices are similar but lighter-weight. No separate gem required. |
-| `isolate_namespace MyEngine` | Slices are naturally namespaced under `MyApp::Slices::Name` |
-| `main_app.root_path` | `routes.path(:root)` or slice-specific route helpers |
-| `EngineName::Engine.routes` | `MyApp::Slices::Api::Routes` |
-| Mount engine at path | `slice :api, at: "/api"` |
-| Cross-engine dependencies | `import` and `export` between slices |

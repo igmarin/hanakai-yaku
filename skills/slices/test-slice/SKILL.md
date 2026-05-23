@@ -43,6 +43,11 @@ DO NOT load another slice in a slice's isolated test. Mock cross-slice calls.
      end
    end
    ```
+   **Validation checkpoint:** confirm the slice loads before writing specs:
+   ```bash
+   bundle exec rspec spec/slices/api/ --dry-run
+   # Expect: 0 errors, all examples collected. Fix any boot errors before proceeding.
+   ```
 2. **Action specs** — test the HTTP boundary. Stub injected operations:
    ```ruby
    RSpec.describe Api::Actions::Users::Create, :slice do
@@ -50,20 +55,50 @@ DO NOT load another slice in a slice's isolated test. Mock cross-slice calls.
      let(:action) { described_class.new(create_user:) }
    end
    ```
-3. **Operation specs** — test business logic with stubbed repositories and services.
-4. **Repository specs** — test query methods against a test database. No stubs needed.
-5. **Integration specs** — test a full slice workflow (action → operation → repository) within the slice's boundary.
-6. **Cross-slice testing** — test interactions between slices through their public API only:
+3. **Operation specs** — test business logic with stubbed repositories and services:
+   ```ruby
+   RSpec.describe Api::Operations::Users::Create, :slice do
+     let(:repo) { instance_double(Api::Repositories::UserRepo) }
+     subject(:operation) { described_class.new(user_repo: repo) }
+
+     it "creates a user and returns a success result" do
+       allow(repo).to receive(:create).and_return(double(id: 42, email: "a@example.com"))
+       result = operation.call(email: "a@example.com", name: "Alice")
+       expect(result).to be_success
+     end
+   end
+   ```
+4. **Repository specs** — test query methods against a test database. No stubs needed. Requires a running test DB and `DatabaseCleaner` (or equivalent) configured in `spec/support/database.rb`:
+   ```ruby
+   RSpec.describe Api::Repositories::UserRepo, :slice, :db do
+     subject(:repo) { described_class.new }
+
+     it "finds a user by email" do
+       repo.create(email: "b@example.com", name: "Bob")
+       user = repo.find_by_email("b@example.com")
+       expect(user.email).to eq("b@example.com")
+     end
+   end
+   ```
+5. **Integration specs** — test a full slice workflow (action → operation → repository) within the slice's boundary. Boot only the target slice, use real collaborators inside it, and assert on the HTTP response or returned result:
+   ```ruby
+   RSpec.describe "Api users flow", :slice, :db do
+     it "creates and retrieves a user" do
+       result = Api::Actions::Users::Create.new.call(params: { email: "c@example.com", name: "Carol" })
+       expect(result[:status]).to eq(201)
+     end
+   end
+   ```
+6. **Cross-slice testing** — test interactions between slices through their public API only. When a slice boundary must be exercised, stub the public interface or use a shared test helper rather than instantiating the other slice's internals:
    ```ruby
    # Never: Api::Repositories::UserRepo.new.find(id) from another slice
-   # Prefer: stubbing the public action or using a shared test helper
+   # Prefer: stub the public action
+   let(:users_api) { instance_double(Api::Actions::Users::Show) }
+   before { allow(users_api).to receive(:call).and_return({ status: 200, user: { id: 1 } }) }
+
+   # Or: extract shared test helpers to spec/support/slices/api_helpers.rb
+   # and include them in both slices' specs.
    ```
-
-## Extended Resources (Progressive Disclosure)
-
-Load these files only when needed:
-
-- **[SLICE_TEST_PATTERNS.md](./SLICE_TEST_PATTERNS.md)** — Test isolation setup, database strategies, cross-slice mocking patterns.
 
 ## Output Style
 

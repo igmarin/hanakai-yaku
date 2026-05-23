@@ -3,8 +3,11 @@ name: configure-slice
 version: "1.0.0"
 license: MIT
 description: >
-  Use when configuring Hanami 2.x Slices. Covers slice-level settings, providers,
-  container configuration, and custom slice behavior.
+  Creates and configures Hanami 2.x Slices by registering providers, setting up container
+  dependencies, customizing auto-registration paths, and managing slice-level settings.
+  Use when configuring slice setup, modular app structure, Hanami component registration,
+  dependency injection, provider registration, container imports/exports, or autoloading
+  for a Hanami 2.x Slice.
 ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
@@ -123,6 +126,19 @@ Use this skill when configuring Hanami 2.x Slices.
 
 8. **Keep configuration minimal**. Only override defaults when necessary. Prefer convention over configuration.
 
+9. **Verify configuration after changes**. Run `bundle exec hanami console` and confirm components resolve correctly:
+
+   ```ruby
+   # Verify settings are loaded
+   MyApp::Slices::Api::Slice[:settings].api_key  # => expected value
+
+   # Verify a registered provider component is available
+   MyApp::Slices::Api::Slice["api.client"]  # => #<ApiClient ...>
+
+   # Verify an imported component resolves
+   MyApp::Slices::Api::Slice["repositories.users"]  # => #<Repositories::Users ...>
+   ```
+
 ---
 
 ## Common Mistakes
@@ -130,23 +146,9 @@ Use this skill when configuring Hanami 2.x Slices.
 | Mistake | Reality |
 |---|---|
 | "I'll duplicate main app configuration in every slice" | Slices inherit main app configuration. Only override when the slice genuinely needs different behavior. |
-| "I'll define all providers in the main app" | Slice-specific providers (e.g., API client) should live in the slice configuration. |
-| "I'll forget to export components other slices depend on" | If Slice B imports from Slice A, Slice A must `export` those components. |
+| "I'll forget to export components other slices depend on" | If Slice B imports from Slice A, Slice A must `export` those components. Verify with `Slice["component.key"]` in the console. |
 | "I'll use `ENV` directly instead of slice settings" | Use `config.settings` for typed, validated configuration. Access via `target[:settings]`. |
 | "I'll configure auto-registration to include ROM-managed directories" | Never auto-register `relations/`, `structs/`, or `entities/`. ROM manages these. |
-| "I'll create tight coupling by importing everything from another slice" | Import only what you need. Explicit imports make dependencies visible. |
-
----
-
-## Red Flags
-
-- Duplicated configuration across slices
-- All providers defined in the main app
-- Missing exports for imported components
-- Direct `ENV` access instead of settings
-- ROM-managed directories in auto-registration
-- Overly broad imports (`import from: :all`)
-- Slice configuration that violates bounded context boundaries
 
 ---
 
@@ -159,16 +161,3 @@ Use this skill when configuring Hanami 2.x Slices.
 | **manage-settings** | Slice-level settings are defined in the Slice class. |
 | **inject-dependencies** | Configured components are injected via `Deps[]`. |
 | **create-new-slice** (workflow) | Full workflow includes configuration step. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Slice Configuration) |
-|---|---|
-| `config/initializers` (app-wide) | `config/app.rb` (main app) + `slices/<name>/config/slice.rb` (per slice) |
-| `MyEngine::Engine.config` | `MyApp::Slices::Api::Slice.config` |
-| `isolate_namespace` | Natural namespace under `MyApp::Slices::Name` |
-| Engine-specific settings | `config.settings` in Slice class |
-| `config.autoload_paths` | `config.auto_register_paths` in Slice class |
-| Engine-specific database | `config.database_url` in Slice class |

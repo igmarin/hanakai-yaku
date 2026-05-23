@@ -56,15 +56,35 @@ DO NOT put validation logic in actions. Contracts are the single source of valid
      result.success? ? Success(result.to_h) : Failure(result.errors.to_h)
    end
    ```
-3. **Custom predicates** — for reusable validation rules across contracts.
-4. **Compose contracts** — inherit or include shared contract modules for common fields (e.g., pagination params).
-5. **Test the contract** — verify valid and invalid inputs independently from the operation.
+3. **Custom predicates and composed contracts** — for reusable validation rules and shared fields (e.g., pagination params). If a `CONTRACT_PATTERNS.md` companion file is present in the bundle, consult it for executable examples of custom predicates, composed contracts, i18n error messages, and nested schemas.
+4. **Test the contract** — verify valid and invalid inputs independently from the operation:
+   ```ruby
+   RSpec.describe Users::CreateContract do
+     subject(:contract) { described_class.new }
 
-## Extended Resources (Progressive Disclosure)
+     context "with valid input" do
+       it "succeeds" do
+         result = contract.call(email: "user@example.com", name: "Alice")
+         expect(result).to be_success
+         expect(result.to_h).to include(email: "user@example.com", name: "Alice")
+       end
+     end
 
-Load these files only when needed:
+     context "with invalid input" do
+       it "fails with email error" do
+         result = contract.call(email: "not-an-email", name: "Alice")
+         expect(result).to be_failure
+         expect(result.errors[:email]).to include("must be a valid email")
+       end
 
-- **[CONTRACT_PATTERNS.md](./CONTRACT_PATTERNS.md)** — Custom predicates, composed contracts, i18n error messages, nested schemas.
+       it "fails when name is too short" do
+         result = contract.call(email: "user@example.com", name: "A")
+         expect(result).to be_failure
+         expect(result.errors[:name]).to be_present
+       end
+     end
+   end
+   ```
 
 ## Output Style
 

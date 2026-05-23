@@ -35,21 +35,50 @@ DO leave the original module empty after extraction — remove dead code.
    - Files that share a namespace (e.g., `App::Payments::*`).
    - Operations, repositories, and actions that serve a single domain.
    - Code that only references itself (no cross-domain coupling).
-2. **Characterize behavior** — ensure all existing functionality is tested. If not, write characterization tests first.
+2. **Characterize behavior** — ensure all existing functionality is tested. If not, write characterization tests first. Capture a baseline:
+   ```sh
+   bundle exec rspec
+   ```
 3. **Create the target slice** — use `create-slice` to scaffold the new slice structure.
-4. **Move files** — relocate from `app/` or `slices/app/` to `slices/<new_slice>/`:
+4. **Move files** — relocate from `app/` or `slices/app/` to `slices/<new_slice>/` using `git mv` to preserve history:
+   ```sh
+   git mv app/actions/payments/ slices/payments/actions/
+   git mv app/operations/payments/ slices/payments/operations/
+   git mv app/repositories/payments/ slices/payments/repositories/
+   ```
+   Directory mapping:
    - Actions → `slices/<slice>/actions/`
    - Operations → `slices/<slice>/operations/`
    - Repositories → `slices/<slice>/repositories/`
    - Relations → `slices/<slice>/relations/`
    - Views → `slices/<slice>/views/`
-5. **Update namespaces** — change module nesting to the new slice namespace.
+5. **Update namespaces** — change module nesting to the new slice namespace. Example:
+   ```ruby
+   # Before
+   module App
+     module Payments
+       class CreateOrder < App::Operation
+         # ...
+       end
+     end
+   end
+
+   # After
+   module Payments
+     class CreateOrder < Payments::Operation
+       # ...
+     end
+   end
+   ```
 6. **Update imports** — any remaining code referencing the old namespace must be updated. Check:
    - `include Deps[...]` keys
    - `require` statements
    - Route definitions
    - Provider registrations
-7. **Verify** — run the full test suite. Every test that passed before must pass after.
+7. **Verify** — run the full test suite. Every test that passed before must pass after:
+   ```sh
+   bundle exec rspec
+   ```
 8. **Remove old code** — clean up the original module. Remove empty directories.
 
 ## Extended Resources (Progressive Disclosure)

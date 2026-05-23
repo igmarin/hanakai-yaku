@@ -19,8 +19,6 @@ tags:
 
 Use this skill when writing RSpec request specs for Hanami 2.x Actions.
 
-**Core principle:** Request specs test the full HTTP cycle. They give the highest confidence that endpoints work correctly.
-
 ---
 
 ## Quick Reference
@@ -49,6 +47,19 @@ IF the test fails for a setup reason, diagnose and fix the setup before proceedi
 
 ---
 
+## Workflow
+
+Follow this sequence when writing a request spec:
+
+1. **Create the spec file** under `spec/requests/` with the correct describe block.
+2. **Write a failing test** for the target HTTP behavior (status, body shape, headers).
+3. **Run the test and verify it fails for the right reason** — a setup failure (missing route, missing factory) must be fixed before proceeding; a logic failure is expected.
+4. **Implement the Action** (or the missing layer) to make the test pass.
+5. **Run the test again and verify it passes** — confirm no other specs broke.
+6. **Add error-case specs** (404, 422, etc.) and repeat steps 3–5 for each.
+
+---
+
 ## Core Rules
 
 1. **Structure the spec file** under `spec/requests/`:
@@ -62,28 +73,7 @@ IF the test fails for a setup reason, diagnose and fix the setup before proceedi
    end
    ```
 
-2. **Use Rack::Test helpers** to make requests:
-
-   ```ruby
-   it "returns a list of users" do
-     get "/users"
-
-     expect(last_response).to be_successful
-     expect(json_body[:users].length).to eq(3)
-   end
-   ```
-
-3. **Assert on status codes**:
-
-   ```ruby
-   expect(last_response).to be_successful           # 200-299
-   expect(last_response.status).to eq(200)
-   expect(last_response.status).to eq(201)
-   expect(last_response.status).to eq(404)
-   expect(last_response.status).to eq(422)
-   ```
-
-4. **Assert on JSON shape** for API endpoints:
+2. **Assert on JSON shape** for API endpoints — use `include` for key presence and type checks:
 
    ```ruby
    it "returns user JSON" do
@@ -96,7 +86,7 @@ IF the test fails for a setup reason, diagnose and fix the setup before proceedi
    end
    ```
 
-5. **Send JSON request bodies**:
+3. **Send JSON request bodies** — serialize with `.to_json` and set `CONTENT_TYPE`:
 
    ```ruby
    it "creates a user" do
@@ -109,15 +99,7 @@ IF the test fails for a setup reason, diagnose and fix the setup before proceedi
    end
    ```
 
-6. **Set request headers**:
-
-   ```ruby
-   header "Authorization", "Bearer #{token}"
-   header "Accept", "application/json"
-   get "/users"
-   ```
-
-7. **Test error responses**:
+4. **Test error responses** — cover both 404 and 422 cases:
 
    ```ruby
    it "returns 404 for missing user" do
@@ -135,7 +117,7 @@ IF the test fails for a setup reason, diagnose and fix the setup before proceedi
    end
    ```
 
-8. **Isolate database state** with transactions:
+5. **Isolate database state** with transactions:
 
    ```ruby
    around do |example|
@@ -150,31 +132,6 @@ IF the test fails for a setup reason, diagnose and fix the setup before proceedi
 
 ---
 
-## Common Mistakes
-
-| Mistake | Reality |
-|---|---|
-| "I'll test only the happy path" | Test error cases (400, 404, 422) as thoroughly as success cases. |
-| "I'll share database state across request specs" | Each spec should be independent. Use transactions to rollback after each test. |
-| "I'll assert on exact JSON strings" | Assert on shape and types, not exact serialization. `"2024-01-01T00:00:00Z"` vs `iso8601`. |
-| "I'll skip setup because it's repetitive" | Extract setup into `let` or `before`, but do not skip it. Each test needs valid data. |
-| "I'll make requests without setting `CONTENT_TYPE` for JSON" | Always set `"CONTENT_TYPE" => "application/json"` when sending JSON bodies. |
-| "I'll test private methods or internal state" | Request specs test HTTP behavior only. Do not assert on internal implementation. |
-
----
-
-## Red Flags
-
-- Only testing happy paths
-- Shared database state between specs
-- Exact JSON string assertions
-- Missing `CONTENT_TYPE` header for JSON requests
-- Testing internal state or private methods
-- No error case coverage
-- Tests that pass when the endpoint is broken
-
----
-
 ## Integration
 
 | Related Skill | When to chain |
@@ -184,17 +141,3 @@ IF the test fails for a setup reason, diagnose and fix the setup before proceedi
 | **create-repository** | Request specs exercise the full stack including Repositories. |
 | **plan-tests** | Decide when request specs are appropriate vs unit specs. |
 | **tdd-loop** | Follow the TDD workflow: write failing request spec → implement → verify pass. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Request Specs) |
-|---|---|
-| `spec/requests/users_spec.rb` | `spec/requests/users_spec.rb` (same path) |
-| `get users_path` | `get "/users"` |
-| `expect(response).to have_http_status(:ok)` | `expect(last_response).to be_successful` |
-| `JSON.parse(response.body)` | `json_body` helper (or `JSON.parse(last_response.body)`) |
-| `post users_path, params: { user: {...} }` | `post "/users", { user: {...} }.to_json, { "CONTENT_TYPE" => "application/json" }` |
-| `sign_in user` | Set auth header: `header "Authorization", "Bearer #{token}"` |
-| `FactoryBot.create(:user)` | Use ROM factories or in-memory setup |

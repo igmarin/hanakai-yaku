@@ -46,12 +46,44 @@ EVERY finding MUST cite the specific file and line as evidence.
    - **Note** — Observation. Minor inconsistency, future consideration.
 4. **Produce** — findings table with severity, evidence, and recommendation.
 
+## Violation Example
+
+A direct import of another slice's internal repository is a **Critical** violation:
+
+```ruby
+# slices/main/actions/users/export.rb  ← inside the `main` slice
+require 'slices/admin/repositories/user_repo'  # ❌ crosses slice boundary
+
+module Main
+  module Actions
+    module Users
+      class Export < Main::Action
+        def handle(request, response)
+          repo = Admin::Repositories::UserRepo.new  # ❌ direct internal coupling
+          # ...
+        end
+      end
+    end
+  end
+end
+```
+
+The correct approach is to expose data through a public action or shared kernel, not by importing an internal repository directly.
+
 ## Output Style
 
 1. **Slice map** — `| Slice | Actions (public API) | Internal modules |`
-2. **Findings table** — `| # | Severity | Slice A | Slice B | File | Finding | Recommendation |`
+2. **Findings table** — `| # | Severity | Slice A | Slice B | File | Line | Finding | Recommendation |`
 3. **Summary** — count by severity, overall boundary health assessment.
 4. **English only** unless user requests otherwise.
+
+### Example Findings Table
+
+| # | Severity | Slice A | Slice B | File | Line | Finding | Recommendation |
+|---|----------|---------|---------|------|------|---------|----------------|
+| 1 | Critical | `main` | `admin` | `slices/main/actions/users/export.rb` | 2 | Direct `require` of `admin` slice repository `slices/admin/repositories/user_repo` | Expose data via a public `admin` action or move shared logic to a shared kernel |
+| 2 | Suggestion | `billing` | `main` | `slices/billing/operations/charge.rb` | 14 | Duplicates `main`'s `EmailValidator` logic inline | Extract `EmailValidator` to `lib/` shared kernel and require from both slices |
+| 3 | Note | `reporting` | — | `slices/reporting/providers/db_provider.rb` | 8 | Registers a global `:db` key that shadows the app-level provider | Consider scoping the key to `reporting.db` to avoid potential conflicts |
 
 ## Integration
 

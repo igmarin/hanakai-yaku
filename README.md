@@ -22,6 +22,7 @@ That TDD gate is encoded directly into the skills and agents.
 > [![Windsurf](https://img.shields.io/badge/Windsurf-0B100F?logo=windsurf&logoColor=fff)](#)
 
 > [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+> ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/igmarin/hanakai-yaku?utm_source=oss&utm_medium=github&utm_campaign=igmarin%2Fhanakai-yaku&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 ## Who This Is For
 

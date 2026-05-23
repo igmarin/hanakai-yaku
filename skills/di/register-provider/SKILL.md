@@ -3,8 +3,10 @@ name: register-provider
 version: "1.0.0"
 license: MIT
 description: >
-  Use when registering external dependencies in Hanami 2.x. Covers provider
-  registration in config/providers/, database, mailer, cache, and third-party services.
+  Use when registering external dependencies in Hanami 2.x. Creates provider
+  files in config/providers/, configures dependency injection containers, sets
+  up boot sequences with prepare/start lifecycle hooks, and integrates database,
+  mailer, cache, and third-party services into the DI container.
 ecosystem_sources:
   - dry-rb/dry-system
   - hanami/hanami
@@ -48,6 +50,8 @@ Use this skill when registering external dependencies (database, mailer, cache, 
    This creates `config/providers/mailer.rb`.
 
 2. **Implement the provider** with `prepare` and `start` hooks:
+
+   > ⚠️ Use `prepare` for requiring libraries only. Use `start` for initialization. Putting everything in `start` slows boot.
 
    ```ruby
    # config/providers/mailer.rb
@@ -109,6 +113,8 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 
 5. **Register third-party API clients** as providers:
 
+   > ⚠️ Never access `ENV` directly in providers. Use `target[:settings]` — settings are typed and validated.
+
    ```ruby
    # config/providers/stripe.rb
    # frozen_string_literal: true
@@ -140,30 +146,23 @@ Use this skill when registering external dependencies (database, mailer, cache, 
    welcome = MyApp::Mailers::Welcome.new(mailer__client: stub_mailer)
    ```
 
----
+9. **Verify a provider is correctly registered** using the Hanami console or a smoke test:
 
-## Common Mistakes
+   > ⚠️ Rescue and log errors in `start`. A failed provider should not crash the app boot.
 
-| Mistake | Reality |
-|---|---|
-| "I'll initialize external clients directly in Actions" | Always register external services as providers. Direct initialization is untestable and scatters configuration. |
-| "I'll create one provider for all external services" | One provider per external service. Monolithic providers are hard to test and reason about. |
-| "I'll access `ENV` directly in the provider" | Use `target[:settings]` for configuration. Settings are typed and validated. |
-| "I'll skip the `prepare` hook and put everything in `start`" | Use `prepare` for requiring libraries. Use `start` for initialization. This keeps boot fast. |
-| "I'll forget to handle initialization errors in the provider" | Rescue and log errors in `start`. A failed provider should not crash the app boot. |
-| "I'll register components with inconsistent naming" | Use `register("provider_name.component_name", instance)` consistently. Match the key to the file path convention. |
+   ```ruby
+   # In `hanami console`
+   Hanami.app["mailer.client"]   # => returns the registered instance
+   Hanami.app["stripe.client"]   # => returns Stripe
+   ```
 
----
+   For a lightweight smoke test in specs:
 
-## Red Flags
-
-- External clients initialized in Actions or Views
-- Monolithic providers handling multiple unrelated services
-- Direct `ENV` access in providers
-- Missing `prepare` / `start` separation
-- Unhandled initialization errors that crash boot
-- Inconsistent naming of registered components
-- Providers that contain business logic
+   ```ruby
+   it "registers the mailer client" do
+     expect(Hanami.app["mailer.client"]).to be_a(Mail::Message)
+   end
+   ```
 
 ---
 
@@ -176,15 +175,3 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 | **create-action** | Actions inject provided services via `Deps[]`. |
 | **create-repository** | The database provider registers ROM, which Repositories depend on. |
 | **integrate-api-client** | Complex API clients may need a dedicated skill for auth/patterns. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Providers) |
-|---|---|
-| `config/initializers/mailer.rb` | `config/providers/mailer.rb` with `prepare` and `start` hooks |
-| `Rails.application.config.action_mailer.*` | `target[:settings]` accessed in provider `start` block |
-| `Stripe.api_key = ENV['STRIPE_KEY']` | Provider `start` block with `target[:settings].stripe_secret_key` |
-| `config/initializers/*.rb` (eager load) | `prepare` hook (require libraries) + `start` hook (initialize lazily) |
-| `Rails.cache` | Register a cache provider, inject via `Deps["cache.client"]` |
