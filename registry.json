@@ -1,9 +1,0 @@
-{
-  "name": "hanaka-yaku-mcp",
-  "display_name": "Hanakai Yaku Skills",
-  "description": "MCP server for Hanakai Yaku 2.x development skills",
-  "repository": "https://github.com/igmarin/hanakai-yaku",
-  "server_path": "mcp_server/server.rb",
-  "gemfile_path": "mcp_server/Gemfile",
-  "transport": "stdio"
-}
