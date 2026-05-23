@@ -33,6 +33,8 @@ DO NOT put validation logic in actions. Contracts are the single source of valid
 
 ## Core Process
 
+> **Pattern reference:** See [CONTRACT_PATTERNS.md](./CONTRACT_PATTERNS.md) for examples of custom predicates, nested schemas, composed contracts, and testing patterns.
+
 1. **Define the contract** — declare expected fields, types, and rules:
    ```ruby
    module Users

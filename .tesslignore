@@ -9,3 +9,7 @@ tessl-evals/
 
 # Local scratch / config
 tmp/
+docs/hanami-rails-mapping.md
+docs/skill-quality-guide.md
+docs/using-skills-guide.md
+docs/workflows/workflow-guide.md

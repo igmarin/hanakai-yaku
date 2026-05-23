@@ -32,6 +32,8 @@ DO NOT load another slice in a slice's isolated test. Mock cross-slice calls.
 
 ## Core Process
 
+> **Pattern reference:** See [SLICE_TEST_PATTERNS.md](./SLICE_TEST_PATTERNS.md) for slice-isolated test helpers, database strategies, action/operation/integration spec patterns, and cross-slice mocking.
+
 1. **Slice test setup** — configure RSpec to load only the target slice:
    ```ruby
    # spec/slices/api/slice_helper.rb

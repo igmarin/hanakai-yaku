@@ -138,5 +138,3 @@ Use this skill when running Hanami 2.x development commands.
 |---|---|
 | [**create-app**](../create-app/SKILL.md) | Development commands are used after creating the app. |
 | [**manage-database**](../manage-database/SKILL.md) | Database commands may be needed before starting the dev server. |
-| [**define-relation**](../define-relation/SKILL.md) | Use the console to explore and test Relation queries. |
-| [**create-repository**](../create-repository/SKILL.md) | Use the console to test Repository methods interactively. |

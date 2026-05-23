@@ -23,6 +23,8 @@ Load the minimum context needed to work safely in a Hanami codebase. Discover st
 
 ## Core Process
 
+> **Pattern reference:** See [PATTERNS.md](./PATTERNS.md) for guidance on sampling established patterns from actions, operations, and repositories.
+
 1. **Slice inventory** — list every slice in `slices/`. Note each slice's actions, repositories, relations, operations, and views.
    ```bash
    find slices/ -mindepth 1 -maxdepth 1 -type d
