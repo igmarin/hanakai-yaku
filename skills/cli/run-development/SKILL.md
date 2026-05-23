@@ -1,6 +1,5 @@
 ---
 name: run-development
-version: "1.0.0"
 license: MIT
 description: >
   Use when running Hanami 2.x development commands. Covers hanami dev
@@ -9,13 +8,15 @@ description: >
   registered components, querying relations, and testing repository methods),
   hanami routes (listing all routes), and hanami middleware (inspecting the
   middleware stack).
-ecosystem_sources:
-  - hanami/hanami-cli
-tags:
-  - cli
-  - development
-  - server
-  - console
+metadata:
+  version: "1.0.0"
+  ecosystem_sources:
+    - hanami/hanami-cli
+  tags:
+    - cli
+    - development
+    - server
+    - console
 ---
 
 # run-development
@@ -44,11 +45,6 @@ Use this skill when running Hanami 2.x development commands.
    hanami dev
    ```
 
-   Expected behavior:
-   - Server starts on `http://localhost:2300`
-   - Code reloading is enabled (changes take effect without restart)
-   - Shows detailed error pages for exceptions
-
    **Verify:** Once started, confirm the server is responding:
 
    ```bash
@@ -56,6 +52,10 @@ Use this skill when running Hanami 2.x development commands.
    ```
 
    A valid HTTP response (even a 404 or 200) confirms the server is running.
+
+   **Error recovery:**
+   - Port already in use: `lsof -ti:2300 | xargs kill -9` or change port in `config/app.rb`
+   - Server fails to start: Check `config/app.rb` and `config/routes.rb` for syntax errors
 
 2. **Start the console**:
 
@@ -71,9 +71,7 @@ Use this skill when running Hanami 2.x development commands.
    hanami console
    ```
 
-   Expected behavior:
-   - IRB or Pry starts with the Hanami container loaded
-   - Access components directly:
+   Access components directly:
 
    ```ruby
    app = Hanami.app
@@ -81,6 +79,10 @@ Use this skill when running Hanami 2.x development commands.
    users = rom.relations[:users]
    users.insert(email: "test@example.com")
    ```
+
+   **Error recovery:**
+   - Database connection refused: Verify `DATABASE_URL` is set and database server is running
+   - Boot errors: Check `config/providers/` for missing dependencies or configuration issues
 
 3. **Use the console for exploration**:
 
@@ -112,15 +114,11 @@ Use this skill when running Hanami 2.x development commands.
    hanami routes
    ```
 
-   Expected output: Table of HTTP methods, paths, and Action names.
-
 7. **List middleware**:
 
    ```bash
    hanami middleware
    ```
-
-   Expected output: Ordered list of middleware in the stack.
 
 ---
 

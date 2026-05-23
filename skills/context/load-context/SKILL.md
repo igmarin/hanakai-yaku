@@ -36,12 +36,14 @@ Load the minimum context needed to work safely in a Hanami codebase. Discover st
    ```bash
    cat config/providers/*.rb
    ```
+   > **Security checkpoint:** Redact all secrets (passwords, API keys, tokens, secret keys) when summarizing provider configuration. Replace with `[REDACTED]` or `*****`.
    > **Checkpoint:** If no provider files are found, note this explicitly in your output — DI and ROM steps may need to rely on inline configuration instead.
 
 3. **Settings** — read `config/settings.rb` (or `config/settings/`). Note environment-specific values, type constraints, and configured services.
    ```bash
    cat config/settings.rb 2>/dev/null || cat config/settings/*.rb
    ```
+   > **Security checkpoint:** Redact all secrets (passwords, API keys, tokens, secret keys) when summarizing settings. Replace with `[REDACTED]` or `*****`.
 
 4. **Routes** — read `config/routes.rb`. Map the URL space to slices and actions.
    ```bash
@@ -88,7 +90,7 @@ Before proceeding to any implementation work, confirm that all seven output sect
 
 1. **Slice map** — `| Slice | Actions | Repositories | Operations | Views |`
 2. **Provider map** — `| Provider | Source | Registered components |`
-3. **Settings summary** — key settings values with types.
+3. **Settings summary** — key settings values with types. **Redact all secrets** (passwords, API keys, tokens, secret keys) and replace with `[REDACTED]`.
 4. **Route summary** — top-level routes grouped by slice.
 5. **Test infrastructure** — framework, spec helper location, slice test isolation.
 6. **DI conventions** — auto_inject usage, Deps include style.

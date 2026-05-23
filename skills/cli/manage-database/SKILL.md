@@ -1,18 +1,19 @@
 ---
 name: manage-database
-version: "1.0.0"
 license: MIT
 description: >
   Use when running Hanami 2.x database CLI commands. Covers hanami db create,
   migrate, rollback, seed with preconditions and expected outcomes.
-ecosystem_sources:
-  - hanami/hanami-cli
-  - jeremyevans/sequel
-tags:
-  - cli
-  - database
-  - migrations
-  - sequel
+metadata:
+  version: "1.0.0"
+  ecosystem_sources:
+    - hanami/hanami-cli
+    - jeremyevans/sequel
+  tags:
+    - cli
+    - database
+    - migrations
+    - sequel
 ---
 
 # manage-database
@@ -27,13 +28,13 @@ Use this skill when running Hanami 2.x database CLI commands.
 
 | Command | Purpose | Preconditions | Validate |
 |---|---|---|---|
-| `hanami db create` | Create the database | `DATABASE_URL` must be set | — |
-| `hanami db drop` | Drop the database | ⚠️ Destructive — see below | — |
+| `hanami db create` | Create the database | `DATABASE_URL` must be set | - |
+| `hanami db drop` | Drop the database | ⚠️ Destructive - see below | - |
 | `hanami db migrate` | Run pending migrations | Database must exist | `hanami db version` |
 | `hanami db rollback` | Roll back the last migration | Database must exist; migration must be reversible | `hanami db version` |
-| `hanami db seed` | Run seed data | Database must exist; migrations must be current | — |
-| `hanami db prepare` | Create + migrate + seed (development) | `DATABASE_URL` must be set | — |
-| `hanami db version` | Show current migration version | Database must exist | — |
+| `hanami db seed` | Run seed data | Database must exist; migrations must be current | - |
+| `hanami db prepare` | Create + migrate + seed (development) | `DATABASE_URL` must be set | - |
+| `hanami db version` | Show current migration version | Database must exist | - |
 
 ### Usage examples
 
@@ -42,13 +43,13 @@ Use this skill when running Hanami 2.x database CLI commands.
 DATABASE_URL=postgres://localhost/my_app_development hanami db create
 ```
 
-**Run migrations** (validate with `hanami db version` — prints timestamp of last applied migration):
+**Run migrations** (validate with `hanami db version` - prints timestamp of last applied migration):
 ```bash
 hanami db migrate
 hanami db version
 ```
 
-**Roll back the last migration** (only works if migration is reversible — `change` block, or explicit `up`/`down`; `drop_column`/`rename_column` require explicit `up`/`down`):
+**Roll back the last migration** (only works if migration is reversible - `change` block, or explicit `up`/`down`; `drop_column`/`rename_column` require explicit `up`/`down`):
 ```bash
 hanami db rollback
 hanami db version  # Should print the previous migration's timestamp
@@ -83,7 +84,7 @@ hanami db prepare
 Safe drop procedure:
 
 ```bash
-echo $HANAMI_ENV   # Must output "development" or "test" — never "production"
+echo $HANAMI_ENV   # Must output "development" or "test" - never "production"
 hanami db drop     # Only proceed if environment is confirmed
 ```
 

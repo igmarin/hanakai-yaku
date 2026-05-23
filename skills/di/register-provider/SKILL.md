@@ -1,20 +1,21 @@
 ---
 name: register-provider
-version: "1.0.0"
 license: MIT
 description: >
   Use when registering external dependencies in Hanami 2.x. Creates provider
   files in config/providers/, configures dependency injection containers, sets
   up boot sequences with prepare/start lifecycle hooks, and integrates database,
   mailer, cache, and third-party services into the DI container.
-ecosystem_sources:
-  - dry-rb/dry-system
-  - hanami/hanami
-tags:
-  - di
-  - providers
-  - container
-  - external-services
+metadata:
+  version: "1.0.0"
+  ecosystem_sources:
+    - dry-rb/dry-system
+    - hanami/hanami
+  tags:
+    - di
+    - providers
+    - container
+    - external-services
 ---
 
 # register-provider
@@ -51,7 +52,7 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 
 2. **Implement the provider** with `prepare` and `start` hooks:
 
-   > ⚠️ Use `prepare` for requiring libraries only. Use `start` for initialization. Putting everything in `start` slows boot.
+   > [WARNING] Use `prepare` for requiring libraries only. Use `start` for initialization. Putting everything in `start` slows boot.
 
    ```ruby
    # config/providers/mailer.rb
@@ -113,17 +114,17 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 
 5. **Register third-party API clients** as providers:
 
-   > ⚠️ Never access `ENV` directly in providers. Use `target[:settings]` — settings are typed and validated.
+   > [WARNING] Never access `ENV` directly in providers. Use `target[:settings]` - settings are typed and validated.
 
    ```ruby
-   # config/providers/stripe.rb
+   # config/providers/logger.rb
    # frozen_string_literal: true
 
-   Hanami.app.register_provider(:stripe) do
+   Hanami.app.register_provider(:logger) do
      start do
-       require "stripe"
-       Stripe.api_key = target[:settings].stripe_secret_key
-       register("stripe.client", Stripe)
+       require "logger"
+       logger = Logger.new(target[:settings].log_file)
+       register("logger.client", logger)
      end
    end
    ```
@@ -148,12 +149,12 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 
 9. **Verify a provider is correctly registered** using the Hanami console or a smoke test:
 
-   > ⚠️ Rescue and log errors in `start`. A failed provider should not crash the app boot.
+   > [WARNING] Rescue and log errors in `start`. A failed provider should not crash the app boot.
 
    ```ruby
    # In `hanami console`
    Hanami.app["mailer.client"]   # => returns the registered instance
-   Hanami.app["stripe.client"]   # => returns Stripe
+   Hanami.app["logger.client"]   # => returns Logger
    ```
 
    For a lightweight smoke test in specs:
