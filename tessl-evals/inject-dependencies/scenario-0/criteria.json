@@ -1,0 +1,36 @@
+{
+  "context": "Checks whether the final artifact follows the inject-dependencies instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when injecting dependencies into Hanami 2.x components.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Core principle:** Dependencies are injected, not looked up. Never access the container directly — always use `include Deps[]`.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Always use `include Deps[]`** to inject dependencies:",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: These are handled by ROM and should not be auto-registered by dry-system.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Inject multiple dependencies** at once:",
+      "max_score": 16
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: **Never access the container directly**:",
+      "max_score": 16
+    }
+  ]
+}

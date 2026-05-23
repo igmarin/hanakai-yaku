@@ -3,8 +3,11 @@ name: validate-params
 version: "1.0.0"
 license: MIT
 description: >
-  Use when validating request parameters in Hanami 2.x Actions. Covers the Params
-  DSL, validation rules, coercion, and error handling.
+  Use when validating request parameters in Hanami 2.x Actions, including defining required/optional
+  params blocks, applying type coercion (integer, bool, date), validating nested and array params,
+  adding constraints, writing custom cross-field rules, and handling validation errors with 422
+  responses. Covers params block DSL, dry-validation predicates, input validation, action params,
+  parameter types, and coercion of request input at the HTTP boundary.
 ecosystem_sources:
   - hanami/hanami-controller
 tags:
@@ -22,22 +25,49 @@ Use this skill when validating and coercing request parameters in Hanami 2.x Act
 
 ---
 
-## Quick Reference
+## Validation Workflow
 
-| Scenario | Approach |
+1. **Define `params` block** inside the Action class with required/optional fields and types
+2. **Hanami validates automatically** — no manual trigger needed; invalid input halts with 422
+3. **Check `request.params.errors`** — inspect or return errors if you need custom responses
+4. **Proceed only if valid** — call business logic after confirming no errors
+
+```ruby
+def handle(request, response)
+  # Step 3: check errors (optional — Hanami already halted if invalid)
+  if request.params.errors.any?
+    response.status = 422
+    response.body = { errors: request.params.errors.to_h }.to_json
+    return
+  end
+
+  # Step 4: proceed with validated, coerced params
+  result = user_repo.create(request.params[:user])
+  response.status = 201
+  response.body = result.to_json
+end
+```
+
+---
+
+## Quick Reference (Syntax Cheat Sheet)
+
+| Scenario | Syntax |
 |---|---|
-| Define params schema | Use the `params` block inside the Action class |
 | Required param | `required(:email).value(:string)` |
 | Optional param | `optional(:bio).value(:string)` |
+| Integer coercion | `required(:age).value(:integer)` |
+| Boolean coercion | `required(:active).value(:bool)` |
+| Date coercion | `required(:birth_date).value(:date)` |
+| Format constraint | `required(:email).value(:string, format?: /\A.+@.+\z/)` |
+| Size constraints | `required(:name).value(:string, min_size?: 1, max_size?: 100)` |
+| Numeric range | `required(:age).value(:integer, gt?: 0, lteq?: 120)` |
+| Enum validation | `required(:role).value(:string, included_in?: %w[admin member guest])` |
 | Nested params | `required(:user).hash { required(:name).value(:string) }` |
 | Array param | `required(:tags).array(:string)` |
-| Integer param | `required(:age).value(:integer)` |
-| Boolean param | `required(:active).value(:bool)` |
-| Date param | `required(:birth_date).value(:date)` |
-| Enum validation | `required(:role).value(:string, included_in?: %w[admin member guest])` |
-| Custom validation | `rule(:email) { key.failure("is invalid") unless value.include?("@") }` |
-| Access validated params | `request.params[:key]` (returns coerced value) |
-| Halt on validation failure | Invalid params automatically halt with 422; errors in `request.params.errors` |
+| Custom rule | `rule(:email) { key.failure("is invalid") unless value.include?("@") }` |
+| Access param | `request.params[:key]` (returns coerced value) |
+| Read errors | `request.params.errors.to_h` |
 
 ---
 
@@ -66,7 +96,6 @@ Use this skill when validating and coercing request parameters in Hanami 2.x Act
            end
 
            def handle(request, response)
-             # Params are already validated and coerced here
              result = user_repo.create(request.params[:user])
              response.status = 201
              response.body = result.to_json
@@ -77,56 +106,7 @@ Use this skill when validating and coercing request parameters in Hanami 2.x Act
    end
    ```
 
-2. **Use `required` for mandatory fields** and `optional` for optional ones:
-
-   ```ruby
-   params do
-     required(:email).value(:string)
-     optional(:phone).value(:string)
-   end
-   ```
-
-3. **Specify types for coercion**. Hanami will coerce string inputs to the declared type:
-
-   ```ruby
-   required(:age).value(:integer)        # "25" → 25
-   required(:active).value(:bool)       # "true" → true
-   required(:score).value(:float)       # "3.14" → 3.14
-   required(:birth_date).value(:date)    # "1990-01-01" → Date
-   ```
-
-4. **Add constraints** with predicates:
-
-   ```ruby
-   required(:email).value(:string, format?: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.\w+\z/)
-   required(:name).value(:string, min_size?: 1, max_size?: 100)
-   required(:age).value(:integer, gt?: 0, lteq?: 120)
-   ```
-
-5. **Define nested params** for complex input:
-
-   ```ruby
-   params do
-     required(:user).hash do
-       required(:name).value(:string)
-       required(:address).hash do
-         required(:street).value(:string)
-         required(:city).value(:string)
-       end
-     end
-   end
-   ```
-
-6. **Define array params**:
-
-   ```ruby
-   params do
-     required(:tags).array(:string)
-     required(:scores).array(:integer)
-   end
-   ```
-
-7. **Custom rules** for cross-field validation:
+2. **Custom rules** for cross-field validation:
 
    ```ruby
    params do
@@ -139,43 +119,17 @@ Use this skill when validating and coercing request parameters in Hanami 2.x Act
    end
    ```
 
-8. **Invalid params halt automatically**. If validation fails, Hanami halts with 422 and populates `request.params.errors`:
-
-   ```ruby
-   def handle(request, response)
-     if request.params.errors.any?
-       response.status = 422
-       response.body = { errors: request.params.errors.to_h }.to_json
-       return
-     end
-
-     # ... proceed with valid params
-   end
-   ```
-
 ---
 
 ## Common Mistakes
 
 | Mistake | Reality |
 |---|---|
-| "I'll validate in the Repository instead of the Action" | Params are validated at the HTTP boundary (Action). Repositories receive already-validated data. |
-| "I'll skip type coercion and validate as strings only" | Always declare types (`:integer`, `:bool`, `:date`). Coercion catches type errors early. |
-| "I'll use `request.params` without defining a `params` block" | Without a `params` block, `request.params` is an untrusted hash. Always define the schema. |
-| "I'll put complex business rules in the `params` block" | Params validation checks shape and constraints. Business rules belong in interactors or service objects. |
-| "I'll rescue validation errors instead of using halt" | Hanami automatically halts on invalid params. Do not fight the framework. Inspect `request.params.errors` if needed. |
-| "I'll define the same params schema in every Action" | Extract shared params to a module or base class if multiple Actions share the same input shape. |
-
----
-
-## Red Flags
-
-- Actions without `params` blocks
-- Manual string validation instead of type coercion
-- Business rules inside `params` blocks
-- Rescue of validation halts instead of using `request.params.errors`
-- Untrusted `request.params` access without schema definition
-- Complex nested params without hash/array declarations
+| Validating in the Repository instead of the Action | Params are validated at the HTTP boundary. Repositories receive already-validated data. |
+| Accessing `request.params` without a `params` block | Without a `params` block, `request.params` is an untrusted hash. Always define the schema. |
+| Putting business rules in the `params` block | Params validation checks shape and constraints. Business rules belong in interactors or service objects. |
+| Duplicating params schemas across multiple Actions | Extract shared params to a module or base class if multiple Actions share the same input shape. |
+| Complex nested params without hash/array declarations | Always use `.hash {}` and `.array()` for nested structures; untyped nesting is unsupported. |
 
 ---
 
@@ -187,16 +141,3 @@ Use this skill when validating and coercing request parameters in Hanami 2.x Act
 | **handle-errors** | Invalid params trigger automatic halts. Handle errors gracefully. |
 | **build-json-api** | JSON request bodies are parsed and validated through the Params DSL. |
 | **handle-result-pattern** | Validated params are passed to interactors that return Success/Failure. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Params DSL) |
-|---|---|
-| `params.require(:user).permit(:name, :email)` | `params do required(:user).hash { required(:name).value(:string); required(:email).value(:string) } end` |
-| `before_action :validate_params` | Automatic halt on invalid params — no manual callback needed |
-| `render json: { errors: ... }, status: 422` | Automatic 422 halt; `request.params.errors` contains details |
-| Strong Parameters (whitelist) | Schema definition (whitelist + type coercion + constraints) |
-| `params[:age].to_i` | `required(:age).value(:integer)` (automatic coercion) |
-| Custom validator class | Custom `rule` blocks inside `params` or extract to a module |

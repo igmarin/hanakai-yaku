@@ -1,0 +1,36 @@
+{
+  "context": "Checks whether the final artifact follows the validate-params instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when validating and coercing request parameters in Hanami 2.x Actions.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Define `params` block** inside the Action class with required/optional fields and types",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Check `request.params.errors`** — inspect or return errors if you need custom responses",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Define params inside the Action class**:",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: class Create < MyApp::Action",
+      "max_score": 16
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: key.failure(\"must match password\") unless value == values[:password]",
+      "max_score": 16
+    }
+  ]
+}

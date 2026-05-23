@@ -1,0 +1,54 @@
+{
+  "target_skill": "create-operation",
+  "source_path": "skills/dry-rb/create-operation/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "**Return:** Always `Success(value)` or `Failure(error)`.",
+      "original_snippets": "**Return:** Always `Success(value)` or `Failure(error)`.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
+      "why_given": "reminder"
+    },
+    {
+      "instruction": "**DI:** Use `include Deps[...]` for dependencies.",
+      "original_snippets": "**DI:** Use `include Deps[...]` for dependencies.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Test:** Pass test doubles through the constructor. Verify step ordering.",
+      "original_snippets": "**Test:** Pass test doubles through the constructor. Verify step ordering.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Write test → Run test → Verify it FAILS → Implement → Verify it PASSES",
+      "original_snippets": "Write test → Run test → Verify it FAILS → Implement → Verify it PASSES",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Create the operation class** in `slices/<slice>/operations/<namespace>/`:",
+      "original_snippets": "**Create the operation class** in `slices/<slice>/operations/<namespace>/`:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Compose operations** by injecting them as dependencies. Never call one operation from inside another's private methods.",
+      "original_snippets": "**Compose operations** by injecting them as dependencies. Never call one operation from inside another's private methods.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Use operations from actions** — the action calls the operation and maps the result to an HTTP response.",
+      "original_snippets": "**Use operations from actions** — the action calls the operation and maps the result to an HTTP response.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Load these files only when needed:",
+      "original_snippets": "Load these files only when needed:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

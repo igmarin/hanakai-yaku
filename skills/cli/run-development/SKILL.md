@@ -4,7 +4,11 @@ version: "1.0.0"
 license: MIT
 description: >
   Use when running Hanami 2.x development commands. Covers hanami dev
-  (development server with code reloading) and hanami console (REPL with full container).
+  (starting the development server with code reloading), hanami console (REPL
+  with full container loaded for exploring the app, accessing slices, inspecting
+  registered components, querying relations, and testing repository methods),
+  hanami routes (listing all routes), and hanami middleware (inspecting the
+  middleware stack).
 ecosystem_sources:
   - hanami/hanami-cli
 tags:
@@ -17,8 +21,6 @@ tags:
 # run-development
 
 Use this skill when running Hanami 2.x development commands.
-
-**Core principle:** Development commands provide fast feedback loops with code reloading and full container access.
 
 ---
 
@@ -45,9 +47,25 @@ Use this skill when running Hanami 2.x development commands.
    Expected behavior:
    - Server starts on `http://localhost:2300`
    - Code reloading is enabled (changes take effect without restart)
-   - Logs print to stdout
+   - Shows detailed error pages for exceptions
+
+   **Verify:** Once started, confirm the server is responding:
+
+   ```bash
+   curl http://localhost:2300
+   ```
+
+   A valid HTTP response (even a 404 or 200) confirms the server is running.
 
 2. **Start the console**:
+
+   **Before starting**, ensure `DATABASE_URL` is set if your app uses a database:
+
+   ```bash
+   echo $DATABASE_URL
+   ```
+
+   Then start the console:
 
    ```bash
    hanami console
@@ -81,10 +99,7 @@ Use this skill when running Hanami 2.x development commands.
    ```
 
 4. **Development server behavior**:
-   - Auto-reloads Ruby files on change
    - Does not reload configuration files (requires restart)
-   - Shows detailed error pages for exceptions
-   - Logs all requests to stdout
 
 5. **Console environment**:
    - Loads the full Hanami application
@@ -111,23 +126,9 @@ Use this skill when running Hanami 2.x development commands.
 
 ## Common Mistakes
 
-| Mistake | Reality |
-|---|---|
-| "I'll use `hanami dev` in production" | `hanami dev` is for development only. Use a production server like Puma or Falcon in production. |
-| "I'll expect config files to reload without restart" | `hanami dev` reloads Ruby code, not configuration. Restart the server after editing `config/app.rb` or `config/routes.rb`. |
-| "I'll run the console without setting `DATABASE_URL`" | The console loads the full app, which needs `DATABASE_URL` to connect to the database. |
-| "I'll use the console to run destructive commands without checking the environment" | The console uses `development` by default, but always verify `HANAMI_ENV` before running destructive operations. |
-| "I'll forget that the console loads the entire app" | The console boots Hanami. It may take a few seconds and requires all dependencies to be resolvable. |
-
----
-
-## Red Flags
-
-- Using `hanami dev` in production
-- Expecting config reload without server restart
-- Running console without `DATABASE_URL`
-- Destructive console commands without environment check
-- Console startup failures due to missing dependencies
+- **Config files don't reload**: `hanami dev` reloads Ruby code, not configuration. Restart the server after editing `config/app.rb` or `config/routes.rb`.
+- **Missing `DATABASE_URL`**: The console loads the full app and requires `DATABASE_URL` to connect. Run `echo $DATABASE_URL` before starting.
+- **Environment awareness**: Always verify `HANAMI_ENV` before running destructive operations in the console — it defaults to `development` but is easy to misconfigure.
 
 ---
 
@@ -135,21 +136,7 @@ Use this skill when running Hanami 2.x development commands.
 
 | Related Skill | When to chain |
 |---|---|
-| **create-app** | Development commands are used after creating the app. |
-| **manage-database** | Database commands may be needed before starting the dev server. |
-| **define-relation** | Use the console to explore and test Relation queries. |
-| **create-repository** | Use the console to test Repository methods interactively. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Dev Runtime) |
-|---|---|
-| `rails server` | `hanami dev` |
-| `rails console` | `hanami console` |
-| `rails routes` | `hanami routes` |
-| `rails middleware` | `hanami middleware` |
-| `rails --version` | `hanami version` |
-| Spring preloader | Code reloading built into `hanami dev` |
-| `bin/rails` | `hanami` CLI |
+| [**create-app**](../create-app/SKILL.md) | Development commands are used after creating the app. |
+| [**manage-database**](../manage-database/SKILL.md) | Database commands may be needed before starting the dev server. |
+| [**define-relation**](../define-relation/SKILL.md) | Use the console to explore and test Relation queries. |
+| [**create-repository**](../create-repository/SKILL.md) | Use the console to test Repository methods interactively. |

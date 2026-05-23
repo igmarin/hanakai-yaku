@@ -1,0 +1,36 @@
+{
+  "target_skill": "define-routes",
+  "source_path": "skills/routing/define-routes/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when defining routes in Hanami 2.x.",
+      "original_snippets": "Use this skill when defining routes in Hanami 2.x.",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-routes.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Define routes in `config/routes.rb`**:",
+      "original_snippets": "**Define routes in `config/routes.rb`**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-routes.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use `resources` for RESTful routes**:",
+      "original_snippets": "**Use `resources` for RESTful routes**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-routes.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use `resource` for singular resources** (no index):",
+      "original_snippets": "**Use `resource` for singular resources** (no index):",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-routes.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Keep routes RESTful**. Avoid custom routes when RESTful ones suffice. Use `resources` and `resource`.",
+      "original_snippets": "**Keep routes RESTful**. Avoid custom routes when RESTful ones suffice. Use `resources` and `resource`.",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-routes.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

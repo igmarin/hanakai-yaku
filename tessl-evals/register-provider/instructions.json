@@ -1,0 +1,36 @@
+{
+  "target_skill": "register-provider",
+  "source_path": "skills/di/register-provider/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when registering external dependencies (database, mailer, cache, third-party APIs) in the Hanami 2.x DI container.",
+      "original_snippets": "Use this skill when registering external dependencies (database, mailer, cache, third-party APIs) in the Hanami 2.x DI container.",
+      "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use the built-in database provider** (already configured by Hanami):",
+      "original_snippets": "**Use the built-in database provider** (already configured by Hanami):",
+      "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Register third-party API clients** as providers:",
+      "original_snippets": "**Register third-party API clients** as providers:",
+      "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Keep providers focused**. One external service = one provider. Do not create a monolithic provider.",
+      "original_snippets": "**Keep providers focused**. One external service = one provider. Do not create a monolithic provider.",
+      "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Use `target[:settings]`** to access application settings within providers:",
+      "original_snippets": "**Use `target[:settings]`** to access application settings within providers:",
+      "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

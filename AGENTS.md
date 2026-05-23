@@ -1,76 +1,66 @@
-# Hanakai Yaku (Skills) — OpenAI Codex Configuration
+# hanakai-yaku — Agent Guidance
 
-This file provides equivalent instructions to `CLAUDE.md` for OpenAI Codex and compatible agents.
+This file tells AI agents how to use this repository.
 
-## Repository Purpose
+## What This Repository Is
 
-`hanakai-yaku` is a curated library of atomic skills and callable agents for the Hanami 2.x Ruby framework.
+A curated library of atomic skills for Hanami, dry-rb, and ROM Ruby development, plus callable agents that chain skills into guided workflows. Skills are executable instructions — not documentation. They guide agents through structured workflows with hard gates.
 
-It teaches AI coding agents (and developers) how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions.
+## How Skills Are Organized
 
-## Skill Catalog
+Each skill lives in its own directory with a `SKILL.md` entry point:
 
-The repository contains 29 atomic skills and 8 agents covering:
-
-- **Database layer**: Sequel migrations, ROM Relations, Repositories, Structs/Entities
-- **Actions layer**: Action anatomy, JSON API, params validation, halt/errors
-- **DI layer**: Deps mixin, register-provider
-- **Views layer**: View objects, view parts
-- **Routing**: Routes DSL
-- **Slices**: Slice anatomy, configuration
-- **Testing**: Test planning, request specs, action unit specs, ROM specs
-- **CLI**: `hanakai-yaku new`, generate-components, db commands, dev runtime
-- **Cross-cutting**: dry-monads result pattern, manage-settings, code review, security review, refactor-code
-
-## How to Discover Skills
-
-1. **MCP Server** (preferred): The `hanakai-yaku` MCP server exposes `list_skills` and `use_skill` tools. Load skills on demand to keep context small.
-2. **Direct file reference**: Reference skills by canonical `name` from frontmatter.
-3. **GitHub CLI**: `gh skill install igmarin/hanakai-yaku <canonical-name>`
-
-## How to Invoke a Skill
-
-Reference skills by their canonical `name` from YAML frontmatter:
-
-- `write-migration`
-- `define-relation`
-- `create-action`
-- `tdd-loop`
-- `build-crud-resource`
-
-File paths (for reference only):
-
-- `skills/db/write-migration/SKILL.md`
-- `skills/actions/create-action/SKILL.md`
-- `agents/tdd-loop/SKILL.md`
-
-## TDD Gate Enforcement
-
-For all code-producing tasks, enforce the TDD Gate:
-
-1. Write a failing test
-2. Run the test and verify it fails for the right reason
-3. Implement the minimal code to make it pass
-4. Run the test and verify it passes
-5. Refactor if needed
-
-No exceptions. Tests gate implementation.
-
-## Codex-Specific Conventions
-
-When working with Codex, use `@skill-name` syntax to explicitly invoke a skill:
-
-```text
-@write-migration — How do I add a column to an existing table?
-@tdd-loop — I need to implement a new user registration feature
+```
+skill-name/
+├── SKILL.md          # Entry point — always read this first
+├── EXAMPLES.md       # Concrete input/output examples (when present)
+├── TEMPLATE.md       # Output structure (when present)
+└── HEURISTICS.md     # Reference tables (when present)
 ```
 
-Or simply describe the task and the agent will load the appropriate skill automatically via MCP.
+Read `SKILL.md` first. Load supporting files only when the skill links to them and the content is needed.
 
-## Progressive Disclosure
+## Skill Selection
 
-When loading skills:
+All skills are organized by category:
 
-1. **Discovery**: Load only the name and description of each skill
-2. **Activation**: When a task matches a skill's description, read the full SKILL.md
-3. **Execution**: Follow the instructions, optionally executing bundled code or loading referenced files
+| Category | Path | Skills |
+|----------|------|--------|
+| **Context** | `skills/context/` | `load-context` |
+| **Providers** | `skills/providers/` | `configure-providers`, `implement-di` |
+| **Actions** | `skills/actions/` | `create-action`, `test-action` *(planned)* |
+| **Persistence** | `skills/persistence/` | `create-repository`, `create-relation`, `create-changeset` *(planned)* |
+| **dry-rb** | `skills/dry-rb/` | `create-operation`, `create-validation-contract` *(planned)* |
+| **Testing** | `skills/testing/` | `write-tests`, `plan-tests` *(planned)* |
+| **Slices** | `skills/slices/` | `create-slice`, `test-slice` *(planned)* |
+| **Views** | `skills/views/` | `create-view` *(planned)* |
+
+## Non-Negotiable Rule
+
+**Tests gate implementation.** This applies to every skill that produces code:
+
+```
+Write test → Run test → Verify it FAILS for the right reason → Implement → Verify it PASSES
+```
+
+Every code-producing skill contains a `HARD-GATE` section enforcing this.
+
+## Agents
+
+| Agent | Path | Purpose |
+|-------|------|---------|
+| **hanami-setup** | `agents/hanami-setup/` | Project onboarding: context → providers → DI → verify |
+| **hanami-tdd** *(planned)* | `agents/hanami-tdd/` | TDD feature cycle: plan → test → implement → review |
+| **slice-lifecycle** *(planned)* | `agents/slice-lifecycle/` | Slice development: create → test → review |
+
+## Workflow Chaining
+
+Each skill's **Integration** table names the next skill to load. Follow it. Skills are building blocks; agents are the primary unit of value.
+
+## Output Language
+
+All generated artifacts must be in **English** unless the user explicitly requests another language.
+
+## Context First
+
+Before any Hanami implementation or review, load context with `load-context` to discover the app's slices, providers, settings, routes, and established patterns.

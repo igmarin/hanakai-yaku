@@ -92,31 +92,14 @@ Use this skill when injecting dependencies into Hanami 2.x components.
    end
    ```
 
-5. **Inject multiple dependencies** at once:
-
-   ```ruby
-   include Deps[
-     "repos.user_repo",
-     "repos.post_repo",
-     "views.users.show"
-   ]
-   ```
-
-6. **Access injected dependencies** by the last segment of the key:
-
-   ```ruby
-   include Deps["repos.user_repo"]
-   # Access via: user_repo
-   ```
-
-7. **Override dependencies in tests** by passing them to `.new`:
+5. **Override dependencies in tests** by passing them to `.new`:
 
    ```ruby
    stub_repo = double("user_repo", all: [])
    action = MyApp::Actions::Users::Index.new(user_repo: stub_repo)
    ```
 
-8. **Never access the container directly**:
+6. **Never access the container directly**:
 
    ```ruby
    # BAD
@@ -129,49 +112,13 @@ Use this skill when injecting dependencies into Hanami 2.x components.
 
 ---
 
-## Common Mistakes
+## Anti-Patterns & Mistakes
 
-| Mistake | Reality |
+| Mistake | Correct Approach |
 |---|---|
-| "I'll call `Hanami.app['key']` inside the Action" | Direct container access is untestable and hides dependencies. Always use `include Deps[]`. |
-| "I'll guess the container key instead of following the file path rule" | Keys follow `app/{dir}/{name}.rb` → `"{dir}.{name}"`. Learn the rule, do not guess. |
-| "I'll auto-register relations/ or entities/ directories" | These are managed by ROM. Adding them to auto-registration causes boot errors. |
-| "I'll inject dependencies in the constructor instead of using Deps" | `Deps` mixin handles constructor injection for you. Do not write custom `initialize` methods for DI. |
-| "I'll forget to update tests when I rename a container key" | When you move a file, the container key changes. Update all `Deps[]` references and test stubs. |
-| "I'll pass the full key name when accessing the dependency" | Access by the last segment: `include Deps["repos.user_repo"]` → use `user_repo`, not `repos.user_repo`. |
-
----
-
-## Red Flags
-
-- Direct container access (`Hanami.app['key']`)
-- Custom `initialize` methods for dependency injection
-- Auto-registration of `relations/`, `structs/`, or `entities/`
-- Guessing container keys instead of following the path rule
-- Tests that instantiate components without providing required dependencies
-- Dependency names that don't match the last segment of the container key
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| **create-action** | Actions inject Repositories and Views via `Deps`. |
-| **create-repository** | Repositories are injected into Actions using their container key. |
-| **create-view** | Views are injected into Actions using their container key. |
-| **register-provider** | Providers register external dependencies that are then injected via `Deps`. |
-| **write-action-spec** (testing) | Test Actions by stubbing injected dependencies. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Deps) |
-|---|---|
-| `User.find(params[:id])` (implicit global model access) | `include Deps["repos.user_repo"]; user_repo.by_id(id).one` (explicit injection) |
-| `before_action :set_user` | `include Deps["repos.user_repo"]` and call `user_repo` in `#handle` |
-| `helper_method :current_user` | Inject an authentication service via `Deps` |
-| `ApplicationController` shared dependencies | Each Action explicitly declares its own `Deps` |
-| `Rails.application.routes.url_helpers` | Inject route helpers via `Deps` if needed |
-| `Thread.current[:current_user]` | Not used. Pass context explicitly via arguments or injection. |
+| `Hanami.app['key']` inside an Action | Direct container access is untestable. Always use `include Deps[]`. |
+| Guessing container keys | Keys follow `app/{dir}/{name}.rb` → `"{dir}.{name}"`. Learn the rule, do not guess. |
+| Auto-registering `relations/`, `structs/`, or `entities/` | These are managed by ROM. Adding them to auto-registration causes boot errors. |
+| Custom `initialize` for dependency injection | `Deps` mixin handles constructor injection for you. Do not write custom `initialize` methods for DI. |
+| Forgetting to update tests after renaming a file | When you move a file, the container key changes. Update all `Deps[]` references and test stubs. |
+| Accessing the full key name as a method | Access by the last segment only: `include Deps["repos.user_repo"]` → use `user_repo`. |

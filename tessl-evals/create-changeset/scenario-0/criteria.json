@@ -1,0 +1,51 @@
+{
+  "context": "Checks whether the final artifact follows the create-changeset instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Define write rules for a relation. Every data mutation goes through a changeset — never call `relation.insert` directly.",
+      "max_score": 12
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Types:** `ROM::Changeset::Create`, `ROM::Changeset::Update`, `ROM::Changeset::Delete`.",
+      "max_score": 11
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: Write test → Run test → Verify it FAILS → Implement → Verify it PASSES",
+      "max_score": 11
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: DO NOT call relation.command(:create).call(...) directly. Use a changeset.",
+      "max_score": 11
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Create the changeset** for the target relation:",
+      "max_score": 11
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: class CreateUser < ROM::Changeset::Create",
+      "max_score": 11
+    },
+    {
+      "name": "instruction-7",
+      "description": "The submitted artifact follows this skill instruction: **Use in the repository** — the repository's `create` method delegates to the changeset:",
+      "max_score": 11
+    },
+    {
+      "name": "instruction-8",
+      "description": "The submitted artifact follows this skill instruction: **Compose changesets** — chain multiple changesets with `.data` for multi-step writes.",
+      "max_score": 11
+    },
+    {
+      "name": "instruction-9",
+      "description": "The submitted artifact follows this skill instruction: Load these files only when needed:",
+      "max_score": 11
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "context": "Checks whether the final artifact follows the configure-providers instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: **Define settings** in `config/settings.rb` if the service needs configuration:",
+      "max_score": 15
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Create the provider** at `config/providers/<name>.rb`:",
+      "max_score": 15
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Use `prepare`** for requiring gems and lightweight setup.",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Use `start`** for instantiation and registration. Access other registered components via `target[...]`.",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Register with a descriptive key** — `\"redis\"`, `\"http_client\"`, not generic names.",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: **Verify** — ensure the provider boots without errors. If it needs external resources (database, API), handle connection failures gracefully.",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-7",
+      "description": "The submitted artifact follows this skill instruction: Load these files only when needed:",
+      "max_score": 14
+    }
+  ]
+}

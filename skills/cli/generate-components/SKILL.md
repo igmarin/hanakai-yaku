@@ -103,28 +103,22 @@ Use this skill when generating Hanami 2.x components via the CLI.
    - Class names match the file path
    - Templates are in the correct directory
 
+   **If verification fails:**
+   - Wrong path or class name: delete the generated file and re-run with the correct dot-notation name.
+   - Missing template: check that `hanami generate view` was used (not `generate action`) when a template is expected.
+   - Existing file conflict: inspect the existing file; if stale or incorrect, remove it manually before re-running.
+   - Slice component in `app/` instead of `slices/`: slice prefix was omitted — re-run with `<slice>.<resource>.<action>` notation.
+
 ---
 
 ## Common Mistakes
 
 | Mistake | Reality |
 |---|---|
-| "I'll use underscores instead of dots in generator commands" | Use dots: `hanami generate action users.index`, not `users_index`. |
-| "I'll forget the slice prefix when generating in a slice" | Use `api.users.index` for slice `api`, not just `users.index`. |
-| "I'll manually create files instead of using generators" | Generators ensure correct naming and structure. Use them for consistency. |
-| "I'll run generators without verifying the output" | Always check generated files. Generators create boilerplate that needs editing. |
-| "I'll use singular names for Actions" | Actions use the plural resource name: `users.index`, `users.show`, not `user.index`. |
-
----
-
-## Red Flags
-
-- Underscores instead of dots in generator commands
-- Missing slice prefix for slice components
-- Manually created files with wrong naming convention
-- Unverified generator output
-- Singular names for Action generators
-- Overwriting generated files manually without checking
+| Using underscores instead of dots in generator commands | Use dots: `hanami generate action users.index`, not `users_index`. |
+| Forgetting the slice prefix when generating in a slice | Use `api.users.index` for slice `api`, not just `users.index`. |
+| Manually creating files instead of using generators | Generators ensure correct naming and structure. |
+| Using singular names for Actions | Actions use the plural resource name: `users.index`, `users.show`, not `user.index`. |
 
 ---
 
@@ -132,20 +126,8 @@ Use this skill when generating Hanami 2.x components via the CLI.
 
 | Related Skill | When to chain |
 |---|---|
-| **create-app** | Generators are used after creating the app. |
-| **create-action** | Generated Actions need to be filled with logic. |
-| **create-view** | Generated Views need exposures defined. |
-| **create-slice** | Generated Slices need routes and configuration. |
-| **write-migration** | Generated migrations need schema definitions. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Generators) |
-|---|---|
-| `rails generate controller Users index show` | `hanami generate action users.index` + `hanami generate action users.show` |
-| `rails generate model User` | `hanami generate relation users` + `hanami generate repo user` + `hanami generate entity user` |
-| `rails generate migration CreateUsers` | `hanami generate migration create_users` |
-| `rails generate scaffold User` | No single scaffold command. Generate Action, View, Relation, Repo, and Migration separately. |
-| `rails generate resource User` | No direct equivalent. Use individual generators. |
+| **create-app** (`../create-app/SKILL.md`) | Generators are used after creating the app. |
+| **create-action** (`../create-action/SKILL.md`) | Generated Actions need to be filled with logic. |
+| **create-view** (`../create-view/SKILL.md`) | Generated Views need exposures defined. |
+| **create-slice** (`../create-slice/SKILL.md`) | Generated Slices need routes and configuration. |
+| **write-migration** (`../write-migration/SKILL.md`) | Generated migrations need schema definitions. |

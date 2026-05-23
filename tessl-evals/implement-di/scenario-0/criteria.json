@@ -1,0 +1,41 @@
+{
+  "context": "Checks whether the final artifact follows the implement-di instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Inject dependencies through the constructor using Hanami's `auto_inject` — never call the container directly.",
+      "max_score": 15
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Providers:** Dependencies must be registered by a provider first.",
+      "max_score": 15
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Rule:** Never call `Hanami.app[\"key\"]` outside of providers.",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Verify the provider** — ensure the dependency is registered in a provider under a descriptive key.",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: class Create < Api::Action",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: RSpec.describe Api::Actions::Users::Create do",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-7",
+      "description": "The submitted artifact follows this skill instruction: Load these files only when needed:",
+      "max_score": 14
+    }
+  ]
+}

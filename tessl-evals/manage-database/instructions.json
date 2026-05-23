@@ -1,0 +1,36 @@
+{
+  "target_skill": "manage-database",
+  "source_path": "skills/cli/manage-database/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when running Hanami 2.x database CLI commands.",
+      "original_snippets": "Use this skill when running Hanami 2.x database CLI commands.",
+      "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Core principle:** Database commands are environment-aware. Always confirm `HANAMI_ENV` and `DATABASE_URL` before running destructive commands.",
+      "original_snippets": "**Core principle:** Database commands are environment-aware. Always confirm `HANAMI_ENV` and `DATABASE_URL` before running destructive commands.",
+      "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
+      "why_given": "reminder"
+    },
+    {
+      "instruction": "**Create the database**:",
+      "original_snippets": "**Create the database**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Check migration version**:",
+      "original_snippets": "**Check migration version**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Never run `db drop` in production**. Always confirm `HANAMI_ENV`:",
+      "original_snippets": "**Never run `db drop` in production**. Always confirm `HANAMI_ENV`:",
+      "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
+      "why_given": "preference"
+    }
+  ]
+}

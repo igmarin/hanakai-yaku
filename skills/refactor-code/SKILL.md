@@ -3,8 +3,13 @@ name: refactor-code
 version: "1.0.0"
 license: MIT
 description: >
-  Use when refactoring Hanami 2.x code. Covers extraction of logic from Actions
-  into interactors or service objects registered in the DI container.
+  Use when refactoring Hanami 2.x code, slimming down fat actions, moving business
+  logic out of actions, or performing a Hanami refactor with dependency injection.
+  Extracts logic from Actions into interactors or service objects, registers
+  dependencies in the DI container, updates auto-injection via `Deps`, applies
+  dry-validation Contracts for extracted validation, and restructures repeated
+  logic into modules or base classes. Use when a developer asks to extract class,
+  slim down Hanami controllers, reduce fat actions, or reorganise Hanami slices.
 ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
@@ -61,9 +66,6 @@ Use this skill when refactoring Hanami 2.x code to improve structure and maintai
          subject: "Welcome",
          body: "Welcome, #{user.first_name}!"
        )
-
-       # Notification logic
-       admin_notification.send("New user: #{user.email}")
 
        response.status = 201
        response.body = user.to_json
@@ -191,24 +193,8 @@ Use this skill when refactoring Hanami 2.x code to improve structure and maintai
 
 | Mistake | Reality |
 |---|---|
-| "I'll refactor without tests" | Never refactor without a passing test suite. Write characterization tests first. |
+| "I'll create circular dependencies between extracted objects" | Extracted components should have clear, acyclic dependencies. Use the container to resolve order, not constructor chaining. |
 | "I'll extract too many tiny service objects" | Extract when logic is complex, reusable, or has side effects. Simple Actions do not need extraction. |
-| "I'll forget to register extracted components" | Extracted components must be registered in the DI container to be injected. |
-| "I'll change behavior during refactoring" | Refactoring preserves behavior. If behavior changes, it's not refactoring — it's a feature change. |
-| "I'll extract logic but leave the Action untouched" | The Action must be updated to use the extracted component via `Deps`. |
-| "I'll create circular dependencies between extracted objects" | Extracted components should have clear, acyclic dependencies. |
-
----
-
-## Red Flags
-
-- Refactoring without tests
-- Over-extraction (too many tiny objects)
-- Extracted components not registered in DI container
-- Behavior changes during "refactoring"
-- Actions not updated to use extracted components
-- Circular dependencies between service objects
-- Missing tests for extracted components
 
 ---
 
@@ -222,17 +208,3 @@ Use this skill when refactoring Hanami 2.x code to improve structure and maintai
 | **create-repository** | Extract complex queries to Repository methods. |
 | **plan-tests** | Write characterization tests before refactoring. |
 | **write-request-spec** | Verify full stack behavior after refactoring. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Refactoring) |
-|---|---|
-| Extract to Service Object | Extract to service object + register in DI container |
-| Extract to Form Object | Extract to dry-validation Contract |
-| `ActiveRecord::Base` callbacks | Explicit interactor/service object calls |
-| `after_create :send_email` | `send_welcome_email.call(user)` in Action or interactor |
-| `before_action :authenticate` | `include Deps["authentication"]` + explicit auth check |
-| Fat controller → Skinny controller | Fat Action → Extracted service objects |
-| `ApplicationController` helpers | Extract to modules or base classes, inject via `Deps` |

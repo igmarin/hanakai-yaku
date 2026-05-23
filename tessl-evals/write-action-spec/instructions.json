@@ -1,0 +1,30 @@
+{
+  "target_skill": "write-action-spec",
+  "source_path": "skills/testing/write-action-spec/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when writing isolated unit specs for Hanami 2.x Actions.",
+      "original_snippets": "Use this skill when writing isolated unit specs for Hanami 2.x Actions.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use verified doubles** to catch interface mismatches:",
+      "original_snippets": "**Use verified doubles** to catch interface mismatches:",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Do not test the framework**. Do not assert that `render` was called or that `halt` works. Test your Action's logic.",
+      "original_snippets": "**Do not test the framework**. Do not assert that `render` was called or that `halt` works. Test your Action's logic.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Use `subject` sparingly**. Prefer explicit `action.call` for clarity.",
+      "original_snippets": "**Use `subject` sparingly**. Prefer explicit `action.call` for clarity.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "target_skill": "handle-errors",
+  "source_path": "skills/actions/handle-errors/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when handling errors and halting requests in Hanami 2.x Actions.",
+      "original_snippets": "Use this skill when handling errors and halting requests in Hanami 2.x Actions.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Core principle:** Fail fast and return meaningful error responses. Never swallow exceptions or leak internal details.",
+      "original_snippets": "**Core principle:** Fail fast and return meaningful error responses. Never swallow exceptions or leak internal details.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Use `halt` for early returns**:",
+      "original_snippets": "**Use `halt` for early returns**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Never expose internal details** in error responses. Log the full exception internally, return a generic message externally:",
+      "original_snippets": "**Never expose internal details** in error responses. Log the full exception internally, return a generic message externally:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Invalid params halt automatically**. Do not manually check `request.params.valid?` unless you need custom behavior:",
+      "original_snippets": "**Invalid params halt automatically**. Do not manually check `request.params.valid?` unless you need custom behavior:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "preference"
+    }
+  ]
+}

@@ -3,8 +3,11 @@ name: write-action-spec
 version: "1.0.0"
 license: MIT
 description: >
-  Use when writing unit specs for Hanami 2.x Actions. Covers dependency injection
-  stubs and isolated action testing.
+  Use when writing RSpec unit specs for Hanami 2.x Actions, testing an action spec,
+  or writing a Hanami controller test. Generates RSpec unit specs, stubs injected
+  dependencies via dry-system, asserts HTTP response status and headers, tests params
+  validation, and verifies action exposures in isolation without hitting the database
+  or HTTP stack.
 ecosystem_sources:
   - rspec/rspec
   - hanami/hanami
@@ -47,95 +50,104 @@ ALWAYS run the test and verify it fails for the right reason before implementing
 
 ---
 
-## Core Rules
+## Workflow
 
-1. **Structure the spec file** under `spec/actions/`:
+Follow these steps in order, treating each as a checkpoint before proceeding.
 
-   ```ruby
-   # spec/actions/users/index_spec.rb
-   # frozen_string_literal: true
+### Step 1 — Create the spec file
 
-   RSpec.describe MyApp::Actions::Users::Index, type: :action do
-     # ...
-   end
-   ```
+Place it under `spec/actions/` mirroring the action namespace:
 
-2. **Stub all injected dependencies**:
+```ruby
+# spec/actions/users/index_spec.rb
+# frozen_string_literal: true
 
-   ```ruby
-   let(:stub_repo) { double("user_repo", all: [user1, user2]) }
-   let(:stub_view) { double("view", call: "rendered") }
+RSpec.describe MyApp::Actions::Users::Index, type: :action do
+  # ...
+end
+```
 
-   it "returns all users" do
-     action = described_class.new(user_repo: stub_repo, view: stub_view)
-     response = action.call({})
+### Step 2 — Define stubs for all injected dependencies
 
-     expect(response.status).to eq(200)
-     expect(response[:users]).to eq([user1, user2])
-   end
-   ```
+Stub every dependency declared in `Deps[]`. Prefer **verified doubles** to catch interface mismatches:
 
-3. **Use verified doubles** to catch interface mismatches:
+```ruby
+let(:stub_repo) { instance_double(MyApp::Repos::UserRepo, all: [user1, user2]) }
+let(:stub_view) { double("view", call: "rendered") }
+```
 
-   ```ruby
-   let(:stub_repo) { instance_double(MyApp::Repos::UserRepo, all: []) }
-   ```
+Use plain `double` only when the real class is not available.
 
-4. **Test the Action contract**, not implementation:
+### Step 3 — Write the failing test
 
-   ```ruby
-   # Test what the Action promises: given inputs, it returns a response
-   it "calls the repository" do
-     action = described_class.new(user_repo: stub_repo, view: stub_view)
-     action.call({})
+Test the Action contract — given inputs, it returns a response with the expected status and exposures:
 
-     expect(stub_repo).to have_received(:all)
-   end
-   ```
+```ruby
+it "returns all users" do
+  action = described_class.new(user_repo: stub_repo, view: stub_view)
+  response = action.call({})
 
-5. **Test error paths** by stubbing failures:
+  expect(response.status).to eq(200)
+  expect(response[:users]).to eq([user1, user2])
+end
+```
 
-   ```ruby
-   it "handles repository errors" do
-     allow(stub_repo).to receive(:all).and_raise(StandardError)
+Also cover **interaction verification** and **error paths**:
 
-     action = described_class.new(user_repo: stub_repo)
-     response = action.call({})
+```ruby
+it "calls the repository" do
+  action = described_class.new(user_repo: stub_repo, view: stub_view)
+  action.call({})
 
-     expect(response.status).to eq(500)
-   end
-   ```
+  expect(stub_repo).to have_received(:all)
+end
 
-6. **Do not test the framework**. Do not assert that `render` was called or that `halt` works. Test your Action's logic.
+it "handles repository errors" do
+  allow(stub_repo).to receive(:all).and_raise(StandardError)
 
-7. **Keep unit specs fast**. No database, no HTTP stack. Only the Action and stubs.
+  action = described_class.new(user_repo: stub_repo)
+  response = action.call({})
 
-8. **Use `subject` sparingly**. Prefer explicit `action.call` for clarity.
+  expect(response.status).to eq(500)
+end
+```
+
+### Step 4 — Run and verify the test fails for the right reason
+
+```text
+$ bundle exec rspec spec/actions/users/index_spec.rb
+```
+
+Confirm the failure is a missing-implementation failure, not a setup error.
+
+### Step 5 — Implement the Action
+
+Write only the code needed to make the failing spec pass.
+
+### Step 6 — Run and verify the test passes
+
+```text
+$ bundle exec rspec spec/actions/users/index_spec.rb
+```
+
+All examples must be green before moving on.
+
+---
+
+## Additional Rules
+
+- **Do not test the framework.** Do not assert that `render` was called or that `halt` works. Test your Action's logic.
+- **Keep unit specs fast.** No database, no HTTP stack. Only the Action and stubs.
+- **Use `subject` sparingly.** Prefer explicit `action.call` for clarity.
+- **Use `expect` to verify interactions; use `allow` for setup only.**
 
 ---
 
 ## Common Mistakes
 
-| Mistake | Reality |
-|---|---|
-| "I'll use real dependencies instead of stubs" | Unit specs must be fast. Use stubs. Integration testing belongs in request specs. |
-| "I'll test that `render` was called" | Do not test the framework. Test your Action's behavior (status, exposures). |
-| "I'll forget to stub a dependency" | The Action will crash with a missing dependency error. Stub everything in `Deps[]`. |
-| "I'll use `allow` when I should use `expect`" | Use `expect` to verify that a dependency was called. Use `allow` for setup only. |
-| "I'll test private methods" | Unit specs test the public `#handle` method. Private methods are implementation details. |
-| "I'll create complex stub setups that duplicate the production code" | Stubs should be simple. If setup is complex, the Action may have too many dependencies. |
-
----
-
-## Red Flags
-
-- Real database or HTTP stack in unit specs
-- Testing framework methods (`render`, `halt`)
-- Missing stubs for injected dependencies
-- `allow` used where `expect` is needed
-- Tests for private methods
-- Complex stub setups that mirror production code
-- Unit specs that test integration concerns
+- **Missing stubs:** The Action will crash with a missing dependency error. Stub every dependency declared in `Deps[]`.
+- **Testing private methods:** Unit specs test the public `#handle` method only. Private methods are implementation details.
+- **Complex stub setups:** Stubs should be simple. If setup is complex, the Action likely has too many dependencies. Use request specs for integration concerns.
 
 ---
 
@@ -148,16 +160,3 @@ ALWAYS run the test and verify it fails for the right reason before implementing
 | **write-request-spec** | Use request specs for integration testing. Use unit specs for isolated logic. |
 | **plan-tests** | Decide when unit specs are appropriate vs request specs. |
 | **tdd-loop** | Follow the TDD workflow: write failing unit spec → implement → verify pass. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Action Unit Specs) |
-|---|---|
-| `spec/controllers/users_controller_spec.rb` | `spec/actions/users/index_spec.rb` |
-| `allow(User).to receive(:all).and_return([user])` | `double("repo", all: [user])` |
-| `get :index` | `action.call({})` |
-| `expect(response).to render_template(:index)` | Do not test framework. Assert on `response.status` and `response[:exposure]`. |
-| `expect(assigns(:users)).to eq([user])` | `expect(response[:users]).to eq([user])` |
-| `expect(controller).to receive(:authenticate!)` | Stub the injected auth service, not the Action method. |

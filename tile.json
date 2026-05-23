@@ -1,0 +1,119 @@
+{
+  "name": "igmarin/hanakai-yaku",
+  "version": "0.2.0",
+  "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, and validation. Uses Markdown + Front-matter architecture.",
+  "docs": "docs/index.md",
+  "skills": {
+    "build-json-api": {
+      "path": "skills/actions/build-json-api/SKILL.md"
+    },
+    "create-action": {
+      "path": "skills/actions/create-action/SKILL.md"
+    },
+    "handle-errors": {
+      "path": "skills/actions/handle-errors/SKILL.md"
+    },
+    "validate-params": {
+      "path": "skills/actions/validate-params/SKILL.md"
+    },
+    "create-app": {
+      "path": "skills/cli/create-app/SKILL.md"
+    },
+    "generate-components": {
+      "path": "skills/cli/generate-components/SKILL.md"
+    },
+    "manage-database": {
+      "path": "skills/cli/manage-database/SKILL.md"
+    },
+    "run-development": {
+      "path": "skills/cli/run-development/SKILL.md"
+    },
+    "load-context": {
+      "path": "skills/context/load-context/SKILL.md"
+    },
+    "manage-settings": {
+      "path": "skills/cross-cutting/manage-settings/SKILL.md"
+    },
+    "review-code": {
+      "path": "skills/cross-cutting/review-code/SKILL.md"
+    },
+    "create-changeset": {
+      "path": "skills/db/create-changeset/SKILL.md"
+    },
+    "create-repository": {
+      "path": "skills/db/create-repository/SKILL.md"
+    },
+    "define-entity": {
+      "path": "skills/db/define-entity/SKILL.md"
+    },
+    "define-relation": {
+      "path": "skills/db/define-relation/SKILL.md"
+    },
+    "write-migration": {
+      "path": "skills/db/write-migration/SKILL.md"
+    },
+    "inject-dependencies": {
+      "path": "skills/di/inject-dependencies/SKILL.md"
+    },
+    "register-provider": {
+      "path": "skills/di/register-provider/SKILL.md"
+    },
+    "handle-result-pattern": {
+      "path": "skills/dry-monads/handle-result-pattern/SKILL.md"
+    },
+    "create-operation": {
+      "path": "skills/dry-rb/create-operation/SKILL.md"
+    },
+    "create-validation-contract": {
+      "path": "skills/dry-rb/create-validation-contract/SKILL.md"
+    },
+    "configure-providers": {
+      "path": "skills/providers/configure-providers/SKILL.md"
+    },
+    "implement-di": {
+      "path": "skills/providers/implement-di/SKILL.md"
+    },
+    "refactor-code": {
+      "path": "skills/refactor-code/SKILL.md"
+    },
+    "review-security": {
+      "path": "skills/review-security/SKILL.md"
+    },
+    "define-routes": {
+      "path": "skills/routing/define-routes/SKILL.md"
+    },
+    "configure-slice": {
+      "path": "skills/slices/configure-slice/SKILL.md"
+    },
+    "create-slice": {
+      "path": "skills/slices/create-slice/SKILL.md"
+    },
+    "extract-slice": {
+      "path": "skills/slices/extract-slice/SKILL.md"
+    },
+    "review-slice-boundaries": {
+      "path": "skills/slices/review-slice-boundaries/SKILL.md"
+    },
+    "test-slice": {
+      "path": "skills/slices/test-slice/SKILL.md"
+    },
+    "plan-tests": {
+      "path": "skills/testing/plan-tests/SKILL.md"
+    },
+    "write-action-spec": {
+      "path": "skills/testing/write-action-spec/SKILL.md"
+    },
+    "write-request-spec": {
+      "path": "skills/testing/write-request-spec/SKILL.md"
+    },
+    "write-rom-spec": {
+      "path": "skills/testing/write-rom-spec/SKILL.md"
+    },
+    "create-view": {
+      "path": "skills/views/create-view/SKILL.md"
+    },
+    "decorate-with-parts": {
+      "path": "skills/views/decorate-with-parts/SKILL.md"
+    }
+  }
+}

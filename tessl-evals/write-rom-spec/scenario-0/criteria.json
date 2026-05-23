@@ -1,0 +1,31 @@
+{
+  "context": "Checks whether the final artifact follows the write-rom-spec instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when writing specs for ROM Relations and Repositories in Hanami 2.x.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Core principle:** ROM specs test data access logic in isolation. Use in-memory ROM or transactional rollback for speed and isolation.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Use transactional rollback** for database isolation:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Create test data** using Repositories or direct ROM calls:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Avoid testing ROM itself**. Do not test that `where` works — test your custom query methods.",
+      "max_score": 20
+    }
+  ]
+}

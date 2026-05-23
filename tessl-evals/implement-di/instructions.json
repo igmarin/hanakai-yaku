@@ -1,0 +1,48 @@
+{
+  "target_skill": "implement-di",
+  "source_path": "skills/providers/implement-di/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Inject dependencies through the constructor using Hanami's `auto_inject` — never call the container directly.",
+      "original_snippets": "Inject dependencies through the constructor using Hanami's `auto_inject` — never call the container directly.",
+      "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Providers:** Dependencies must be registered by a provider first.",
+      "original_snippets": "**Providers:** Dependencies must be registered by a provider first.",
+      "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Rule:** Never call `Hanami.app[\"key\"]` outside of providers.",
+      "original_snippets": "**Rule:** Never call `Hanami.app[\"key\"]` outside of providers.",
+      "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Verify the provider** — ensure the dependency is registered in a provider under a descriptive key.",
+      "original_snippets": "**Verify the provider** — ensure the dependency is registered in a provider under a descriptive key.",
+      "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "class Create < Api::Action",
+      "original_snippets": "class Create < Api::Action",
+      "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "RSpec.describe Api::Actions::Users::Create do",
+      "original_snippets": "RSpec.describe Api::Actions::Users::Create do",
+      "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Load these files only when needed:",
+      "original_snippets": "Load these files only when needed:",
+      "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

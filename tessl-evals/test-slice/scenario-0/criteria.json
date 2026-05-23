@@ -1,0 +1,36 @@
+{
+  "context": "Checks whether the final artifact follows the test-slice instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: **Goal:** Test a slice's public interface. Never reach into another slice's internals.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Isolation:** Load only the slice under test. Mock cross-slice dependencies.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Rule:** A slice test must NOT depend on another slice booting.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: Write test → Run test → Verify it FAILS → Implement → Verify it PASSES",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: RSpec.describe Api::Actions::Users::Create, :slice do",
+      "max_score": 16
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: Load these files only when needed:",
+      "max_score": 16
+    }
+  ]
+}

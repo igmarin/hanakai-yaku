@@ -1,0 +1,31 @@
+{
+  "context": "Checks whether the final artifact follows the configure-slice instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when configuring Hanami 2.x Slices.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Create the Slice configuration file**:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Define slice-level settings**:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Register slice-specific providers**:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Keep configuration minimal**. Only override defaults when necessary. Prefer convention over configuration.",
+      "max_score": 20
+    }
+  ]
+}

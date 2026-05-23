@@ -3,8 +3,10 @@ name: plan-tests
 version: "1.0.0"
 license: MIT
 description: >
-  Use when deciding what type of test to write in Hanami 2.x. Covers the decision
-  between request specs, action unit specs, view specs, relation specs, and repository specs.
+  Use when deciding what type of test to write in Hanami 2.x. Recommends the appropriate
+  test type (request specs, action unit specs, view specs, relation specs, or repository specs),
+  explains when to prefer request specs over action unit specs, and provides copy-paste RSpec
+  examples with file paths and decision criteria for each test type.
 ecosystem_sources:
   - rspec/rspec
   - hanami/hanami
@@ -35,26 +37,28 @@ Use this skill when deciding which type of test to write for a Hanami 2.x featur
 
 ---
 
-## HARD-GATE
+## Test-Planning Workflow
 
-```text
-DO NOT write implementation code before a failing test exists.
-ALWAYS run the test and verify it fails for the right reason before implementing.
-```
-
----
-
-## Core Rules
-
-1. **Start with the question**: "What behavior am I testing?"
-
+1. **Identify the behavior** — Ask: "What behavior am I testing?"
    - User-facing HTTP endpoint → **Request spec**
    - Action logic with complex branching → **Action unit spec**
    - View rendering with specific data → **View spec**
    - Database query methods → **Relation spec**
    - Repository persistence logic → **Repository spec**
 
-2. **Prefer request specs** for critical user paths:
+2. **Choose the test type** from the Quick Reference table above and create the file at the appropriate path.
+
+3. **Write the failing test** using the examples below. Do not write implementation code yet.
+
+4. **Run the test and verify it fails for the right reason** — a compile error or missing constant means setup is incomplete; a meaningful assertion failure means you are ready to implement.
+
+5. **Proceed to implementation** only after the test fails with the expected assertion.
+
+---
+
+## Core Rules
+
+1. **Prefer request specs** for critical user paths:
 
    ```ruby
    # spec/requests/users_spec.rb
@@ -68,7 +72,7 @@ ALWAYS run the test and verify it fails for the right reason before implementing
    end
    ```
 
-3. **Use action unit specs** for isolated Action testing:
+2. **Use action unit specs** for isolated Action testing:
 
    ```ruby
    # spec/actions/users/index_spec.rb
@@ -82,7 +86,7 @@ ALWAYS run the test and verify it fails for the right reason before implementing
    end
    ```
 
-4. **Write Relation specs** for custom query methods:
+3. **Write Relation specs** for custom query methods:
 
    ```ruby
    # spec/relations/users_spec.rb
@@ -95,7 +99,7 @@ ALWAYS run the test and verify it fails for the right reason before implementing
    end
    ```
 
-5. **Write Repository specs** for domain persistence methods:
+4. **Write Repository specs** for domain persistence methods:
 
    ```ruby
    # spec/repos/user_repo_spec.rb
@@ -109,42 +113,18 @@ ALWAYS run the test and verify it fails for the right reason before implementing
    end
    ```
 
-6. **Avoid view specs** unless the View has complex presentation logic. Most Views are thin and tested implicitly by request specs.
-
-7. **One assertion per test** is a guideline, not a rule. Group related assertions that test a single behavior.
-
-8. **Test edge cases**:
-   - Empty collections
-   - Invalid params (400/422 responses)
-   - Missing resources (404 responses)
-   - Authentication failures (401/403 responses)
-   - Large payloads
-   - Special characters in input
+5. **Avoid view specs** unless the View has complex presentation logic. Most Views are thin and tested implicitly by request specs.
 
 ---
 
-## Common Mistakes
+## Pitfalls & Red Flags
 
-| Mistake | Reality |
+| Issue | Guidance |
 |---|---|
-| "I'll skip request specs because they're slow" | Request specs give the highest confidence. Run the full suite in CI, run a subset locally. |
-| "I'll test everything with request specs" | Unit specs are faster and pinpoint failures. Use the right tool for the job. |
-| "I'll write tests after implementing" | Tests gate implementation. Write the failing test first, then implement. |
-| "I'll test implementation details instead of behavior" | Test what the code does, not how it does it. Avoid testing private methods. |
-| "I'll share database state between tests" | Each test should be independent. Use transactions or in-memory setup. |
-| "I'll skip edge cases because they're unlikely" | Edge cases are where bugs hide. Always test empty input, invalid input, and boundary conditions. |
-
----
-
-## Red Flags
-
-- No request specs for HTTP endpoints
-- Only request specs with no unit tests for complex logic
-- Tests written after implementation
-- Tests asserting on implementation details (method calls, private state)
-- Shared database state between tests
-- Missing edge case coverage
-- Tests that don't fail when the feature is removed
+| Skipping request specs because they're slow | Request specs give the highest confidence. Run the full suite in CI, run a subset locally. |
+| Testing everything with request specs | Unit specs are faster and pinpoint failures. Use the right tool for the job. |
+| No request specs for HTTP endpoints | Every user-facing endpoint needs at least one request spec. |
+| Only request specs with no unit tests for complex logic | Complex Action branching deserves isolated unit tests for faster feedback. |
 
 ---
 
@@ -156,18 +136,3 @@ ALWAYS run the test and verify it fails for the right reason before implementing
 | **write-action-spec** | Write action unit specs for isolated Action logic. |
 | **write-rom-spec** | Write ROM specs for Relation and Repository testing. |
 | **tdd-loop** | Follow the full TDD workflow: plan → test → implement → review. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Testing) |
-|---|---|
-| `spec/requests/` (integration tests) | `spec/requests/` (request specs with Rack::Test) |
-| `spec/controllers/` | `spec/actions/` (unit specs with stubbed deps) |
-| `spec/models/` | `spec/relations/` + `spec/repos/` + `spec/entities/` |
-| `spec/views/` | `spec/views/` (rarely needed) |
-| `type: :request` | `type: :request` (same) |
-| `type: :controller` | `type: :action` (isolated unit tests) |
-| `let(:user) { create(:user) }` | Factory or in-memory setup with ROM |
-| `before { sign_in user }` | Stub authentication in request specs |

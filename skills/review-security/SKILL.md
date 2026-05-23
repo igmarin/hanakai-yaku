@@ -3,8 +3,10 @@ name: review-security
 version: "1.0.0"
 license: MIT
 description: >
-  Use when reviewing Hanami 2.x code for security. Covers param validation,
-  CSRF protection, authentication integration points, and common vulnerabilities.
+  Use when conducting a security audit, vulnerability check, or code review on Hanami 2.x
+  applications. Validates parameter handling, detects CSRF misconfigurations, audits
+  authentication integration points, flags SQL injection and XSS risks, enforces input
+  sanitization, and identifies secrets management and session configuration issues.
 ecosystem_sources:
   - hanami/hanami
 tags:
@@ -23,20 +25,37 @@ Use this skill when reviewing Hanami 2.x code for security concerns.
 
 ---
 
-## Quick Reference
+## Review Workflow
 
-| Concern | Check |
+Follow this sequence when performing a security review:
+
+1. **Validate params** — Check every Action for a `params` block. Grep: `grep -rn 'request.params' app/actions/ | grep -v 'params do'`
+2. **Verify CSRF config** — Confirm `config.actions.csrf_protection = true` in `config/app.rb` for HTML apps.
+3. **Audit auth checks** — Confirm every sensitive Action has an explicit `before :authenticate!` or equivalent. Grep: `grep -rn 'def handle' app/actions/` and cross-check with `grep -rn 'authenticate'`
+4. **Check authorization** — Confirm role/permission checks exist in Actions or service objects beyond mere authentication.
+5. **Scan for secrets in code** — Grep: `grep -rn 'secret\|password\|api_key\|token' app/ config/ --include='*.rb' | grep -v 'settings\|ENV'`
+6. **Check logging** — Grep: `grep -rn 'logger' app/ | grep 'password\|token\|secret'`
+7. **Check SQL safety** — Grep: `grep -rn 'where("' app/` to find potential string interpolation in queries.
+8. **Check template output** — Grep: `grep -rn 'raw ' app/` to find unescaped output.
+9. **Review session config** — Confirm `config.sessions` has a secret from settings, not hardcoded.
+10. **Review error messages** — Confirm auth failures return generic messages (no user enumeration).
+
+---
+
+## Quick Reference Checklist
+
+| Concern | Red Flag |
 |---|---|
-| Param validation | All params validated via Params DSL? No unvalidated input used? |
-| CSRF protection | Enabled for HTML forms? Token validated? |
-| Authentication | Action checks auth before processing? Identity injected via `Deps`? |
-| Authorization | Role/permission checks in Action or service object? |
-| Error messages | No sensitive data in error responses? |
-| Logging | No passwords or tokens logged? |
-| Secrets | Stored in settings/environment, not in code? |
-| SQL injection | No string interpolation in queries? ROM/Sanitized only? |
-| XSS | Output escaped in templates? No raw HTML from user input? |
-| Session management | Secure session config? Session secret in settings? |
+| Param validation | `request.params` used directly in business logic |
+| CSRF protection | Missing `csrf_protection = true` for HTML endpoints |
+| Authentication | Auth assumed by convention, not explicit check |
+| Authorization | Only authn, no authz |
+| Error messages | Messages like "User not found" or "Password incorrect" |
+| Logging | `params[:password]` or tokens in log calls |
+| Secrets | Hardcoded strings for keys/secrets in source files |
+| SQL injection | String interpolation in `where("...")` |
+| XSS | `raw` or `html_safe` on user input |
+| Session management | No secret, no expiration, or hardcoded secret |
 
 ---
 
@@ -45,57 +64,42 @@ Use this skill when reviewing Hanami 2.x code for security concerns.
 1. **Validate all params** via the Params DSL:
 
    ```ruby
-   # GOOD: All params validated and typed
+   # GOOD
    params do
      required(:email).value(:string, format?: /\A.+@.+\z/)
      required(:password).value(:string, min_size?: 8)
    end
 
-   # BAD: Unvalidated params used directly
-   def handle(request, response)
-     user_repo.create(request.params)  # Dangerous!
-   end
+   # BAD — mass assignment risk
+   user_repo.create(request.params)
    ```
 
 2. **Enable CSRF protection** for HTML endpoints:
 
    ```ruby
    # config/app.rb
-   module MyApp
-     class App < Hanami::App
-       config.actions.csrf_protection = true
-     end
-   end
+   config.actions.csrf_protection = true
    ```
 
 3. **Authenticate in Actions** using injected services:
 
    ```ruby
-   class Create < MyApp::Action
-     include Deps["authentication"]
+   include Deps["authentication"]
+   before :authenticate!
 
-     before :authenticate!
-
-     def handle(request, response)
-       # ... only reached if authenticated
-     end
-
-     private
-
-     def authenticate!(request, response)
-       halt 401 unless authentication.valid?(request)
-     end
+   def authenticate!(request, response)
+     halt 401 unless authentication.valid?(request)
    end
    ```
 
 4. **Never log sensitive data**:
 
    ```ruby
-   # GOOD: Log sanitized data
-   Hanami.app[:logger].info("User login attempt: #{params[:email]}")
+   # GOOD
+   logger.info("Login attempt: #{params[:email]}")
 
-   # BAD: Log sensitive data
-   Hanami.app[:logger].info("User login: #{params[:email]}, password: #{params[:password]}")
+   # BAD
+   logger.info("Login: #{params[:email]}, password: #{params[:password]}")
    ```
 
 5. **Store secrets in settings**, never in code:
@@ -103,88 +107,51 @@ Use this skill when reviewing Hanami 2.x code for security concerns.
    ```ruby
    # config/settings.rb
    setting :session_secret, constructor: Types::String
-   setting :api_key, constructor: Types::String
    ```
-
    ```bash
    # .env
    SESSION_SECRET=your-secret-here
-   API_KEY=your-api-key-here
    ```
 
-6. **Prevent SQL injection** by using ROM's query interface:
+6. **Prevent SQL injection** using ROM's query interface:
 
    ```ruby
-   # GOOD: ROM parameterized query
+   # GOOD
    users.where(email: params[:email]).one
 
-   # BAD: String interpolation
-   users.where("email = '#{params[:email]}'")  # SQL Injection risk!
+   # BAD
+   users.where("email = '#{params[:email]}'")
    ```
 
 7. **Escape output in templates** to prevent XSS:
 
    ```erb
-   <!-- GOOD: ERB auto-escapes -->
+   <!-- GOOD -->
    <p><%= user.bio %></p>
 
-   <!-- BAD: raw HTML from user input -->
+   <!-- BAD -->
    <p><%= raw user.bio %></p>
    ```
 
 8. **Use secure session configuration**:
 
    ```ruby
-   # config/app.rb
-   module MyApp
-     class App < Hanami::App
-       config.sessions = :cookie, {
-         key: "my_app.session",
-         secret: settings.session_secret,
-         expire_after: 60 * 60 * 24 * 7  # 1 week
-       }
-     end
-   end
+   config.sessions = :cookie, {
+     key: "my_app.session",
+     secret: settings.session_secret,
+     expire_after: 60 * 60 * 24 * 7
+   }
    ```
 
-9. **Return generic error messages** for security-sensitive failures:
+9. **Return generic error messages** for auth failures:
 
    ```ruby
-   # GOOD: Generic message prevents user enumeration
+   # GOOD
    halt 401, { error: "Invalid credentials" }.to_json
 
-   # BAD: Specific message reveals valid users
-   halt 401, { error: "User not found" }.to_json  # Reveals email is not registered
-   halt 401, { error: "Password incorrect" }.to_json  # Reveals email is valid
+   # BAD — reveals account existence
+   halt 401, { error: "User not found" }.to_json
    ```
-
----
-
-## Common Mistakes
-
-| Mistake | Reality |
-|---|---|
-| "I'll skip param validation for internal endpoints" | Validate all params. Internal endpoints can be called externally. |
-| "I'll disable CSRF for JSON APIs" | JSON APIs do not need CSRF tokens, but ensure `Content-Type: application/json` is enforced. |
-| "I'll put auth logic in a base controller" | Hanami has no base controller. Each Action must explicitly handle auth. |
-| "I'll log params for debugging" | Never log passwords, tokens, or session IDs. Sanitize logged data. |
-| "I'll hardcode API keys for convenience" | All secrets belong in environment variables accessed via Settings. |
-| "I'll use string interpolation in ROM queries" | Always use parameterized queries. ROM handles sanitization. |
-| "I'll trust user input in HTML output" | ERB escapes by default. Never use `raw` or `html_safe` on user input. |
-
----
-
-## Red Flags
-
-- Unvalidated params used in business logic
-- Missing CSRF protection for HTML forms
-- Auth logic assumed by convention rather than explicit check
-- Sensitive data in logs or error responses
-- Secrets hardcoded in source files
-- String interpolation in database queries
-- `raw` or `html_safe` on user input
-- Weak session configuration (no secret, no expiration)
-- Specific error messages that reveal system state
 
 ---
 
@@ -202,13 +169,11 @@ Use this skill when reviewing Hanami 2.x code for security concerns.
 
 ## Rails → Hanami
 
-| Rails (ActiveRecord) | Hanami 2.x (Security) |
+| Rails | Hanami 2.x |
 |---|---|
 | `protect_from_forgery` | `config.actions.csrf_protection = true` |
-| `before_action :authenticate_user!` | Explicit auth check in each Action (no global callbacks) |
+| `before_action :authenticate_user!` | Explicit `before :authenticate!` in each Action |
 | `strong_parameters` | Params DSL with type coercion and constraints |
-| `Rails.logger` | `Hanami.app[:logger]` (sanitized logging) |
 | `Rails.application.credentials` | Settings with environment variables |
-| ActiveRecord parameterized queries | ROM parameterized queries (same principle) |
-| `html_safe` | ERB auto-escapes; avoid `raw` |
+| `html_safe` / `raw` | ERB auto-escapes; avoid `raw` on user input |
 | `config.session_store` | `config.sessions = :cookie, { ... }` in `config/app.rb` |

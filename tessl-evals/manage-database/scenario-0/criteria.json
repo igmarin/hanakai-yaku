@@ -1,0 +1,31 @@
+{
+  "context": "Checks whether the final artifact follows the manage-database instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when running Hanami 2.x database CLI commands.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Core principle:** Database commands are environment-aware. Always confirm `HANAMI_ENV` and `DATABASE_URL` before running destructive commands.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Create the database**:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Check migration version**:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Never run `db drop` in production**. Always confirm `HANAMI_ENV`:",
+      "max_score": 20
+    }
+  ]
+}

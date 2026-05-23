@@ -1,0 +1,16 @@
+{
+  "context": "Checks whether the final artifact follows the manage-settings instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when managing Hanami 2.x application settings.",
+      "max_score": 50
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Define settings in `config/settings.rb`**:",
+      "max_score": 50
+    }
+  ]
+}

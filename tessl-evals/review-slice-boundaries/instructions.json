@@ -1,0 +1,24 @@
+{
+  "target_skill": "review-slice-boundaries",
+  "source_path": "skills/slices/review-slice-boundaries/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Audit slice isolation. Every slice should be a self-contained module — dependencies across boundaries must be intentional and through public interfaces.",
+      "original_snippets": "Audit slice isolation. Every slice should be a self-contained module — dependencies across boundaries must be intentional and through public interfaces.",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-slice-boundaries.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "EVERY finding MUST cite the specific file and line as evidence.",
+      "original_snippets": "EVERY finding MUST cite the specific file and line as evidence.",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-slice-boundaries.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Provider leaks** — Does a provider register something that should be slice-scoped?",
+      "original_snippets": "**Provider leaks** — Does a provider register something that should be slice-scoped?",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-slice-boundaries.",
+      "why_given": "reminder"
+    }
+  ]
+}

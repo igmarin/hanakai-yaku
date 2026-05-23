@@ -3,8 +3,11 @@ name: review-code
 version: "1.0.0"
 license: MIT
 description: >
-  Use when reviewing Hanami 2.x code. Covers single-responsibility Actions,
-  proper DI usage, no direct container access, and ROM query encapsulation in Repositories.
+  Use when reviewing Hanami 2.x code, a Hanami app, or any hanami slice for quality
+  and convention adherence. Covers single-responsibility Actions, dependency injection
+  via Deps[], no direct container access, ROM query encapsulation in Repositories,
+  entity usage, View simplicity, error handling, and test coverage. Triggers on phrases
+  like 'review my Hanami code', 'check my action', 'code review', or 'dry-rb patterns'.
 ecosystem_sources:
   - hanami/hanami
 tags:
@@ -24,157 +27,113 @@ Use this skill when reviewing Hanami 2.x code for quality and convention adheren
 
 ## Quick Reference
 
-| Concern | Check |
-|---|---|
-| Action responsibility | One Action = one endpoint. No business logic. |
-| Dependency injection | `include Deps[]` used? No direct container access? |
-| Repository encapsulation | All queries in Repositories/Relations? No SQL in Actions? |
-| Entity usage | Entities returned from Repositories? No raw hashes passed to Views? |
-| View simplicity | No DB queries in Views? No business logic in `expose` blocks? |
-| Test coverage | Request specs for endpoints? Unit specs for complex logic? |
-| Error handling | Meaningful error responses? No exception message leakage? |
-| Settings usage | No `ENV` access? Settings used for configuration? |
+| Concern | Rule | Priority |
+|---|---|---|
+| Action responsibility | One Action = one endpoint. No business logic. ≤ ~10 lines of logic. | Blocker if logic leaks |
+| Dependency injection | `include Deps[]` only. No `Hanami.app['key']` direct access. | Blocker |
+| Query location | All DB queries in Repositories/Relations. No SQL in Actions or Views. | Blocker |
+| Repository return types | Return Entities (`auto_struct true`, `struct_namespace`). No raw hashes. | High |
+| View simplicity | `expose` blocks receive pre-fetched data only. No DB calls or business logic. | Blocker if DB in View |
+| Error handling | Log and return generic messages. No `e.message`/`e.backtrace` in responses. | Blocker |
+| Test coverage | Request specs per endpoint. Test 400, 404, 422, 500 paths. Behavior, not implementation. | High |
+| Settings usage | No `ENV` access. Use Settings for configuration. | Suggestion |
 
 ---
 
-## Core Rules
+## Review Workflow
 
-1. **Actions must be single-responsibility HTTP handlers**:
+Follow this sequence and report violations in priority order:
 
-   ```ruby
-   # GOOD: Action delegates to Repository and renders View
-   class Index < MyApp::Action
-     include Deps["repos.user_repo"]
-     def handle(request, response)
-       response.render(view, users: user_repo.all)
-     end
-   end
+1. **Check Action responsibility** — Is the Action ≤ ~10 lines? Does it delegate business logic to services or repositories? Flag any SQL, filtering, or domain logic inline in the Action.
+2. **Verify DI usage** — Are all dependencies declared via `include Deps[...]`? Flag any `Hanami.app['key']` direct access.
+3. **Audit query locations** — Do all DB queries live in Repositories or Relations? Flag SQL in Actions or Views immediately.
+4. **Inspect Repositories** — Do they return Entities (not raw hashes)? Is `auto_struct true` / `struct_namespace` configured?
+5. **Review Views** — Do `expose` blocks receive pre-fetched data only? Flag any DB calls or business logic.
+6. **Check error handling** — Are exceptions logged and generic messages returned? Flag any `e.message` or `e.backtrace` in responses.
+7. **Assess test coverage** — Are there request specs for each endpoint? Are 400, 404, 422, and 500 paths tested?
 
-   # BAD: Action contains business logic
-   class Index < MyApp::Action
-     def handle(request, response)
-       users = UserRelation.new(Hanami.app["db.rom"]).all
-       active_users = users.select { |u| u.status == "active" }
-       # ... more logic ...
-       response.render(view, users: active_users)
-     end
-   end
-   ```
-
-2. **Dependencies must be injected via `Deps`**:
-
-   ```ruby
-   # GOOD: Injected via Deps
-   include Deps["repos.user_repo"]
-
-   # BAD: Direct container access
-   repo = Hanami.app["repos.user_repo"]
-   ```
-
-3. **All database queries must be in Repositories or Relations**:
-
-   ```ruby
-   # GOOD: Query in Repository
-   class UserRepo < Hanami::DB::Repo[:users]
-     def active
-       users.where(status: "active").to_a
-     end
-   end
-
-   # BAD: SQL in Action
-   users = Hanami.app["db.rom"].gateways[:default].dataset(:users)
-     .where(status: "active")
-     .to_a
-   ```
-
-4. **Repositories must return Entities, not raw hashes**:
-
-   ```ruby
-   # GOOD: Returns Entity
-   class UserRepo < Hanami::DB::Repo[:users]
-     struct_namespace MyApp::Entities
-     auto_struct true
-   end
-
-   # BAD: Returns raw hash
-   def find(id)
-     users.where(id: id).one.to_h
-   end
-   ```
-
-5. **Views must not contain database queries or business logic**:
-
-   ```ruby
-   # GOOD: View receives prepared data
-   class Show < MyApp::View
-     expose :user
-   end
-
-   # BAD: View queries the database
-   class Show < MyApp::View
-     expose :user do |request|
-       Hanami.app["repos.user_repo"].by_id(request.params[:id]).one
-     end
-   end
-   ```
-
-6. **Tests must cover behavior, not implementation**:
-
-   ```ruby
-   # GOOD: Tests behavior
-   it "returns active users" do
-     get "/users?status=active"
-     expect(json_body[:users].length).to eq(2)
-   end
-
-   # BAD: Tests implementation
-   it "calls user_repo.active" do
-     expect(user_repo).to receive(:active)
-     action.call({})
-   end
-   ```
-
-7. **Error responses must be meaningful and not leak internals**:
-
-   ```ruby
-   # GOOD: Generic error message, details logged
-   rescue StandardError => e
-     Hanami.app[:logger].error(e.message)
-     halt 500, { error: "Internal server error" }.to_json
-   end
-
-   # BAD: Leaks exception details
-   rescue StandardError => e
-     halt 500, { error: e.message, backtrace: e.backtrace }.to_json
-   end
-   ```
+For each violation found, report: **location**, **rule broken**, **concrete fix** (with code where helpful), and **priority** (blocker if it exposes internals or bypasses DI; suggestion otherwise).
 
 ---
 
-## Common Mistakes
+## Core Rules with Examples
 
-| Mistake | Reality |
-|---|---|
-| "The Action has 50 lines of business logic" | Actions should be < 10 lines. Extract logic to service objects or interactors. |
-| "The Action accesses `Hanami.app['key']` directly" | All dependencies must be injected via `Deps[]`. |
-| "SQL fragments appear in Actions or Views" | All queries belong in Relations or Repositories. |
-| "Repositories return raw hashes" | Repositories must return Entity objects with `auto_struct true`. |
-| "Views query the database" | Views receive data from Actions. No queries in Views. |
-| "Exception messages exposed in HTTP responses" | Log internally. Return generic messages externally. |
-| "Missing tests for error paths" | Every endpoint must have tests for 400, 404, 422, and 500 cases. |
+**1. Actions — single-responsibility, delegate logic:**
 
----
+```ruby
+# GOOD
+class Index < MyApp::Action
+  include Deps["repos.user_repo"]
+  def handle(request, response)
+    response.render(view, users: user_repo.all)
+  end
+end
 
-## Red Flags
+# BAD — business logic and direct ROM access in Action
+users = Hanami.app["db.rom"].gateways[:default].dataset(:users).where(status: "active").to_a
+active_users = users.select { |u| u.status == "active" }
+```
 
-- Actions with > 10 lines of business logic
-- Direct container access (`Hanami.app['key']`)
-- SQL or query logic in Actions/Views
-- Raw hashes returned from Repositories
-- Database queries in Views
-- Exception details in HTTP responses
-- Missing error path tests
-- Untested edge cases
+**2. Dependencies — always via `Deps`, never direct container:**
+
+```ruby
+# GOOD
+include Deps["repos.user_repo"]
+
+# BAD
+repo = Hanami.app["repos.user_repo"]
+```
+
+**3. Repositories — return Entities, not raw hashes:**
+
+```ruby
+# GOOD
+class UserRepo < Hanami::DB::Repo[:users]
+  struct_namespace MyApp::Entities
+  auto_struct true
+end
+
+# BAD
+def find(id) = users.where(id: id).one.to_h
+```
+
+**4. Views — no DB queries or business logic in `expose`:**
+
+```ruby
+# GOOD
+expose :user  # receives pre-fetched entity from Action
+
+# BAD
+expose :user do |request|
+  Hanami.app["repos.user_repo"].by_id(request.params[:id]).one
+end
+```
+
+**5. Error handling — log details, return generic messages:**
+
+```ruby
+# GOOD
+rescue StandardError => e
+  Hanami.app[:logger].error(e.message)
+  halt 500, { error: "Internal server error" }.to_json
+end
+
+# BAD — leaks internals
+halt 500, { error: e.message, backtrace: e.backtrace }.to_json
+```
+
+**6. Tests — cover behavior and all error paths:**
+
+```ruby
+# GOOD
+it "returns 404 for unknown user" do
+  get "/users/9999"
+  expect(last_response.status).to eq(404)
+end
+
+# BAD — tests implementation, not behavior
+expect(user_repo).to receive(:active)
+```
 
 ---
 
@@ -188,17 +147,3 @@ Use this skill when reviewing Hanami 2.x code for quality and convention adheren
 | **create-view** | Verify View simplicity and no DB access. |
 | **write-request-spec** | Verify test coverage for all endpoints. |
 | **review-security** | Cross-reference security concerns during code review. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Code Review Focus) |
-|---|---|
-| Fat controllers | Single-responsibility Actions |
-| `before_action` callbacks | `Deps` injection and explicit method calls |
-| `ApplicationController` shared logic | Each Action declares its own dependencies |
-| `Model.find` in controllers | Repository methods injected via `Deps` |
-| `render @users` | `response.render(view, users: user_repo.all)` |
-| `helper_method` | Part methods or View exposures |
-| `rescue_from` in ApplicationController | `rescue` in individual Actions |

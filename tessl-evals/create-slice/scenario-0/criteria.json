@@ -1,0 +1,31 @@
+{
+  "context": "Checks whether the final artifact follows the create-slice instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when creating and configuring Hanami 2.x Slices.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Register the Slice** in the app:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Define Slice routes** in `slices/<name>/config/routes.rb`:",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Keep Slices self-contained**. A Slice should be able to function independently. Minimize cross-slice dependencies.",
+      "max_score": 20
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Use Slices for bounded contexts**:",
+      "max_score": 20
+    }
+  ]
+}

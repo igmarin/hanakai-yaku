@@ -1,0 +1,42 @@
+{
+  "target_skill": "create-repository",
+  "source_path": "skills/db/create-repository/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when creating ROM Repositories that encapsulate domain-level persistence logic in Hanami 2.x.",
+      "original_snippets": "Use this skill when creating ROM Repositories that encapsulate domain-level persistence logic in Hanami 2.x.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-repository.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Create the Repository file** in the app or slice:",
+      "original_snippets": "**Create the Repository file** in the app or slice:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-repository.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Inject the Repository into Actions** using the Deps mixin:",
+      "original_snippets": "**Inject the Repository into Actions** using the Deps mixin:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-repository.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use transactions** for multi-step writes:",
+      "original_snippets": "**Use transactions** for multi-step writes:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-repository.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Never expose Relations directly**. The Repository is the public API. Views and Actions receive data from Repositories, not Relations.",
+      "original_snippets": "**Never expose Relations directly**. The Repository is the public API. Views and Actions receive data from Repositories, not Relations.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-repository.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Keep Repositories focused**. One Repository per bounded context or entity. Do not create a single \"God\" Repository.",
+      "original_snippets": "**Keep Repositories focused**. One Repository per bounded context or entity. Do not create a single \"God\" Repository.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-repository.",
+      "why_given": "preference"
+    }
+  ]
+}

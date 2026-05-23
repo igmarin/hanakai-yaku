@@ -1,0 +1,54 @@
+{
+  "target_skill": "review-code",
+  "source_path": "skills/cross-cutting/review-code/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when reviewing Hanami 2.x code for quality and convention adherence.",
+      "original_snippets": "Use this skill when reviewing Hanami 2.x code for quality and convention adherence.",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Actions must be single-responsibility HTTP handlers**:",
+      "original_snippets": "**Actions must be single-responsibility HTTP handlers**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Dependencies must be injected via `Deps`**:",
+      "original_snippets": "**Dependencies must be injected via `Deps`**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**All database queries must be in Repositories or Relations**:",
+      "original_snippets": "**All database queries must be in Repositories or Relations**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Repositories must return Entities, not raw hashes**:",
+      "original_snippets": "**Repositories must return Entities, not raw hashes**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Views must not contain database queries or business logic**:",
+      "original_snippets": "**Views must not contain database queries or business logic**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Tests must cover behavior, not implementation**:",
+      "original_snippets": "**Tests must cover behavior, not implementation**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Error responses must be meaningful and not leak internals**:",
+      "original_snippets": "**Error responses must be meaningful and not leak internals**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
+      "why_given": "preference"
+    }
+  ]
+}

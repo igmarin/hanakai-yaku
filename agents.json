@@ -1,0 +1,34 @@
+{
+  "agents": {
+    "add-background-jobs": {
+      "path": "agents/add-background-jobs/SKILL.md"
+    },
+    "add-table-column": {
+      "path": "agents/add-table-column/SKILL.md"
+    },
+    "build-api-slice": {
+      "path": "agents/build-api-slice/SKILL.md"
+    },
+    "build-crud-resource": {
+      "path": "agents/build-crud-resource/SKILL.md"
+    },
+    "create-new-slice": {
+      "path": "agents/create-new-slice/SKILL.md"
+    },
+    "hanami-setup": {
+      "path": "agents/hanami-setup/SKILL.md"
+    },
+    "setup-authentication": {
+      "path": "agents/setup-authentication/SKILL.md"
+    },
+    "slice-lifecycle": {
+      "path": "agents/slice-lifecycle/SKILL.md"
+    },
+    "tdd-loop": {
+      "path": "agents/tdd-loop/SKILL.md"
+    },
+    "validation-contract": {
+      "path": "agents/validation-contract/SKILL.md"
+    }
+  }
+}

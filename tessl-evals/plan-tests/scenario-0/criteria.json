@@ -1,0 +1,41 @@
+{
+  "context": "Checks whether the final artifact follows the plan-tests instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Use this skill when deciding which type of test to write for a Hanami 2.x feature.",
+      "max_score": 15
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: **Core principle:** Test at the highest level that gives you confidence. Prefer request specs for user-facing behavior, unit specs for isolated logic.",
+      "max_score": 15
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Prefer request specs** for critical user paths:",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Use action unit specs** for isolated Action testing:",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Write Relation specs** for custom query methods:",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: **Write Repository specs** for domain persistence methods:",
+      "max_score": 14
+    },
+    {
+      "name": "instruction-7",
+      "description": "The submitted artifact follows this skill instruction: **Avoid view specs** unless the View has complex presentation logic. Most Views are thin and tested implicitly by request specs.",
+      "max_score": 14
+    }
+  ]
+}

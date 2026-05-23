@@ -3,8 +3,11 @@ name: write-rom-spec
 version: "1.0.0"
 license: MIT
 description: >
-  Use when writing ROM relation and repository specs in Hanami 2.x. Covers
-  in-memory ROM setup, transaction rollback, and isolated database testing.
+  Use when writing ROM relation and repository specs in Hanami 2.x — creates
+  relation query specs, configures test repositories, wraps tests in transactional
+  rollback, sets up in-memory ROM gateways, and verifies isolated database testing.
+  Use when testing custom Relation query methods, Repository CRUD operations,
+  or entity creation and lookup in a Hanami 2.x ROM-backed app.
 ecosystem_sources:
   - rspec/rspec
   - rom-rb/rom
@@ -35,7 +38,6 @@ Use this skill when writing specs for ROM Relations and Repositories in Hanami 2
 | Test Relation queries | `expect(relation.active.to_a.length).to eq(2)` |
 | Test Repository methods | `expect(repo.all.length).to eq(3)` |
 | Test entity creation | `expect(user.id).not_to be_nil` |
-| Clean up between specs | Transactions automatically rollback; no manual cleanup needed |
 
 ---
 
@@ -45,6 +47,18 @@ Use this skill when writing specs for ROM Relations and Repositories in Hanami 2
 DO NOT write implementation code before a failing test exists.
 ALWAYS run the test and verify it fails for the right reason before implementing.
 ```
+
+---
+
+## Workflow
+
+Follow this sequence for every ROM spec:
+
+1. **Write the failing spec** — define the example describing the desired behaviour.
+2. **Run the spec; verify the correct failure** — confirm the failure message matches the missing behaviour, not a setup error.
+3. **Implement the minimum code** — write just enough Relation or Repository code to satisfy the spec.
+4. **Run the spec; verify it passes** — confirm green with no unintended side effects.
+5. **Refactor if needed** — clean up, then re-run to confirm still green.
 
 ---
 
@@ -136,50 +150,11 @@ ALWAYS run the test and verify it fails for the right reason before implementing
 
 ## Common Mistakes
 
-| Mistake | Reality |
+| Mistake | Fix |
 |---|---|
-| "I'll skip transactional rollback" | Without rollback, test data pollutes the database and causes flaky tests. |
-| "I'll test ROM's built-in methods" | Do not test `where`, `insert`, or `update`. Test your custom Relation methods and Repository operations. |
-| "I'll create test data in `before(:all)`" | Use `let!` or `before(:each)` so each spec starts with known data. |
-| "I'll manually clean up database state" | Transactional rollback handles cleanup. Do not write manual `after` blocks to delete records. |
-| "I'll test with the production database" | ROM specs should use a test database or in-memory setup. Never run specs against production. |
-| "I'll assert on internal ROM structures" | Assert on Entity attributes and collections, not on raw ROM relation internals. |
-
----
-
-## Red Flags
-
-- Missing transactional rollback
-- Tests for ROM built-in methods
-- Test data created in `before(:all)`
-- Manual database cleanup in `after` blocks
-- Production database used for testing
-- Assertions on internal ROM structures
-- Shared database state between specs
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| **define-relation** | Test custom Relation query methods. |
-| **create-repository** | Test Repository read/write operations. |
-| **define-entity** | Assert on Entity attributes in ROM specs. |
-| **plan-tests** | Decide when ROM specs are needed vs request specs. |
-| **tdd-loop** | Follow the TDD workflow: write failing ROM spec → implement → verify pass. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (ROM Specs) |
-|---|---|
-| `spec/models/user_spec.rb` | `spec/relations/users_spec.rb` + `spec/repos/user_repo_spec.rb` |
-| `User.create!(attrs)` | `repo.create(attrs)` |
-| `User.where(active: true)` | `relation.active.to_a` |
-| `User.find(id)` | `repo.by_id(id).one` |
-| `User.find_by(email: "a@b.com")` | `repo.find_by_email("a@b.com")` |
-| `transaction { ... }` | `rom.gateways[:default].transaction { ... }` |
-| `DatabaseCleaner` gem | Transactional rollback (built into ROM/Hanami test setup) |
-| `FactoryBot.create(:user)` | ROM factories or direct repository calls |
+| Skipping transactional rollback | Without rollback, test data pollutes the database and causes flaky tests. |
+| Testing ROM's built-in methods | Test only your custom Relation methods and Repository operations, not `where`/`insert`/`update`. |
+| Creating test data in `before(:all)` | Use `let!` or `before(:each)` so each spec starts with known, isolated data. |
+| Manual database cleanup in `after` blocks | Transactional rollback handles cleanup automatically. |
+| Asserting on internal ROM structures | Assert on Entity attributes and collections, not raw ROM relation internals. |
+| Sharing state across specs | Each spec must be independent; shared state causes order-dependent failures. |

@@ -1,0 +1,36 @@
+{
+  "target_skill": "load-context",
+  "source_path": "skills/context/load-context/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Load the minimum context needed to work safely in a Hanami codebase. Discover structure before proposing changes.",
+      "original_snippets": "Load the minimum context needed to work safely in a Hanami codebase. Discover structure before proposing changes.",
+      "relevant_when": "When a user asks for Hanami work that should trigger load-context.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Verify:** Test framework, DI conventions, ROM setup.",
+      "original_snippets": "**Verify:** Test framework, DI conventions, ROM setup.",
+      "relevant_when": "When a user asks for Hanami work that should trigger load-context.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Rule:** Never propose code without first running `load-context`.",
+      "original_snippets": "**Rule:** Never propose code without first running `load-context`.",
+      "relevant_when": "When a user asks for Hanami work that should trigger load-context.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "before completing load-context. You must know the app's structure.",
+      "original_snippets": "before completing load-context. You must know the app's structure.",
+      "relevant_when": "When a user asks for Hanami work that should trigger load-context.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "Load these files only when needed:",
+      "original_snippets": "Load these files only when needed:",
+      "relevant_when": "When a user asks for Hanami work that should trigger load-context.",
+      "why_given": "new knowledge"
+    }
+  ]
+}

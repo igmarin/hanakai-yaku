@@ -3,8 +3,11 @@ name: create-view
 version: "1.0.0"
 license: MIT
 description: >
-  Use when creating Hanami 2.x Views. Covers view class structure, expose macro,
-  context, and template rendering with Tilt/ERB.
+  Use when creating Hanami 2.x view classes, exposing data to templates via the
+  expose macro, configuring Tilt/ERB template rendering, setting up layouts, or
+  working with the hanami-view gem and Hanami view layer. Covers view class
+  structure, expose macro, context, rendering HTML templates, and integration
+  with Actions and Parts.
 ecosystem_sources:
   - hanami/hanami-view
 tags:
@@ -120,27 +123,14 @@ Use this skill when creating Hanami 2.x Views.
 
 ---
 
-## Common Mistakes
+## Common Mistakes & Red Flags
 
-| Mistake | Reality |
+| Mistake / Red Flag | Reality |
 |---|---|
-| "I'll put database queries in the View" | Views are for presentation only. All data fetching happens in Actions (via Repositories). |
-| "I'll pass raw params to the View" | Actions should validate params and prepare data before passing to Views. Views receive clean, validated data. |
-| "I'll use instance variables in the template" | Templates receive locals from `expose`. No `@instance_variables`. |
-| "I'll skip the View class and render the template directly" | Always define a View class. It encapsulates presentation logic and makes templates testable. |
-| "I'll put business logic in the `expose` block" | `expose` blocks transform data for presentation only. Business logic belongs in Actions or interactors. |
-| "I'll use a different template path than the View namespace" | Templates follow the View namespace: `app/views/users/show.rb` → `app/templates/users/show.html.erb`. |
-
----
-
-## Red Flags
-
-- Database queries in View classes or templates
-- Raw params passed to Views
-- Instance variables (`@variable`) in templates
-- Business logic in `expose` blocks
-- Views bypassed in favor of direct template rendering
-- Templates with complex conditional logic
+| Database queries in View classes or templates | Views are for presentation only. All data fetching happens in Actions via Repositories. |
+| `@instance_variables` in templates | Templates receive locals from `expose`. No instance variables. |
+| Skipping the View class and rendering templates directly | Always define a View class. It encapsulates presentation logic and makes templates testable. |
+| Template path mismatched from View namespace | Templates follow the View namespace: `app/views/users/show.rb` → `app/templates/users/show.html.erb`. |
 
 ---
 
@@ -152,17 +142,3 @@ Use this skill when creating Hanami 2.x Views.
 | **decorate-with-parts** | Use Parts for complex decorator-style logic in Views. |
 | **create-repository** | Actions fetch data from Repositories before passing to Views. |
 | **write-request-spec** (testing) | Test the full stack: request → Action → View → template. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (View) |
-|---|---|
-| `app/views/users/show.html.erb` | `app/templates/users/show.html.erb` (template) + `app/views/users/show.rb` (View class) |
-| `<%= @user.name %>` | `<%= user.name %>` (local from `expose`) |
-| `UsersController#show` | `MyApp::Actions::Users::Show` (Action) renders `MyApp::Views::Users::Show` (View) |
-| `render partial: "user"` | Use `expose` with a Part or render a nested View |
-| `layout "application"` | `layout "application"` in the View class |
-| `helper_method :current_user` | `expose :current_user` in a base View class or pass from Action |
-| `content_for :title` | Use `expose` or Part methods for dynamic content |

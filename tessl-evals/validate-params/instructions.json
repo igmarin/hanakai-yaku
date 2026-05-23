@@ -1,0 +1,42 @@
+{
+  "target_skill": "validate-params",
+  "source_path": "skills/actions/validate-params/SKILL.md",
+  "instructions": [
+    {
+      "instruction": "Use this skill when validating and coercing request parameters in Hanami 2.x Actions.",
+      "original_snippets": "Use this skill when validating and coercing request parameters in Hanami 2.x Actions.",
+      "relevant_when": "When a user asks for Hanami work that should trigger validate-params.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Define `params` block** inside the Action class with required/optional fields and types",
+      "original_snippets": "**Define `params` block** inside the Action class with required/optional fields and types",
+      "relevant_when": "When a user asks for Hanami work that should trigger validate-params.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Check `request.params.errors`** — inspect or return errors if you need custom responses",
+      "original_snippets": "**Check `request.params.errors`** — inspect or return errors if you need custom responses",
+      "relevant_when": "When a user asks for Hanami work that should trigger validate-params.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Define params inside the Action class**:",
+      "original_snippets": "**Define params inside the Action class**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger validate-params.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "class Create < MyApp::Action",
+      "original_snippets": "class Create < MyApp::Action",
+      "relevant_when": "When a user asks for Hanami work that should trigger validate-params.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "key.failure(\"must match password\") unless value == values[:password]",
+      "original_snippets": "key.failure(\"must match password\") unless value == values[:password]",
+      "relevant_when": "When a user asks for Hanami work that should trigger validate-params.",
+      "why_given": "preference"
+    }
+  ]
+}

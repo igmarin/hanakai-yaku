@@ -1,0 +1,36 @@
+{
+  "context": "Checks whether the final artifact follows the extract-slice instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: **Rule:** Extraction must not change behavior. Run tests before and after.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: DO NOT change behavior during extraction. Every existing test must pass after the move.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Create the target slice** — use `create-slice` to scaffold the new slice structure.",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-4",
+      "description": "The submitted artifact follows this skill instruction: **Update imports** — any remaining code referencing the old namespace must be updated. Check:",
+      "max_score": 17
+    },
+    {
+      "name": "instruction-5",
+      "description": "The submitted artifact follows this skill instruction: **Verify** — run the full test suite. Every test that passed before must pass after.",
+      "max_score": 16
+    },
+    {
+      "name": "instruction-6",
+      "description": "The submitted artifact follows this skill instruction: Load these files only when needed:",
+      "max_score": 16
+    }
+  ]
+}
