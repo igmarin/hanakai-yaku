@@ -1,119 +1,103 @@
-# Hanakai Yaku (Skills)
+# hanakai-yaku
 
-A curated library of atomic skills and callable agents for the Hanami 2.x Ruby framework.
+**hanakai-yaku turns AI coding assistants into disciplined Hanami collaborators.**
 
-## Purpose
+A curated library of atomic skills for Hanami, dry-rb, and ROM Ruby development. 3 initial skills and 1 agent (expanding to 18 skills + 3 agents) that teach AI tools how to configure providers, implement dependency injection, write TDD tests, create repositories, design slices, and build operations — using Hanami conventions.
 
-`hanakai-yaku` teaches AI coding agents (and developers) how to build Hanami 2.x applications using production-minded conventions. It covers the full stack: database layer (Sequel, ROM), HTTP layer (Actions, Views, Routing), dependency injection, testing, and agents.
-
-## Repository Structure
+The project is built around one non-negotiable rule:
 
 ```text
-hanakai-yaku/
-├── skills/           # 29 atomic skills organized by category
-│   ├── actions/      # Action anatomy, JSON API, params validation, halt/errors
-│   ├── cli/          # hanami new, generate-components, db commands, dev runtime
-│   ├── cross-cutting/ # manage-settings, review-code
-│   ├── db/           # Sequel migrations, ROM relations, repositories, structs/entities
-│   ├── di/           # Deps mixin, register-provider
-│   ├── dry-monads/   # Result pattern
-│   ├── refactor-code/  # Refactoring conventions
-│   ├── routing/      # Routes DSL
-│   ├── review-security/  # Security review conventions
-│   ├── slices/       # Slice anatomy, configuration
-│   ├── testing/      # Test planning, request specs, action unit specs, ROM specs
-│   └── views/        # View objects, view parts
-├── agents/        # 8 callable agents
-│   ├── tdd-loop/
-│   ├── build-crud-resource/
-│   ├── build-api-slice/
-│   ├── setup-authentication/
-│   ├── add-table-column/
-│   ├── create-new-slice/
-│   ├── validation-contract/
-│   └── add-background-jobs/
-├── mcp_server/       # Ruby MCP server
-├── docs/             # Documentation
-│   ├── reference/    # Skill catalog, integration matrix
-│   ├── using-skills-guide.md  # How to compose skills into agents
-│   └── agents/    # Workflow guide
-├── CLAUDE.md         # Claude Code configuration
-├── AGENTS.md         # OpenAI Codex configuration
-├── GEMINI.md         # Gemini CLI configuration
-└── CONTRIBUTING.md   # Contribution guidelines
+Write test -> Run test -> Verify it FAILS for the right reason -> Implement -> Verify it PASSES
 ```
 
-## Usage
+That TDD gate is encoded directly into the skills and agents.
 
-### MCP Server (Recommended)
+> Supported agent environments
+>
+> [![Claude](https://img.shields.io/badge/Claude-D97757?logo=claude&logoColor=fff)](#)
+> [![Cursor](https://img.shields.io/badge/Cursor-000000?logo=cursor)](#)
+> [![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-000?logo=githubcopilot&logoColor=fff)](#)
+> [![Google Gemini](https://img.shields.io/badge/Google%20Gemini-886FBF?logo=googlegemini&logoColor=fff)](#)
+> [![OpenCode](https://img.shields.io/badge/OpenCode-4285F4?style=for-the-badge&logoColor=white)](#)
+> [![Windsurf](https://img.shields.io/badge/Windsurf-0B100F?logo=windsurf&logoColor=fff)](#)
 
-The MCP server keeps context small by loading skills on demand:
+> [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-```bash
-cd mcp_server
-bundle install
-bundle exec ruby server.rb
+## Who This Is For
+
+| Reader | What you get |
+| Hanami developers | AI-assisted Hanami development: slices, repositories, operations, actions, views. |
+| dry-rb users | Guidance on operations, validation contracts, DI patterns, and type-safe design. |
+| ROM users | Repository patterns, relation design, changeset composition, migration safety. |
+| Team leads | Repeatable workflows for Hanami onboarding, TDD discipline, and slice architecture. |
+
+## What Is In The Repository
+
+| Area | Purpose |
+|------|---------|
+| `skills/` | Atomic Hanami skills organized by category: context, providers, actions, persistence, dry-rb, testing, slices, views. |
+| `agents/` | Orchestrated agents that chain skills into guided workflows. |
+| `docs/` | Architecture, agent guide, reference catalog, and calling conventions. |
+| `CONTEXT.md` | Domain glossary — the canonical vocabulary for Hanami concepts. |
+
+## Start Here
+
+Skills are invoked via chat commands:
+
+| Method | Syntax | Example |
+|--------|--------|---------|
+| **Chat Command** | `@skill-name` | `@load-context` |
+
+```text
+@load-context            # Discover the app's slices, providers, and routes
+@configure-providers     # Set up providers and settings
+@implement-di            # Configure dependency injection patterns
+@hanami-setup            # Full project onboarding workflow
 ```
 
-Exposes:
-- `list_skills` — Discover available skills
-- `use_skill` — Load a specific skill's instructions
+## Skill Catalog
 
-### Direct File Reference
+| Skill | Category | Description |
+|-------|----------|-------------|
+| `load-context` | Context | Load the Hanami app structure before coding |
+| `configure-providers` | Providers | Set up Hanami providers, settings, and .env |
+| `implement-di` | Providers | Dependency injection patterns with dry-system |
 
-Reference skills by canonical name from frontmatter:
+### Agent
 
-- `write-migration`
-- `create-action`
-- `tdd-loop`
+| Agent | Description |
+|-------|-------------|
+| `hanami-setup` | Project onboarding: Context → Providers → DI → Verify |
 
-### GitHub CLI
+See `docs/reference/skill-catalog.md` for the complete catalog.
 
-```bash
-gh skill install igmarin/hanakai-yaku write-migration
+## How Skills Work
+
+Each skill is a single `SKILL.md` file with YAML frontmatter and a 6-section body:
+
+```text
+1. Frontmatter (YAML)       — name, description, metadata
+2. Quick Reference          — scannable table for fast lookup
+3. HARD-GATE               — non-negotiable blocking rules
+4. Core Process             — step-by-step procedure
+5. Output Style             — exact shape of artifacts
+6. Integration              — predecessor/successor skills
 ```
 
-## Skill Categories
+## Documentation Map
 
-| Category | Skills |
-|---|---|
-| Database | `write-migration`, `define-relation`, `create-repository`, `define-entity` |
-| Actions | `create-action`, `build-json-api`, `validate-params`, `handle-errors` |
-| DI | `inject-dependencies`, `register-provider` |
-| Views | `create-view`, `decorate-with-parts` |
-| Routing | `define-routes` |
-| Slices | `create-slice`, `configure-slice` |
-| Testing | `plan-tests`, `write-request-spec`, `write-action-spec`, `write-rom-spec` |
-| CLI | `create-app`, `generate-components`, `manage-database`, `run-development` |
-| Cross-cutting | `handle-result-pattern`, `manage-settings`, `review-code`, `review-security`, `refactor-code` |
-
-## agents
-
-| Workflow | Description |
-|---|---|
-| `tdd-loop` | TDD feature development loop |
-| `build-crud-resource` | Full CRUD resource implementation |
-| `build-api-slice` | API-only slice creation |
-| `setup-authentication` | Authentication integration |
-| `add-table-column` | Schema migration workflow |
-| `create-new-slice` | New slice creation |
-| `validation-contract` | dry-validation contract implementation |
-| `add-background-jobs` | Background job integration |
-
-## TDD Gate
-
-All code-producing skills enforce the TDD Gate:
-
-1. Write a failing test
-2. Run and verify it fails for the right reason
-3. Implement the minimal code to make it pass
-4. Verify the test passes
-5. Refactor if needed
+| Need | Document |
+|------|----------|
+| Understand the docs system | [docs/index.md](docs/index.md) |
+| Browse all skills | [docs/reference/skill-catalog.md](docs/reference/skill-catalog.md) |
+| Understand skill chaining | [docs/reference/integration-matrix.md](docs/reference/integration-matrix.md) |
+| Follow agent guides | [docs/agent-guide.md](docs/agent-guide.md) |
+| Understand repository structure | [docs/architecture.md](docs/architecture.md) |
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding new skills.
+When contributing skills, agents, or docs:
 
-## License
-
-MIT
+- Keep generated artifacts in English unless the user explicitly asks for another language.
+- Preserve the tests-gate-implementation rule for every code-producing skill.
+- Keep public docs consistent with `tile.json`, `agents.json`, and `CONTEXT.md`.

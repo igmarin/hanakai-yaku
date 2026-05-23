@@ -1,0 +1,8 @@
+# Root orchestrator — not an atomic skill registered in tile.json
+/SKILL.md
+
+# Agent files are registered in agents.json, not tile.json
+agents/
+
+# Local scratch / config
+tmp/

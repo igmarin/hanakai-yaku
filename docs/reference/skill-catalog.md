@@ -1,49 +1,105 @@
-# Skill Catalog
+# Skill Catalog — hanakai-yaku
 
-Complete catalog of all skills and agents in the `hanakai-yaku` repository.
+Catalog of Hanami, dry-rb, and ROM development skills. 3 skills and 1 agent available now; 15 skills and 2 agents planned.
 
-## Atomic Skills
+---
 
-| Name | Category | Description | Ecosystem Sources |
-|---|---|---|---|
-| `write-migration` | db | Write and run Sequel database migrations | jeremyevans/sequel |
-| `define-relation` | db | Define ROM Relations with schema and queries | rom-rb/rom, rom-rb/rom-sql |
-| `create-repository` | db | Create ROM Repositories for persistence | rom-rb/rom, rom-rb/rom-sql |
-| `define-entity` | db | Define ROM Structs and Entities | rom-rb/rom, rom-rb/rom-sql |
-| `create-action` | actions | Create Hanami 2.x Actions | hanami/hanami-controller |
-| `build-json-api` | actions | Build JSON API responses | hanami/hanami-controller |
-| `validate-params` | actions | Validate request parameters | hanami/hanami-controller |
-| `handle-errors` | actions | Handle errors and halting | hanami/hanami-controller |
-| `inject-dependencies` | di | Inject dependencies with Deps | dry-rb/dry-system |
-| `register-provider` | di | Register external dependencies | dry-rb/dry-system |
-| `create-view` | views | Create Hanami 2.x Views | hanami/hanami-view |
-| `decorate-with-parts` | views | Use View Parts for decorator logic | hanami/hanami-view |
-| `define-routes` | routing | Define routes | hanami/hanami-router |
-| `create-slice` | slices | Create modular Slices | hanami/hanami |
-| `configure-slice` | slices | Configure Slices | hanami/hanami |
-| `plan-tests` | testing | Choose the right test type | rspec/rspec, hanami/hanami |
-| `write-request-spec` | testing | Write RSpec request specs | rspec/rspec, hanami/hanami |
-| `write-action-spec` | testing | Write isolated Action specs | rspec/rspec, hanami/hanami |
-| `write-rom-spec` | testing | Write ROM relation/repository specs | rspec/rspec, hanami/hanami |
-| `create-app` | cli | Scaffold new Hanami applications | hanami/hanami |
-| `generate-components` | cli | Generate components | hanami/hanami-cli |
-| `manage-database` | cli | Run database CLI commands | hanami/hanami-cli |
-| `run-development` | cli | Development server and console | hanami/hanami-cli |
-| `handle-result-pattern` | dry-monads | Use dry-monads Success/Failure | dry-rb/dry-monads |
-| `manage-settings` | cross-cutting | Manage application settings | hanami/hanami |
-| `review-code` | cross-cutting | Review Hanami 2.x code | hanami/hanami |
-| `review-security` | cross-cutting | Review security concerns | hanami/hanami |
-| `refactor-code` | cross-cutting | Refactor Hanami 2.x code | hanami/hanami |
+## Quick Navigation
 
-## agents
+**Skills:** [load-context](#load-context) · [configure-providers](#configure-providers) · [implement-di](#implement-di)
+**Agents:** [hanami-setup](#hanami-setup-agent)
 
-| Name | Description | Constituent Skills |
-|---|---|---|
-| `tdd-loop` | TDD feature development | plan-tests → write-request-spec → implement → review-code |
-| `build-crud-resource` | Full CRUD resource | define-entity → define-relation → create-repository → create-action → create-view → write-request-spec → review-code |
-| `build-api-slice` | API-only slice | create-slice → create-action → define-routes → write-request-spec → review-code |
-| `setup-authentication` | Authentication | inject-dependencies → register-provider → create-action → handle-errors |
-| `add-table-column` | Schema migration | write-migration → define-relation → define-entity → create-repository → write-request-spec |
-| `create-new-slice` | New slice creation | create-slice → define-routes → configure-slice → inject-dependencies → write-request-spec |
-| `validation-contract` | dry-validation | inject-dependencies → validate-params → handle-result-pattern → write-action-spec |
-| `add-background-jobs` | Background jobs | register-provider → inject-dependencies → create-action → write-action-spec |
+---
+
+## Skills
+
+### load-context
+
+| Path | `skills/context/load-context/SKILL.md` |
+| Category | Context |
+| Description | Load Hanami app structure before any code work |
+| Trigger Words | "load context", "before I code", "what does this app use", "discover structure" |
+
+**What it does:** Discovers all slices, providers, settings, routes, relations, and established patterns in a Hanami app. The non-negotiable first step before any implementation.
+
+**HARD-GATE:** Do not propose code without completing load-context.
+
+**Next after use:** `configure-providers` (after context, to set up providers) or `hanami-setup` (first step in onboarding).
+
+---
+
+### configure-providers
+
+| Path | `skills/providers/configure-providers/SKILL.md` |
+| Category | Providers |
+| Description | Configure Hanami providers for services and databases |
+| Trigger Words | "provider", "configure", "ROM setup", "external service", "register component" |
+
+**What it does:** Creates provider files for external services, database connections, and application components. Integrates with Hanami settings for environment configuration.
+
+**HARD-GATE:** Never hardcode credentials. Use settings for all environment values.
+
+**Next after use:** `implement-di` (inject the provider into consumers).
+
+---
+
+### implement-di
+
+| Path | `skills/providers/implement-di/SKILL.md` |
+| Category | Providers |
+| Description | Implement dependency injection with dry-system auto_inject |
+| Trigger Words | "dependency injection", "DI", "auto_inject", "Deps", "inject" |
+
+**What it does:** Adds `include Deps[...]` to actions, operations, and repositories. Ensures dependencies are injected through the constructor. Provides testing patterns for DI.
+
+**HARD-GATE:** Never call the container directly. Always inject through the constructor.
+
+**Next after use:** Write tests with injected test doubles; proceed to implementation.
+
+---
+
+## Agents
+
+### hanami-setup Agent
+
+| Path | `agents/hanami-setup/SKILL.md` |
+| Description | Project onboarding lifecycle |
+
+**Phases:** Context Loading → Provider Configuration → DI Implementation → Verification
+
+**Hard Gates:** Context Loaded, Providers Verified
+
+**Dependencies:** `load-context`, `configure-providers`, `implement-di`
+
+---
+
+## Planned (Future Groups)
+
+| Skill/Agent | Category | Group |
+|-------------|----------|-------|
+| `create-action` | Actions | Group 2 |
+| `test-action` | Actions | Group 2 |
+| `create-repository` | Persistence | Group 2 |
+| `create-relation` | Persistence | Group 2 |
+| `create-changeset` | Persistence | Group 2 |
+| `create-operation` | dry-rb | Group 2 |
+| `create-validation-contract` | dry-rb | Group 2 |
+| `write-tests` | Testing | Group 2 |
+| `plan-tests` | Testing | Group 2 |
+| `hanami-tdd` (agent) | Agents | Group 2 |
+| `create-slice` | Slices | Group 3 |
+| `test-slice` | Slices | Group 3 |
+| `extract-slice` | Slices | Group 3 |
+| `review-slice-boundaries` | Slices | Group 3 |
+| `create-view` | Views | Group 3 |
+| `design-routes` | Actions | Group 3 |
+| `review-migration` | Persistence | Group 3 |
+| `slice-lifecycle` (agent) | Agents | Group 3 |
+
+---
+
+## See Also
+
+- [Integration Matrix](integration-matrix.md) — How skills chain together
+- [Agent Guide](../agent-guide.md) — Agent workflows with Mermaid diagrams
+- [Architecture](../architecture.md) — Repository layout and conventions
