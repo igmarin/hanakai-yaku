@@ -4,11 +4,11 @@ This file provides equivalent instructions to `CLAUDE.md` for Gemini CLI.
 
 ## Repository Purpose
 
-`hanakai-yaku` is a curated library of atomic skills and callable agents for the Hanami 2.x Ruby framework. It teaches AI coding agents (and developers) how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions.
+`hanakai-yaku` is a curated library of 35 atomic skills and 10 callable agents for the Hanami 2.x Ruby framework. It teaches AI coding agents (and developers) how to plan, implement, test, and review Hanami 2.x applications using production-minded conventions. **This repo depends on `ruby-core-skills`** for shared Ruby process skills (`tdd-process`, `refactor-process`, `review-process`, `security-review-process`, `test-planning-process`). These are resolved automatically via pack resolution.
 
 ## Skill Catalog
 
-The repository contains 29 atomic skills and 8 agents covering:
+The repository contains 35 atomic skills and 10 agents covering:
 
 - **Database layer**: Sequel migrations, ROM Relations, Repositories, Structs/Entities
 - **Actions layer**: Action anatomy, JSON API, params validation, halt/errors
@@ -16,9 +16,10 @@ The repository contains 29 atomic skills and 8 agents covering:
 - **Views layer**: View objects, view parts
 - **Routing**: Routes DSL
 - **Slices**: Slice anatomy, configuration
-- **Testing**: Test planning, request specs, action unit specs, ROM specs
+- **Testing**: Request specs, action unit specs, ROM specs
 - **CLI**: `hanami new`, generate-components, db commands, dev runtime
-- **Cross-cutting**: dry-monads result pattern, manage-settings, code review, security review, refactor-code
+- **Cross-cutting**: dry-monads result pattern, manage-settings, code review, security review
+- **Process skills** *(from ruby-core-skills)*: `tdd-process`, `refactor-process`, `review-process`, `security-review-process`, `test-planning-process`
 
 ## How to Discover Skills
 
