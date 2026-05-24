@@ -1,18 +1,19 @@
 ---
 name: setup-authentication
-version: "1.0.0"
 license: MIT
 description: >
   Use when implementing authentication in Hanami 2.x. Chains inject-dependencies,
   providers, create-action, and handle-errors.
-ecosystem_sources:
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - hanami/hanami-controller
-tags:
+  tags:
   - agents
   - authentication
   - auth
   - security
+  version: 1.0.0
 ---
 
 # setup-authentication

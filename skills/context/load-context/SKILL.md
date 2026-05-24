@@ -23,88 +23,72 @@ Load the minimum context needed to work safely in a Hanami codebase. Discover st
 
 ## Core Process
 
-> **Pattern reference:** See [PATTERNS.md](./PATTERNS.md) for guidance on sampling established patterns from actions, operations, and repositories.
+> [!IMPORTANT]
+> **Security Gate:** Always redact all passwords, credentials, tokens, and API keys. Replace them with `[REDACTED]` or `*****` in any notes or summaries.
 
-1. **Slice inventory** — list every slice in `slices/`. Note each slice's actions, repositories, relations, operations, and views.
+> **Pattern reference:** For details on sampling, see [PATTERNS.md](PATTERNS.md).
+
+1. **Slice inventory** — list every slice in `slices/`:
    ```bash
    find slices/ -mindepth 1 -maxdepth 1 -type d
    find slices/ -name '*.rb' | head -40
    ```
-   > **Checkpoint:** If `slices/` is empty or missing, this may not be a Hanami 2.x app. Verify with `cat config/app.rb` or check `Gemfile` for the `hanami` gem version before continuing.
+   *Checkpoint:* If `slices/` is missing, verify this is a Hanami 2.x application by checking `Gemfile` or `config/app.rb`.
 
-2. **Provider inventory** — read `config/providers/`. Identify every registered provider and its dependencies (ROM connections, external services, application components).
+2. **Provider inventory** — read `config/providers/` to identify registered integrations:
    ```bash
    cat config/providers/*.rb
    ```
-   > **Security checkpoint:** Redact all secrets (passwords, API keys, tokens, secret keys) when summarizing provider configuration. Replace with `[REDACTED]` or `*****`.
-   > **Checkpoint:** If no provider files are found, note this explicitly in your output — DI and ROM steps may need to rely on inline configuration instead.
 
-3. **Settings** — read `config/settings.rb` (or `config/settings/`). Note environment-specific values, type constraints, and configured services.
+3. **Settings** — inspect `config/settings.rb` for environment variables and type constraints:
    ```bash
    cat config/settings.rb 2>/dev/null || cat config/settings/*.rb
    ```
-   > **Security checkpoint:** Redact all secrets (passwords, API keys, tokens, secret keys) when summarizing settings. Replace with `[REDACTED]` or `*****`.
 
-4. **Routes** — read `config/routes.rb`. Map the URL space to slices and actions.
+4. **Routes** — read `config/routes.rb` to map URL endpoints:
    ```bash
    cat config/routes.rb
    ```
 
-5. **ROM setup** — read `config/providers/rom.rb` (or equivalent). Identify database adapters, relation paths, and migration setup.
+5. **ROM setup** — identify database adapters, relation paths, and migration setup:
    ```bash
    cat config/providers/rom.rb 2>/dev/null || grep -r 'rom' config/providers/ -l
    ```
 
-6. **Test setup** — detect test framework (RSpec), spec helper conventions, and slice test isolation patterns.
+6. **Test setup** — detect testing frameworks and transactional helpers:
    ```bash
    cat spec/spec_helper.rb 2>/dev/null
    find spec/ -name '*_helper.rb' | head -10
    ```
 
-7. **Dependency injection** — detect auto_inject usage patterns. Note whether `include Deps[...]` is used in actions, operations, and repositories.
+7. **Dependency injection** — analyze auto_inject usages and mixin styles:
    ```bash
    grep -r 'include Deps' slices/ --include='*.rb' | head -10
    grep -r 'auto_inject' slices/ config/ --include='*.rb' | head -10
    ```
 
-8. **Existing patterns** — sample 2-3 actions, operations, and repositories to understand the established style (naming, response contracts, error handling).
+8. **Existing patterns** — sample actions, operations, and repos:
    ```bash
    find slices/ -path '*/actions/*.rb' | head -3 | xargs cat
    find slices/ -path '*/operations/*.rb' | head -3 | xargs cat
    find slices/ -path '*/repositories/*.rb' | head -3 | xargs cat
    ```
 
+---
+
 ## Completion Gate
 
-Before proceeding to any implementation work, confirm that all seven output sections below have been populated. If any section could not be filled (e.g., no providers found), record that explicitly as `— (not found)` rather than skipping the row. Do not proceed to implementation until this checklist is complete:
+Before proceeding to any implementation, populate the 7 sections of the context map. For details on the output format and examples, refer to [CONTEXT-OUTPUT-FORMAT.md](CONTEXT-OUTPUT-FORMAT.md).
 
-- [ ] Slice map populated (or confirmed absent)
-- [ ] Provider map populated (or confirmed absent)
+- [ ] Slice map populated
+- [ ] Provider map populated
 - [ ] Settings summary recorded
 - [ ] Route summary recorded
 - [ ] Test infrastructure identified
 - [ ] DI conventions noted
-- [ ] Pattern notes captured from sampled files
+- [ ] Pattern notes captured
 
-## Output Style
-
-1. **Slice map** — `| Slice | Actions | Repositories | Operations | Views |`
-2. **Provider map** — `| Provider | Source | Registered components |`
-3. **Settings summary** — key settings values with types. **Redact all secrets** (passwords, API keys, tokens, secret keys) and replace with `[REDACTED]`.
-4. **Route summary** — top-level routes grouped by slice.
-5. **Test infrastructure** — framework, spec helper location, slice test isolation.
-6. **DI conventions** — auto_inject usage, Deps include style.
-7. **Pattern notes** — established conventions for actions, operations, repositories.
-8. **English only** unless user requests otherwise.
-
-### Example Output (Slice Map)
-
-| Slice | Actions | Repositories | Operations | Views |
-|-------|---------|--------------|------------|-------|
-| `admin` | `users/index`, `users/show`, `users/create` | `users_repo` | `create_user` | `users/index`, `users/show` |
-| `api` | `v1/health`, `v1/users/index` | — | — | — |
-
-> Fill in each column from the discovered files; leave `—` where no files exist.
+---
 
 ## Integration
 

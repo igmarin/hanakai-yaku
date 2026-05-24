@@ -1,23 +1,25 @@
 ---
 name: define-relation
-version: "1.0.0"
 license: MIT
 description: >
-  Use when defining ROM relation classes, configuring schema inference from database tables,
-  building custom query methods, or setting up one-to-many, many-to-one, and other associations
-  in Hanami 2.x. Covers the full relation class lifecycle: schema inference via rom-sql,
-  explicit attribute declarations, dataset filters, repository queries, and the Relation as
-  the data query layer. Trigger terms: ROM Relations, Hanami 2.x, relation class, database
-  relations, rom-sql, auto_struct, schema inference, associations, query methods.
-ecosystem_sources:
+  Use when defining ROM relation classes, configuring schema inference from database
+  tables, building custom query methods, or setting up one-to-many, many-to-one, and
+  other associations in Hanami 2.x. Covers the full relation class lifecycle: schema
+  inference via rom-sql, explicit attribute declarations, dataset filters, repository
+  queries, and the Relation as the data query layer. Trigger terms: ROM Relations,
+  Hanami 2.x, relation class, database relations, rom-sql, auto_struct, schema inference,
+  associations, query methods.
+metadata:
+  ecosystem_sources:
   - rom-rb/rom
   - rom-rb/rom-sql
   - hanami/hanami-db
-tags:
+  tags:
   - db
   - rom
   - relations
   - queries
+  version: 1.0.0
 ---
 
 # define-relation
@@ -84,39 +86,45 @@ Use this skill when defining ROM Relations that map to database tables in Hanami
    end
    ```
 
-5. **Define associations** to navigate between Relations:
+5. **Define associations**:
+   Link related tables using association DSL macros. For complete association setup and advanced configurations, see [RELATIONS.md](RELATIONS.md).
 
    ```ruby
-   many_to_one :users, as: :author    # belongs_to
-   one_to_many :posts, as: :posts     # has_many
+   associations do
+     many_to_one :users, as: :author
+     one_to_many :posts, as: :posts
+   end
    ```
 
-6. **Never put business logic in Relations**. Relations filter and fetch data. Business decisions belong in Repositories, interactors, or service objects.
+6. **Filter queries via custom methods**:
+   Encapsulate query filters inside public relation methods:
 
-7. **Keep Relations in sync with migrations**. When a migration adds, removes, or renames columns, update the Relation schema if not using `infer: true`.
+   ```ruby
+   def active
+     where(status: "active")
+   end
+   ```
 
-8. **Verify the Relation after any schema change.** Boot the console and inspect the inferred schema:
+7. **Keep Relations in sync with migrations**:
+   If not using `infer: true`, manually sync explicit schema declarations when migrations alter the database. Verify using the console:
 
    ```bash
    bundle exec hanami console
+   # check app["relations.users"].schema
    ```
-   ```ruby
-   app["relations.users"].schema        # lists all inferred attributes
-   app["relations.users"].schema.to_h   # inspect types
-   ```
-   Confirm column names and types match expectations before proceeding.
 
-9. **Test Relations** with in-memory ROM setup (`write-rom-spec`).
+8. **Never put business logic in Relations**:
+   Relations are the query construction layer. Do not place validations or side effects here; those belong in Operations, Repositories, or actions.
 
 ---
 
 ## Common Mistakes
 
-| Mistake | Reality |
+| Mistake | Resolution |
 |---|---|
-| "I'll use `infer: true` but also declare explicit attributes for the same columns" | Either infer or declare explicitly. Declaring attributes that conflict with inferred types causes boot errors. |
-| "I'll access Relations directly from Views" | Views should receive data from Actions, which get it from Repositories. Do not bypass the Repository layer. |
-| "I'll name the Relation class `User` (singular)" | Relation names are plural and match the table name: `Users`, `Posts`, `Organizations`. |
+| Redundant declarations | Do not declare explicit attributes for columns that are already auto-inferred (causes boot errors). |
+| Direct View access | Bypassing the Repository layer to query relations directly in views is an anti-pattern. |
+| Singular class names | Relations map to plural database tables and must be plural: `Users`, not `User`. |
 
 ---
 

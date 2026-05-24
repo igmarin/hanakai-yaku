@@ -1,20 +1,22 @@
 ---
 name: review-security
-version: "1.0.0"
 license: MIT
 description: >
-  Use when conducting a security audit, vulnerability check, or code review on Hanami 2.x
-  applications. Validates parameter handling, detects CSRF misconfigurations, audits
-  authentication integration points, flags SQL injection and XSS risks, enforces input
-  sanitization, and identifies secrets management and session configuration issues.
-ecosystem_sources:
+  Use when conducting a security audit, vulnerability check, or code review on Hanami
+  2.x applications. Validates parameter handling, detects CSRF misconfigurations,
+  audits authentication integration points, flags SQL injection and XSS risks, enforces
+  input sanitization, and identifies secrets management and session configuration
+  issues.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
-tags:
+  tags:
   - security
   - review
   - csrf
   - authentication
   - vulnerabilities
+  version: 1.0.0
 ---
 
 # review-security

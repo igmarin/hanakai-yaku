@@ -1,24 +1,26 @@
 ---
 name: define-entity
-version: "1.0.0"
 license: MIT
 description: >
-  Use when defining ROM Struct attributes, configuring dry-types coercion for entity fields,
-  implementing value-based equality semantics, or setting up a domain model class in Hanami 2.x.
-  Handles creating entity classes, declaring typed attributes, enforcing immutability, configuring
-  the repository struct namespace, and syncing entity definitions with schema changes. Use when
-  working with ROM entity class definitions, persistence layer value objects, ROM relation mappings,
-  or any Hanami 2.x domain model backed by rom-rb.
-écosystem_sources:
+  Use when defining ROM Struct attributes, configuring dry-types coercion for entity
+  fields, implementing value-based equality semantics, or setting up a domain model
+  class in Hanami 2.x. Handles creating entity classes, declaring typed attributes,
+  enforcing immutability, configuring the repository struct namespace, and syncing
+  entity definitions with schema changes. Use when working with ROM entity class definitions,
+  persistence layer value objects, ROM relation mappings, or any Hanami 2.x domain
+  model backed by rom-rb.
+metadata:
+  ecosystem_sources:
   - rom-rb/rom
   - rom-rb/rom-sql
   - hanami/hanami-db
-tags:
+  tags:
   - db
   - rom
   - entities
   - structs
   - value-objects
+  version: 1.0.0
 ---
 
 # define-entity
@@ -49,31 +51,30 @@ Use this skill when defining ROM Structs and Entities in Hanami 2.x.
    end
    ```
 
-2. **Use dry-types for coercion and constraints**:
+2. **Apply dry-types coercion and constraints**:
+   Specify attribute types using standard dry-types constraints. For a comprehensive list of type modifiers, constraints, and defaults, see [TYPES.md](TYPES.md).
 
    ```ruby
    attribute :email, Types::String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.\w+\z/)
-   attribute :age, Types::Integer.constrained(gt: 0)
-   attribute :role, Types::String.default("member").enum("admin", "member", "guest")
+   attribute :role, Types::String.default("member")
    ```
 
-3. **Entities are immutable**. To change an Entity, create a new one:
+3. **Entities are immutable**:
+   Entities cannot be mutated in place. Use `#copy` to return a new instance with updated attributes:
 
    ```ruby
-   updated_user = user.copy(name: "New Name")
+   updated_user = user.copy(first_name: "Alicia")
    ```
 
-4. **Equality is value-based**. Two Entities with the same attributes are equal:
+4. **Equality is value-based**:
+   Two entity instances with identical attributes are considered equivalent:
 
    ```ruby
-   user1 = User.new(id: 1, email: "a@b.com")
-   user2 = User.new(id: 1, email: "a@b.com")
-   user1 == user2 # => true
+   user1 == user2 # => true if attributes match
    ```
 
-5. **Keep Entities simple**. No business logic, no persistence methods, no validations.
-
-6. **Register the Entity namespace** in the Repository:
+5. **Register the Entity namespace in Repositories**:
+   Wired repositories require mapping directives to output typed Entity classes rather than generic ROM structs:
 
    ```ruby
    class UserRepo < Hanami::DB::Repo[:users]
@@ -82,31 +83,22 @@ Use this skill when defining ROM Structs and Entities in Hanami 2.x.
    end
    ```
 
-7. **Update Entities when the schema changes**. When a migration adds or removes columns, update the corresponding Entity attributes. After updating, verify that the returned struct fields match the database columns with a quick REPL check:
-
-   ```ruby
-   # In a Hanami console (bundle exec hanami console)
-   user = MyApp::App[:user_repo].users.first
-   user.class            # => MyApp::Entities::User
-   user.class.attributes # confirm all expected attribute keys are present
-   user.respond_to?(:new_column) # => true after adding the attribute
-   ```
-
-   Or run the relevant unit/integration tests:
+6. **Sync Entities with migrations**:
+   Keep entity class attributes manually updated with database schema modifications. Verify using the Hanami console or spec suite:
 
    ```bash
-   bundle exec rspec spec/entities/user_spec.rb spec/repositories/user_repo_spec.rb
+   bundle exec hanami console
+   # check MyApp::App[:user_repo].users.first.class.attributes
    ```
 
 ---
 
 ## Common Mistakes
 
-| Mistake | Reality |
+| Mistake | Resolution |
 |---|---|
-| Calling `user.name = "new"` to mutate | Entities are frozen; use `user.copy(name: "new")` instead |
-| Forgetting to update the Entity after a migration | The struct will raise `ROM::Struct::UnknownAttributeError` for unmapped columns; always sync attributes with schema changes |
-| Adding business logic or validations inside the Entity | Entities are pure data containers; put validations in operations/actions and business logic in domain services |
-| Using plain Ruby `Struct` or `Data` instead of `Hanami::DB::Entity` | You lose dry-types coercion, `.copy`, and value-based equality automatically provided by ROM Struct |
-| Omitting `struct_namespace` in the Repository | ROM will return generic `ROM::Struct` instances instead of your typed Entity class |
-| Declaring optional attributes without a default or `Types::Nominal` | A `nil` value will raise a type error; use `Types::String.optional.meta(omittable: true)` or provide a default |
+| Attempting in-place mutations (`user.name = "new"`) | Entities are frozen. Always use `user.copy(name: "new")`. |
+| Out of sync migrations | Stale attributes cause `UnknownAttributeError`. Sync entity attributes with database migrations. |
+| Putting business logic inside Entities | Entities are pure data structs. Place logic in domain services or actions. |
+| Omitting `struct_namespace` configuration | Omitting this returns generic `ROM::Struct` objects instead of your custom Entity class. |
+| Missing `.optional` on nullable fields | Null database columns require `Types::String.optional` to prevent boot/coercion type errors. |

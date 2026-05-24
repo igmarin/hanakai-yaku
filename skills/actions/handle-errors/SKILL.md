@@ -1,19 +1,21 @@
 ---
 name: handle-errors
-version: "1.0.0"
 license: MIT
 description: >
-  Use when handling errors, raising exceptions, or halting requests in Hanami 2.x Actions. Demonstrates
-  how to halt requests with specific HTTP status codes (404, 422, 500), rescue and catch exceptions in
-  actions, and return custom error responses. Use when implementing error handling patterns, exception
-  handling, or returning JSON error responses in Hanami actions.
-ecosystem_sources:
+  Use when handling errors, raising exceptions, or halting requests in Hanami 2.x
+  Actions. Demonstrates how to halt requests with specific HTTP status codes (404,
+  422, 500), rescue and catch exceptions in actions, and return custom error responses.
+  Use when implementing error handling patterns, exception handling, or returning
+  JSON error responses in Hanami actions.
+metadata:
+  ecosystem_sources:
   - hanami/hanami-controller
-tags:
+  tags:
   - actions
   - errors
   - halt
   - exceptions
+  version: 1.0.0
 ---
 
 # handle-errors
@@ -69,6 +71,7 @@ Success → set response.status + response.body
 ## Core Rules
 
 1. **Use `halt` for early returns**:
+   Halt immediately with a status code and response body for early returns. Do not rely on default success status codes (e.g. 200) for error conditions.
 
    ```ruby
    def handle(request, response)
@@ -79,13 +82,18 @@ Success → set response.status + response.body
    end
    ```
 
+   > [!CAUTION]
+   > **Common Mistake:** Match the error response format to the action format. Do not use `halt` with HTML error pages/strings in a JSON API action.
+
 2. **Halt with consistent error shapes**:
+   Ensure all JSON error payloads conform to a unified schema (e.g., `{ error: { message: "...", details: ... } }`).
 
    ```ruby
    halt 422, { error: { message: "Validation failed", details: request.params.errors.to_h } }.to_json
    ```
 
-3. **Rescue exceptions and log them**:
+3. **Rescue exceptions, log them, and keep details internal**:
+   Always rescue `StandardError` (never rescue `Exception` as it catches system-level interrupts like `SIGTERM` or `NoMemoryError`). Log full backtraces internally, but return generic messages externally. Never rescue exceptions silently.
 
    ```ruby
    def handle(request, response)
@@ -93,24 +101,20 @@ Success → set response.status + response.body
      response.status = 201
      response.body = result.to_json
    rescue StandardError => e
+     # GOOD: Log full details internally
      Hanami.app[:logger].error(e.message)
      Hanami.app[:logger].error(e.backtrace.first(5).join("\n"))
+     
+     # GOOD: Return generic error message to client
      halt 500, { error: "Internal server error" }.to_json
    end
    ```
 
-4. **Never expose internal details** in error responses. Log the full exception internally, return a generic message externally:
+   > [!WARNING]
+   > **Anti-pattern:** Exposing `e.message` or `e.backtrace` to HTTP clients. This leaks system internals and database schema details.
 
-   ```ruby
-   # BAD
-   halt 500, { error: e.message }.to_json
-
-   # GOOD
-   Hanami.app[:logger].error(e.message)
-   halt 500, { error: "Internal server error" }.to_json
-   ```
-
-5. **Render error Views** for HTML endpoints:
+4. **Render error Views for HTML endpoints**:
+   Set `response.status` explicitly and render specialized error views instead of returning raw strings or JSON.
 
    ```ruby
    def handle(request, response)
@@ -121,45 +125,32 @@ Success → set response.status + response.body
    end
    ```
 
-6. **Invalid params halt automatically**. Do not manually check `request.params.valid?` unless you need custom behavior:
+5. **Let invalid params halt automatically**:
+   Do not manually inspect `request.params.valid?` or duplicate validation inside `#handle`. The action automatically halts with `422 Unprocessable Entity` before `#handle` runs if params validation fails.
 
    ```ruby
-   # Automatic halt with 422 happens before #handle is called
-   # Only define custom error handling if needed:
+   # No manual validation checks needed here for standard param schemas
    def handle(request, response)
-     if request.params.errors.any?
-       response.status = 422
-       response.body = { errors: request.params.errors.to_h }.to_json
-       return
-     end
-     # ...
+     # Proceed directly with valid params...
    end
    ```
 
-7. **Test error responses** in request specs. Assert on status codes and error body shapes.
+6. **Test error states in request specs**:
+   Always write tests asserting on expected HTTP error status codes (e.g., 404, 422, 500) and verified error payload shapes.
 
 ---
 
-## Common Mistakes
+## Code Review Checklist
 
-| Mistake | Reality |
-|---|---|
-| "I'll return the exception message in the response" | Never expose `e.message` or `e.backtrace` to clients. Log internally, return generic externally. |
-| "I'll rescue exceptions silently" | Always log rescued exceptions. Silent failures hide bugs. |
-| "I'll use `rescue Exception` instead of `rescue StandardError`" | `Exception` catches system-level errors (SIGTERM, OutOfMemory). Only rescue `StandardError`. |
-| "I'll forget to set the response status" | Always set `response.status` or use `halt` with a status code. Default 200 is wrong for errors. |
-| "I'll manually validate params instead of using the DSL" | The Params DSL automatically halts on invalid input. Do not duplicate validation in `#handle`. |
-| "I'll use `halt` with HTML error messages in JSON APIs" | Match error response format to the endpoint format. JSON APIs return JSON errors. |
-
-**Red flags in code review:**
-- Exception messages or stack traces exposed in HTTP responses
-- Silent exception rescuing without logging
-- `rescue Exception` instead of `rescue StandardError`
-- Error responses without appropriate status codes
-- Manual param validation duplicating the Params DSL
-- Inconsistent error response shapes across endpoints
+Reviewers should check for these red flags:
+- [ ] Exception messages or backtraces returned in HTTP responses.
+- [ ] Silent exception rescues (`rescue StandardError => e` without logging).
+- [ ] Broad rescues of the base `Exception` class instead of `StandardError`.
+- [ ] Manual param validation duplicating rules defined in the action's `params` block.
+- [ ] Mismatched format types (e.g. HTML error responses in JSON action routes).
 
 ---
+
 
 ## Integration
 

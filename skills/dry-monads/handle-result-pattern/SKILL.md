@@ -1,17 +1,18 @@
 ---
 name: handle-result-pattern
-version: "1.0.0"
 license: MIT
 description: >
-  Use when using dry-monads Result pattern in Hanami 2.x. Covers Success/Failure
-  wrapping, bind/fmap chaining, and use in service objects registered in the DI container.
-ecosystem_sources:
+  Use when using dry-monads Result pattern in Hanami 2.x. Covers Success/Failure wrapping,
+  bind/fmap chaining, and use in service objects registered in the DI container.
+metadata:
+  ecosystem_sources:
   - dry-rb/dry-monads
-tags:
+  tags:
   - dry-monads
   - result
   - monads
   - service-objects
+  version: 1.0.0
 ---
 
 # handle-result-pattern
@@ -159,28 +160,16 @@ Use this skill when using the dry-monads Result pattern in Hanami 2.x.
 
 ---
 
-## Common Mistakes
+## Common Mistakes & Red Flags
 
-| Mistake | Reality |
-|---|---|
-| "I'll raise exceptions for expected failures" | Use `Failure` for expected errors (validation, not found). Reserve exceptions for truly exceptional cases. |
-| "I'll unwrap Results with `value!` without checking" | `value!` raises on `Failure`. Use pattern matching or `bind`/`fmap` instead. |
-| "I'll put business logic in Actions instead of service objects" | Actions are HTTP handlers. Complex business logic belongs in service objects that return `Success`/`Failure`. |
-| "I'll forget to register the service object in the container" | Service objects must be registered in the DI container to be injected into Actions. |
-| "I'll return `nil` or `false` instead of `Failure`" | Always return explicit `Success` or `Failure`. `nil` and `false` are ambiguous. |
-| "I'll create deeply nested `bind` chains" | Use `Do` notation for sequential operations. Deep `bind` chains are hard to read. |
-
----
-
-## Red Flags
-
-- Exceptions for expected errors
-- `value!` without checking status
-- Business logic in Actions
-- Service objects not registered in DI container
-- Returning `nil` or `false` instead of `Failure`
-- Deeply nested `bind` chains
-- Monolithic service objects
+Reviewers and developers should check for these patterns:
+- [ ] Raising exceptions for expected domain errors (validation, resource missing). Use `Failure` instead.
+- [ ] Unsafely unwrapping monadic Results with `value!` without verifying status. Use pattern matching (`in Success(v)`) or flow-based chains (`bind`/`fmap`).
+- [ ] Putting business logic in HTTP Actions instead of service objects.
+- [ ] Forgetting to register service objects/operations in the DI container.
+- [ ] Returning ambiguous `nil` or `false` values instead of explicit `Success` or `Failure`.
+- [ ] Writing deeply nested `bind` blocks. Use `Do` notation (`yield`) to flatten sequential operations.
+- [ ] Creating monolithic service objects doing multiple unrelated tasks.
 
 ---
 
@@ -196,13 +185,6 @@ Use this skill when using the dry-monads Result pattern in Hanami 2.x.
 
 ---
 
-## Rails → Hanami
+## Rails → Hanami Reference
 
-| Rails (ActiveRecord) | Hanami 2.x (Result Pattern) |
-|---|---|
-| `User.create!(attrs)` (raises on failure) | `create_user.call(attrs)` → `Success(user)` or `Failure(error)` |
-| `ActiveRecord::RecordInvalid` | `Failure({ code: :validation_failed, errors: ... })` |
-| `rescue_from ActiveRecord::RecordNotFound` | Pattern match `Failure` in Action and `halt 404` |
-| `if user.save; ...; else; ...; end` | `case result; in Success(v); ...; in Failure(e); ...; end` |
-| Service objects (manual) | `dry-monads` service objects with `Success`/`Failure` |
-| `before_action` for setup | `Do` notation for sequential operations |
+For developers transitioning from Rails/ActiveRecord exception patterns, see the side-by-side [RAILS_COMPARISON.md](RAILS_COMPARISON.md) guide.

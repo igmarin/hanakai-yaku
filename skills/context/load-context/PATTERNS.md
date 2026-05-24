@@ -1,69 +1,28 @@
-# Pattern Sampling Guide
+# Sampling Codebase Patterns in Hanami 2.x
 
-How to sample established patterns from a Hanami app without reading every file.
+This document guides developers and agents on how to identify, inspect, and match existing design patterns within a Hanami codebase.
 
-## Action Pattern
+---
 
-Read 2-3 actions across different slices. Note:
+## What to Sample
 
-```ruby
-# Example: slices/api/actions/users/create.rb
-module Api
-  module Actions
-    module Users
-      class Create < Api::Action
-        include Deps["operations.users.create_user"]
+To maintain codebase architectural consistency, analyze files from three main layers:
 
-        def handle(req, res)
-          result = create_user.call(req.params.to_h)
-          case result
-          when Dry::Monads::Success
-            res.status = 201
-            res.body = result.value!.to_json
-          when Dry::Monads::Failure
-            res.status = 422
-            res.body = { errors: result.failure }.to_json
-          end
-        end
-      end
-    end
-  end
-end
-```
+### 1. Action Patterns
+When sampling files in `app/actions/` or `slices/*/actions/`, identify:
+- **Base class:** What action class do they inherit from (e.g. `MyApp::Action`, `Admin::Action`)?
+- **DI usage:** How are dependencies declared (e.g. `include Deps["repos.user_repo"]`)?
+- **Response handling:** Are they rendering views, returning JSON strings directly, or using `halt`?
+- **Params validation:** Is there an inline `params` schema block or do they delegate validation?
 
-**Checklist:**
-- Does the action use `include Deps[...]`?
-- Does it delegate to an operation?
-- What response contract does it use? (Success/Failure pattern?)
-- What status codes map to what outcomes?
+### 2. Operation Patterns
+When sampling files in `app/operations/` or `slices/*/operations/`, identify:
+- **Monadic Results:** Do they return `Success`/`Failure` using `dry-monads`?
+- **Do Notation:** Is `include Dry::Monads::Do.for(:call)` used to chain commands?
+- **Interface:** Is `#call` the universal execution entry point?
 
-## Operation Pattern
-
-Read 2-3 operations. Note:
-
-- dry-operation vs dry-transaction?
-- Step naming conventions?
-- How are failures handled? (Failure monad, custom error types?)
-- Do operations compose other operations?
-
-## Repository Pattern
-
-Read 2-3 repositories. Note:
-
-- Query method naming conventions? (e.g., `by_email`, `active_since`)
-- Do repositories return ROM relations or materialized arrays?
-- Custom types usage in queries?
-
-## DI Convention
-
-Check if the app uses:
-
-```ruby
-include Deps["operations.users.create_user"]
-# or
-include Deps["repositories.user_repo"]
-# or
-include Deps[...]  # auto-injected
-```
-
-Note the naming convention for registered components.
+### 3. Repository/Database Patterns
+When sampling files in `app/repos/` or `slices/*/repos/`, identify:
+- **Inheritance:** Do they inherit from a central base repository (e.g. `Hanami::DB::Repo[:users]`)?
+- **Namespace mapping:** Is `struct_namespace` configured to map database results to domain entities?
+- **Scope usage:** Do they call relation scopes or execute custom queries inside repo methods?

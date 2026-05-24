@@ -1,81 +1,73 @@
 ---
 name: write-rom-spec
-version: "1.0.0"
 license: MIT
 description: >
-  Use when writing ROM relation and repository specs in Hanami 2.x — creates
-  relation query specs, configures test repositories, wraps tests in transactional
-  rollback, sets up in-memory ROM gateways, and verifies isolated database testing.
-  Use when testing custom Relation query methods, Repository CRUD operations,
-  or entity creation and lookup in a Hanami 2.x ROM-backed app.
-ecosystem_sources:
+  Use when writing ROM relation and repository specs in Hanami 2.x — creates relation
+  query specs, configures test repositories, wraps tests in transactional rollback,
+  sets up in-memory ROM gateways, and verifies isolated database testing. Use when
+  testing custom Relation query methods, Repository CRUD operations, or entity creation
+  and lookup in a Hanami 2.x ROM-backed app.
+metadata:
+  ecosystem_sources:
   - rspec/rspec
   - rom-rb/rom
   - hanami/hanami
-tags:
+  tags:
   - testing
   - rspec
   - rom
   - database
+  version: 1.0.0
 ---
 
 # write-rom-spec
 
 Use this skill when writing specs for ROM Relations and Repositories in Hanami 2.x.
 
-**Core principle:** ROM specs test data access logic in isolation. Use in-memory ROM or transactional rollback for speed and isolation.
-
----
-
-## Quick Reference
-
-| Scenario | Approach |
-|---|---|
-| Setup ROM in spec | `Hanami.app["db.rom"]` or configure a test ROM container |
-| Transaction rollback | Wrap each spec in a database transaction that rolls back |
-| In-memory setup | Use ROM's in-memory gateway for fast, isolated tests |
-| Create test data | Use ROM factories or direct repository calls |
-| Test Relation queries | `expect(relation.active.to_a.length).to eq(2)` |
-| Test Repository methods | `expect(repo.all.length).to eq(3)` |
-| Test entity creation | `expect(user.id).not_to be_nil` |
-
----
-
-## HARD-GATE
-
-```text
-DO NOT write implementation code before a failing test exists.
-ALWAYS run the test and verify it fails for the right reason before implementing.
-```
-
 ---
 
 ## Workflow
 
-Follow this sequence for every ROM spec:
+Follow these steps in order, treating each as a checkpoint:
 
-1. **Write the failing spec** — define the example describing the desired behaviour.
-2. **Run the spec; verify the correct failure** — confirm the failure message matches the missing behaviour, not a setup error.
-3. **Implement the minimum code** — write just enough Relation or Repository code to satisfy the spec.
-4. **Run the spec; verify it passes** — confirm green with no unintended side effects.
-5. **Refactor if needed** — clean up, then re-run to confirm still green.
+### Step 1 — Create the spec file
+Place it under `spec/relations/` or `spec/repos/`:
+
+```ruby
+# spec/repos/users_spec.rb
+RSpec.describe MyApp::Repos::UserRepo, type: :repo do
+  let(:repo) { described_class.new }
+
+  it "creates and finds a user by email" do
+    user = repo.create(email: "alice@example.com", name: "Alice")
+    expect(user.id).not_to be_nil
+
+    found = repo.find_by_email("alice@example.com")
+    expect(found.name).to eq("Alice")
+  end
+end
+```
+
+### Step 2 — Run the test to verify it fails
+Run RSpec and confirm the spec fails because the relation/repo method is unimplemented:
+```bash
+bundle exec rspec spec/repos/users_spec.rb
+```
+
+### Step 3 — Implement the Repository / Relation code
+Write only the minimal ROM query or persistence logic to make the specs pass.
+
+### Step 4 — Run specs to verify they pass
+Verify all specs pass green:
+```bash
+bundle exec rspec spec/repos/users_spec.rb
+```
 
 ---
 
 ## Core Rules
 
-1. **Structure the spec file** under `spec/relations/` or `spec/repos/`:
-
-   ```ruby
-   # spec/relations/users_spec.rb
-   # frozen_string_literal: true
-
-   RSpec.describe MyApp::Relations::Users, type: :relation do
-     # ...
-   end
-   ```
-
-2. **Use transactional rollback** for database isolation:
+1. **Use transactional rollback** — ensure each test runs in isolation and rolls back its changes:
 
    ```ruby
    around do |example|
@@ -88,17 +80,11 @@ Follow this sequence for every ROM spec:
    end
    ```
 
-3. **Create test data** using Repositories or direct ROM calls:
-
-   ```ruby
-   let!(:user1) { repo.create(email: "alice@example.com", first_name: "Alice", status: "active") }
-   let!(:user2) { repo.create(email: "bob@example.com", first_name: "Bob", status: "inactive") }
-   ```
-
-4. **Test Relation query methods**:
+2. **Test custom Relation query methods** — assert on collections returned by custom filters:
 
    ```ruby
    it "returns active users" do
+     # user1 and user2 created during setup
      active_users = relation.active.to_a
 
      expect(active_users.length).to eq(1)
@@ -106,22 +92,9 @@ Follow this sequence for every ROM spec:
    end
    ```
 
-5. **Test Repository read/write operations**:
+3. **Verify Repository CRUD operations** — verify custom read, write, and update methods:
 
    ```ruby
-   it "creates a user" do
-     user = repo.create(email: "charlie@example.com", first_name: "Charlie")
-
-     expect(user.id).not_to be_nil
-     expect(user.email).to eq("charlie@example.com")
-   end
-
-   it "finds a user by email" do
-     user = repo.find_by_email("alice@example.com")
-
-     expect(user.first_name).to eq("Alice")
-   end
-
    it "updates a user" do
      repo.update(user1.id, first_name: "Alicia")
      user = repo.by_id(user1.id).one
@@ -130,31 +103,29 @@ Follow this sequence for every ROM spec:
    end
    ```
 
-6. **Test edge cases**:
+4. **Test expected edge cases** — verify empty lists, missing tuples, and mismatch errors:
 
    ```ruby
-   it "returns empty array when no users match" do
-     expect(relation.by_email("nonexistent@example.com").to_a).to be_empty
-   end
-
-   it "raises when user not found" do
+   it "raises when user is not found" do
      expect { repo.by_id(99999).one! }.to raise_error(ROM::TupleCountMismatchError)
    end
    ```
-
-7. **Avoid testing ROM itself**. Do not test that `where` works — test your custom query methods.
-
-8. **Keep ROM specs focused**. One spec per query method or Repository operation.
 
 ---
 
 ## Common Mistakes
 
-| Mistake | Fix |
+- **Skipping Database Transactions:** Failing to wrap specs in a transactional rollback, which pollutes test databases and creates flaky/order-dependent tests.
+- **Testing ROM Framework Internals:** Verifying ROM's native `where`/`insert`/`update` mechanics rather than your custom repository queries.
+- **Persistent State Pollution:** Using `before(:all)` for database data setup, which operates outside individual test transaction boundaries.
+- **Direct Entity Instantiation:** Manually instantiating ROM Structs instead of writing to the DB via repository/changeset calls to test lookup.
+
+---
+
+## Integration
+
+| Related Skill | When to chain |
 |---|---|
-| Skipping transactional rollback | Without rollback, test data pollutes the database and causes flaky tests. |
-| Testing ROM's built-in methods | Test only your custom Relation methods and Repository operations, not `where`/`insert`/`update`. |
-| Creating test data in `before(:all)` | Use `let!` or `before(:each)` so each spec starts with known, isolated data. |
-| Manual database cleanup in `after` blocks | Transactional rollback handles cleanup automatically. |
-| Asserting on internal ROM structures | Assert on Entity attributes and collections, not raw ROM relation internals. |
-| Sharing state across specs | Each spec must be independent; shared state causes order-dependent failures. |
+| **create-repository** | Repository creation precedes spec implementation. |
+| **define-relation** | Relation definitions are verified via custom specs. |
+

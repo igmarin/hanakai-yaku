@@ -50,9 +50,8 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 
    This creates `config/providers/mailer.rb`.
 
-2. **Implement the provider** with `prepare` and `start` hooks:
-
-   > [WARNING] Use `prepare` for requiring libraries only. Use `start` for initialization. Putting everything in `start` slows boot.
+2. **Implement the provider** using lifecycle hooks:
+   Use `prepare` for requiring dependencies and `start` for component initialization. Keep providers focused on a single external dependency or library.
 
    ```ruby
    # config/providers/mailer.rb
@@ -60,12 +59,10 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 
    Hanami.app.register_provider(:mailer) do
      prepare do
-       # Configuration that runs before the app boots
        require "mail"
      end
 
      start do
-       # Initialization that runs when the component is first accessed
        client = Mail.new do
          delivery_method :smtp, {
            address: target[:settings].smtp_host,
@@ -82,8 +79,6 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 
    ```ruby
    # app/mailers/welcome.rb
-   # frozen_string_literal: true
-
    module MyApp
      module Mailers
        class Welcome
@@ -92,9 +87,7 @@ Use this skill when registering external dependencies (database, mailer, cache, 
          def deliver(user)
            client.deliver do
              to user.email
-             from "noreply@example.com"
              subject "Welcome!"
-             body "Welcome to MyApp, #{user.first_name}!"
            end
          end
        end
@@ -102,41 +95,24 @@ Use this skill when registering external dependencies (database, mailer, cache, 
    end
    ```
 
-4. **Use the built-in database provider** (already configured by Hanami):
+4. **Use the built-in database provider**:
+   The ROM container is automatically registered at boot by the framework:
 
    ```ruby
-   # Access the ROM container
    include Deps["db.rom"]
-
-   # Access a specific gateway
-   include Deps["db.gateway"]
    ```
 
-5. **Register third-party API clients** as providers:
-
-   > [WARNING] Never access `ENV` directly in providers. Use `target[:settings]` - settings are typed and validated.
+5. **Register third-party API clients using settings**:
+   Always load keys and URLs through `target[:settings]`. Do not reference raw environment variables via `ENV` in providers.
 
    ```ruby
    # config/providers/logger.rb
-   # frozen_string_literal: true
-
    Hanami.app.register_provider(:logger) do
      start do
        require "logger"
        logger = Logger.new(target[:settings].log_file)
        register("logger.client", logger)
      end
-   end
-   ```
-
-6. **Keep providers focused**. One external service = one provider. Do not create a monolithic provider.
-
-7. **Use `target[:settings]`** to access application settings within providers:
-
-   ```ruby
-   start do
-     api_key = target[:settings].some_api_key
-     register("service.client", SomeService.new(api_key: api_key))
    end
    ```
 

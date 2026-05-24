@@ -1,18 +1,19 @@
 ---
 name: build-api-slice
-version: "1.0.0"
 license: MIT
 description: >
-  Use when creating an API-only Slice in Hanami 2.x. Chains create-slice,
-  create-action, define-routes, write-request-spec, and code-review.
-ecosystem_sources:
+  Use when creating an API-only Slice in Hanami 2.x. Chains create-slice, create-action,
+  define-routes, write-request-spec, and code-review.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - hanami/hanami-router
-tags:
+  tags:
   - agents
   - api
   - slices
   - json
+  version: 1.0.0
 ---
 
 # build-api-slice

@@ -1,18 +1,19 @@
 ---
 name: validation-contract
-version: "1.0.0"
 license: MIT
 description: >
-  Use when implementing validation with dry-validation in Hanami 2.x. Chains
-  inject-dependencies, validate-params, handle-result-pattern, and write-action-spec.
-ecosystem_sources:
+  Use when implementing validation with dry-validation in Hanami 2.x. Chains inject-dependencies,
+  validate-params, handle-result-pattern, and write-action-spec.
+metadata:
+  ecosystem_sources:
   - dry-rb/dry-validation
   - hanami/hanami-controller
-tags:
+  tags:
   - agents
   - validation
   - dry-validation
   - contracts
+  version: 1.0.0
 ---
 
 # validation-contract

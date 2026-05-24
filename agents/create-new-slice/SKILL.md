@@ -1,18 +1,19 @@
 ---
 name: create-new-slice
-version: "1.0.0"
 license: MIT
 description: >
-  Use when creating a new Slice in Hanami 2.x. Chains create-slice,
-  define-routes, configure-slice, inject-dependencies, and write-request-spec.
-ecosystem_sources:
+  Use when creating a new Slice in Hanami 2.x. Chains create-slice, define-routes,
+  configure-slice, inject-dependencies, and write-request-spec.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
-tags:
+  tags:
   - agents
   - slices
   - modularization
   - bounded-contexts
+  version: 1.0.0
 ---
 
 # create-new-slice

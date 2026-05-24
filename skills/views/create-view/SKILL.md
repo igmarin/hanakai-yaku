@@ -1,20 +1,20 @@
 ---
 name: create-view
-version: "1.0.0"
 license: MIT
 description: >
-  Use when creating Hanami 2.x view classes, exposing data to templates via the
-  expose macro, configuring Tilt/ERB template rendering, setting up layouts, or
-  working with the hanami-view gem and Hanami view layer. Covers view class
-  structure, expose macro, context, rendering HTML templates, and integration
-  with Actions and Parts.
-ecosystem_sources:
+  Use when creating Hanami 2.x view classes, exposing data to templates via the expose
+  macro, configuring Tilt/ERB template rendering, setting up layouts, or working with
+  the hanami-view gem and Hanami view layer. Covers view class structure, expose macro,
+  context, rendering HTML templates, and integration with Actions and Parts.
+metadata:
+  ecosystem_sources:
   - hanami/hanami-view
-tags:
+  tags:
   - views
   - templates
   - rendering
   - tilt
+  version: 1.0.0
 ---
 
 # create-view

@@ -1,22 +1,23 @@
 ---
 name: decorate-with-parts
-version: "1.0.0"
 license: MIT
 description: >
-  Use when creating View Parts in Hanami 2.x, adding a part class, wrapping
-  exposures in Hanami::View::Part, formatting attributes for display, or adding
-  custom helper methods to view objects. Defines Part classes that encapsulate
-  presentation logic (formatted strings, predicates, delegated attributes),
-  exposes them via the `expose` macro, and keeps templates and Views free of
-  complex formatting. Use when working with view decoration, view objects,
-  template helpers, or the Ruby view layer in a Hanami application.
-ecosystem_sources:
+  Use when creating View Parts in Hanami 2.x, adding a part class, wrapping exposures
+  in Hanami::View::Part, formatting attributes for display, or adding custom helper
+  methods to view objects. Defines Part classes that encapsulate presentation logic
+  (formatted strings, predicates, delegated attributes), exposes them via the `expose`
+  macro, and keeps templates and Views free of complex formatting. Use when working
+  with view decoration, view objects, template helpers, or the Ruby view layer in
+  a Hanami application.
+metadata:
+  ecosystem_sources:
   - hanami/hanami-view
-tags:
+  tags:
   - views
   - parts
   - decorators
   - presentation
+  version: 1.0.0
 ---
 
 # decorate-with-parts

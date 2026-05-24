@@ -29,7 +29,7 @@ Use this skill when running Hanami 2.x database CLI commands.
 | Command | Purpose | Preconditions | Validate |
 |---|---|---|---|
 | `hanami db create` | Create the database | `DATABASE_URL` must be set | - |
-| `hanami db drop` | Drop the database | ⚠️ Destructive - see below | - |
+| `hanami db drop` | Drop the database | **Warning:** Destructive - see below | - |
 | `hanami db migrate` | Run pending migrations | Database must exist | `hanami db version` |
 | `hanami db rollback` | Roll back the last migration | Database must exist; migration must be reversible | `hanami db version` |
 | `hanami db seed` | Run seed data | Database must exist; migrations must be current | - |

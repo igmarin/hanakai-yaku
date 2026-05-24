@@ -1,19 +1,20 @@
 ---
 name: write-migration
-version: "1.0.0"
 license: MIT
 description: >
-  Use when creating or modifying database schemas in Hanami 2.x with Sequel.
-  Covers create_table, add_column, drop_column, alter_table, primary_key, indexes,
-  and migration lifecycle commands.
-ecosystem_sources:
+  Use when creating or modifying database schemas in Hanami 2.x with Sequel. Covers
+  create_table, add_column, drop_column, alter_table, primary_key, indexes, and migration
+  lifecycle commands.
+metadata:
+  ecosystem_sources:
   - jeremyevans/sequel
   - hanami/hanami
-tags:
+  tags:
   - db
   - migrations
   - sequel
   - schema
+  version: 1.0.0
 ---
 
 # write-migration
@@ -106,8 +107,8 @@ Use this skill when writing or running Sequel database migrations in Hanami 2.x.
 
 ## Reference Files
 
-- **RAILS_MAPPING.md** — Side-by-side Rails (ActiveRecord) → Hanami 2.x (Sequel) syntax reference.
-- **COLUMN_TYPES.md** — Sequel generic column types and their database-specific mappings (`:text`, `:timestamptz`, `:jsonb`, `:uuid`, etc.).
+- [RAILS_MAPPING.md](RAILS_MAPPING.md) — Side-by-side Rails (ActiveRecord) → Hanami 2.x (Sequel) syntax reference.
+- [COLUMN_TYPES.md](COLUMN_TYPES.md) — Sequel generic column types and database mappings.
 
 ---
 

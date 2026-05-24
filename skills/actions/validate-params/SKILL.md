@@ -1,20 +1,22 @@
 ---
 name: validate-params
-version: "1.0.0"
 license: MIT
 description: >
-  Use when validating request parameters in Hanami 2.x Actions, including defining required/optional
-  params blocks, applying type coercion (integer, bool, date), validating nested and array params,
-  adding constraints, writing custom cross-field rules, and handling validation errors with 422
-  responses. Covers params block DSL, dry-validation predicates, input validation, action params,
-  parameter types, and coercion of request input at the HTTP boundary.
-ecosystem_sources:
+  Use when validating request parameters in Hanami 2.x Actions, including defining
+  required/optional params blocks, applying type coercion (integer, bool, date), validating
+  nested and array params, adding constraints, writing custom cross-field rules, and
+  handling validation errors with 422 responses. Covers params block DSL, dry-validation
+  predicates, input validation, action params, parameter types, and coercion of request
+  input at the HTTP boundary.
+metadata:
+  ecosystem_sources:
   - hanami/hanami-controller
-tags:
+  tags:
   - actions
   - params
   - validation
   - input
+  version: 1.0.0
 ---
 
 # validate-params

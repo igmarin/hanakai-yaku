@@ -1,18 +1,19 @@
 ---
 name: inject-dependencies
-version: "1.0.0"
 license: MIT
 description: >
-  Use when injecting dependencies in Hanami 2.x. Covers include Deps[],
-  container keys, auto-registration rules, no_auto_register_paths, and testing with stubs.
-ecosystem_sources:
+  Use when injecting dependencies in Hanami 2.x. Covers include Deps[], container
+  keys, auto-registration rules, no_auto_register_paths, and testing with stubs.
+metadata:
+  ecosystem_sources:
   - dry-rb/dry-system
   - hanami/hanami
-tags:
+  tags:
   - di
   - dependencies
   - container
   - deps
+  version: 1.0.0
 ---
 
 # inject-dependencies

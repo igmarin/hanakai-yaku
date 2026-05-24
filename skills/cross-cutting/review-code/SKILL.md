@@ -1,6 +1,5 @@
 ---
 name: review-code
-version: "1.0.0"
 license: MIT
 description: >
   Use when reviewing Hanami 2.x code, a Hanami app, or any hanami slice for quality
@@ -8,13 +7,15 @@ description: >
   via Deps[], no direct container access, ROM query encapsulation in Repositories,
   entity usage, View simplicity, error handling, and test coverage. Triggers on phrases
   like 'review my Hanami code', 'check my action', 'code review', or 'dry-rb patterns'.
-ecosystem_sources:
+metadata:
+  ecosystem_sources:
   - hanami/hanami
-tags:
+  tags:
   - code-review
   - quality
   - conventions
   - review
+  version: 1.0.0
 ---
 
 # review-code

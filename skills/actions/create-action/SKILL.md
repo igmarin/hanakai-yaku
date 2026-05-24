@@ -1,21 +1,23 @@
 ---
 name: create-action
-version: "1.0.0"
 license: MIT
 description: >
   Use when creating, generating, or reviewing Hanami 2.x Action classes (route handlers,
-  request handling, hanami controller equivalents). Generates Action classes with proper
-  handle method signatures, configures dependency injection via Deps[], renders views with
-  exposures, validates params, redirects, returns JSON responses, sets HTTP status codes,
-  and implements halt-based error handling. Use when building a hanami action, wiring a
-  new endpoint, handling params, or structuring request/response logic in a Hanami 2.x app.
-ecosystem_sources:
+  request handling, hanami controller equivalents). Generates Action classes with
+  proper handle method signatures, configures dependency injection via Deps[], renders
+  views with exposures, validates params, redirects, returns JSON responses, sets
+  HTTP status codes, and implements halt-based error handling. Use when building a
+  hanami action, wiring a new endpoint, handling params, or structuring request/response
+  logic in a Hanami 2.x app.
+metadata:
+  ecosystem_sources:
   - hanami/hanami-controller
-tags:
+  tags:
   - actions
   - http
   - controllers
   - endpoints
+  version: 1.0.0
 ---
 
 # create-action

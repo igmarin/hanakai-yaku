@@ -1,17 +1,18 @@
 ---
 name: tdd-loop
-version: "1.0.0"
 license: MIT
 description: >
-  Use when implementing a Hanami 2.x feature using TDD. Chains plan-tests,
-  write-request-spec or write-action-spec, implementation, and code-review.
-ecosystem_sources:
+  Use when implementing a Hanami 2.x feature using TDD. Chains plan-tests, write-request-spec
+  or write-action-spec, implementation, and code-review.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
-tags:
+  tags:
   - agents
   - tdd
   - testing
   - development
+  version: 1.0.0
 ---
 
 # tdd-loop

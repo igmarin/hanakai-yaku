@@ -1,16 +1,17 @@
 ---
 name: generate-components
-version: "1.0.0"
 license: MIT
 description: >
   Use when generating Hanami 2.x components via CLI. Covers hanami generate action,
   view, slice, migration with output paths and naming conventions.
-ecosystem_sources:
+metadata:
+  ecosystem_sources:
   - hanami/hanami-cli
-tags:
+  tags:
   - cli
   - generators
   - scaffolding
+  version: 1.0.0
 ---
 
 # generate-components
@@ -89,36 +90,22 @@ Use this skill when generating Hanami 2.x components via the CLI.
    Generates:
    - `db/migrate/{timestamp}_create_users.rb`
 
-5. **Naming convention**:
-
-   - Commands use dot notation: `users.index` → `app/actions/users/index.rb`
-   - Each segment becomes a directory
-   - The last segment becomes the class name
-   - Slices are prefixed: `api.users.index` → `slices/api/actions/users/index.rb`
-
-6. **Generator commands** never overwrite existing files. They fail if the target exists.
-
-7. **Always verify generated files** after running a generator. Check that:
-   - File paths match the naming convention
-   - Class names match the file path
-   - Templates are in the correct directory
-
-   **If verification fails:**
-   - Wrong path or class name: delete the generated file and re-run with the correct dot-notation name.
-   - Missing template: check that `hanami generate view` was used (not `generate action`) when a template is expected.
-   - Existing file conflict: inspect the existing file; if stale or incorrect, remove it manually before re-running.
-   - Slice component in `app/` instead of `slices/`: slice prefix was omitted — re-run with `<slice>.<resource>.<action>` notation.
+5. **Always verify generated files**:
+   Generators will fail if target files already exist. Always check:
+   - File paths match the expected pattern.
+   - Class names align with module nesting (e.g. `users.index` → `MyApp::Actions::Users::Index`).
+   - Slices are correctly prefixed: `<slice>.<resource>.<action>` (omitting this places components in the default `app/` folder).
 
 ---
 
-## Common Mistakes
+## Common Mistakes & Troubleshooting
 
-| Mistake | Reality |
+| Problem / Mistake | Resolution |
 |---|---|
-| Using underscores instead of dots in generator commands | Use dots: `hanami generate action users.index`, not `users_index`. |
-| Forgetting the slice prefix when generating in a slice | Use `api.users.index` for slice `api`, not just `users.index`. |
-| Manually creating files instead of using generators | Generators ensure correct naming and structure. |
-| Using singular names for Actions | Actions use the plural resource name: `users.index`, `users.show`, not `user.index`. |
+| Using underscores instead of dots | CLI commands require dot notation: `users.index`, not `users_index`. |
+| Omitting the slice prefix | Use `api.users.index` to generate in the `api` slice. |
+| Singular names for Actions | Actions should use plural resource names: `users.index`, not `user.index`. |
+| File conflicts / stale files | Generators never overwrite. Manually delete conflicting files before re-generating. |
 
 ---
 

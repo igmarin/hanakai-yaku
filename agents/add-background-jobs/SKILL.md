@@ -1,18 +1,19 @@
 ---
 name: add-background-jobs
-version: "1.0.0"
 license: MIT
 description: >
-  Use when integrating background jobs in Hanami 2.x. Chains providers,
-  inject-dependencies, create-action, and write-action-spec.
-ecosystem_sources:
+  Use when integrating background jobs in Hanami 2.x. Chains providers, inject-dependencies,
+  create-action, and write-action-spec.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
-tags:
+  tags:
   - agents
   - add-background-jobs
   - sidekiq
   - good-job
+  version: 1.0.0
 ---
 
 # add-background-jobs

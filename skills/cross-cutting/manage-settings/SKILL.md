@@ -1,22 +1,23 @@
 ---
 name: manage-settings
-version: "1.0.0"
 license: MIT
 description: >
-  Use when managing Hanami 2.x application settings, app config, or environment
-  variables (env vars). Covers defining typed settings with dry-configurable,
-  setting defaults, validating enum values, reading .env files, and injecting
-  settings into components via Hanami's container. Use when declaring typed
-  environment variable declarations, accessing configuration in Actions or
-  providers, or migrating from Rails config to Hanami 2.x settings.
-ecosystem_sources:
+  Use when managing Hanami 2.x application settings, app config, or environment variables
+  (env vars). Covers defining typed settings with dry-configurable, setting defaults,
+  validating enum values, reading .env files, and injecting settings into components
+  via Hanami's container. Use when declaring typed environment variable declarations,
+  accessing configuration in Actions or providers, or migrating from Rails config
+  to Hanami 2.x settings.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
-tags:
+  tags:
   - configuration
   - settings
   - environment
   - dry-configurable
+  version: 1.0.0
 ---
 
 # manage-settings

@@ -1,20 +1,21 @@
 ---
 name: plan-tests
-version: "1.0.0"
 license: MIT
 description: >
   Use when deciding what type of test to write in Hanami 2.x. Recommends the appropriate
-  test type (request specs, action unit specs, view specs, relation specs, or repository specs),
-  explains when to prefer request specs over action unit specs, and provides copy-paste RSpec
-  examples with file paths and decision criteria for each test type.
-ecosystem_sources:
+  test type (request specs, action unit specs, view specs, relation specs, or repository
+  specs), explains when to prefer request specs over action unit specs, and provides
+  copy-paste RSpec examples with file paths and decision criteria for each test type.
+metadata:
+  ecosystem_sources:
   - rspec/rspec
   - hanami/hanami
-tags:
+  tags:
   - testing
   - rspec
   - planning
   - tdd
+  version: 1.0.0
 ---
 
 # plan-tests

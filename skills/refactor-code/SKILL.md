@@ -1,23 +1,24 @@
 ---
 name: refactor-code
-version: "1.0.0"
 license: MIT
 description: >
   Use when refactoring Hanami 2.x code, slimming down fat actions, moving business
   logic out of actions, or performing a Hanami refactor with dependency injection.
-  Extracts logic from Actions into interactors or service objects, registers
-  dependencies in the DI container, updates auto-injection via `Deps`, applies
-  dry-validation Contracts for extracted validation, and restructures repeated
-  logic into modules or base classes. Use when a developer asks to extract class,
-  slim down Hanami controllers, reduce fat actions, or reorganise Hanami slices.
-ecosystem_sources:
+  Extracts logic from Actions into interactors or service objects, registers dependencies
+  in the DI container, updates auto-injection via `Deps`, applies dry-validation Contracts
+  for extracted validation, and restructures repeated logic into modules or base classes.
+  Use when a developer asks to extract class, slim down Hanami controllers, reduce
+  fat actions, or reorganise Hanami slices.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
-tags:
+  tags:
   - refactoring
   - extraction
   - service-objects
   - interactors
+  version: 1.0.0
 ---
 
 # refactoring
@@ -44,97 +45,17 @@ Use this skill when refactoring Hanami 2.x code to improve structure and maintai
 
 ## Core Rules
 
-1. **Identify extraction candidates** in Actions:
+1. **Identify extraction candidates**:
+   Locate Actions containing inline validations, complex repo queries, or multiple side effects (emails, notifications).
+
+2. **Extract concerns into dedicated objects**:
+   Extract validations to Contracts, business logic to Operation services, and side effects to interactors. For detailed implementations of these extracted classes, see the [EXAMPLES.md Guide](EXAMPLES.md).
+
+3. **Simplify the Action class**:
+   Inject the extracted objects via auto-injection (`Deps`) and delegate responsibilities:
 
    ```ruby
-   # BEFORE: Action with too much logic
-   class Create < MyApp::Action
-     include Deps["repos.user_repo", "mailer"]
-
-     def handle(request, response)
-       attrs = request.params[:user]
-
-       # Validation logic
-       return halt 422 unless attrs[:email].include?("@")
-
-       # Business logic
-       user = user_repo.create(attrs)
-
-       # Side effect
-       mailer.deliver(
-         to: user.email,
-         subject: "Welcome",
-         body: "Welcome, #{user.first_name}!"
-       )
-
-       response.status = 201
-       response.body = user.to_json
-     end
-   end
-   ```
-
-2. **Extract validation to a Contract**:
-
-   ```ruby
-   # app/contracts/user_contract.rb
-   module MyApp
-     module Contracts
-       class UserContract < Dry::Validation::Contract
-         params do
-           required(:email).value(:string, format?: /\A.+@.+\z/)
-           required(:first_name).value(:string, min_size?: 1)
-         end
-       end
-     end
-   end
-   ```
-
-3. **Extract business logic to a service object**:
-
-   ```ruby
-   # app/operations/create_user.rb
-   module MyApp
-     module Operations
-       class CreateUser
-         include Dry::Monads[:result]
-         include Deps["repos.user_repo"]
-
-         def call(attrs)
-           user = user_repo.create(attrs)
-           Success(user)
-         rescue StandardError => e
-           Failure("Database error: #{e.message}")
-         end
-       end
-     end
-   end
-   ```
-
-4. **Extract side effects to an interactor**:
-
-   ```ruby
-   # app/operations/send_welcome_email.rb
-   module MyApp
-     module Operations
-       class SendWelcomeEmail
-         include Deps["mailer"]
-
-         def call(user)
-           mailer.deliver(
-             to: user.email,
-             subject: "Welcome",
-             body: "Welcome, #{user.first_name}!"
-           )
-         end
-       end
-     end
-   end
-   ```
-
-5. **Refactor the Action** to use extracted components:
-
-   ```ruby
-   # AFTER: Clean Action
+   # AFTER: Cleaned Action delegating to operations
    class Create < MyApp::Action
      include Deps[
        "contracts.user",
@@ -160,41 +81,21 @@ Use this skill when refactoring Hanami 2.x code to improve structure and maintai
    end
    ```
 
-6. **Register extracted components** in the container:
+4. **Register in the container**:
+   Ensure all new classes are registered in a container provider so they are discoverable for injection. See [EXAMPLES.md Provider Registration](EXAMPLES.md#4-di-provider-registration).
 
-   ```ruby
-   # config/providers/operations.rb
-   Hanami.app.register_provider(:operations) do
-     start do
-       register("contracts.user", MyApp::Contracts::UserContract.new)
-       register("operations.create_user", MyApp::Operations::CreateUser.new)
-       register("operations.send_welcome_email", MyApp::Operations::SendWelcomeEmail.new)
-     end
-   end
-   ```
+5. **Write characterization tests first**:
+   Always capture current behavior in request specs before touching code.
 
-7. **Write characterization tests** before refactoring:
-
-   ```ruby
-   # Capture current behavior
-   it "creates a user and sends email" do
-     post "/users", { user: valid_attrs }.to_json, { "CONTENT_TYPE" => "application/json" }
-
-     expect(last_response.status).to eq(201)
-     expect(Mailer.deliveries.last.to).to include("alice@example.com")
-   end
-   ```
-
-8. **Run the full test suite** after refactoring. All tests must pass without modification.
+6. **Verify the full suite after**:
+   Run the test suite to ensure refactoring didn't alter behavior.
 
 ---
 
 ## Common Mistakes
 
-| Mistake | Reality |
-|---|---|
-| "I'll create circular dependencies between extracted objects" | Extracted components should have clear, acyclic dependencies. Use the container to resolve order, not constructor chaining. |
-| "I'll extract too many tiny service objects" | Extract when logic is complex, reusable, or has side effects. Simple Actions do not need extraction. |
+- **Circular Dependencies:** Ensure extracted components have acyclic dependencies. Use the container to resolve dependencies, not tight constructor nesting.
+- **Over-extraction:** Only extract when logic is complex or reusable. Simple CRUD actions do not need separate operations.
 
 ---
 
@@ -202,9 +103,7 @@ Use this skill when refactoring Hanami 2.x code to improve structure and maintai
 
 | Related Skill | When to chain |
 |---|---|
-| **create-action** | Identify extraction candidates in Actions. |
+| **create-action** | Action creation precedes refactoring. |
 | **inject-dependencies** | Register and inject extracted components via `Deps`. |
-| **handle-result-pattern** | Service objects often return `Success`/`Failure`. |
-| **create-repository** | Extract complex queries to Repository methods. |
-| **plan-tests** | Write characterization tests before refactoring. |
-| **write-request-spec** | Verify full stack behavior after refactoring. |
+| **handle-result-pattern** | Operations return monadic `Success`/`Failure`. |
+| **plan-tests** | Write characterization specs before altering code. |

@@ -1,22 +1,24 @@
 ---
 name: create-slice
-version: "1.0.0"
 license: MIT
 description: >
-  Use when creating and configuring Slices in Hanami 2.x, including running `hanami generate slice`,
-  registering slices as modular sub-containers, configuring slice routes, setting up inter-slice
-  dependencies with import/export, and structuring a modular architecture with bounded contexts.
-  Covers slice directory generation, route configuration, cross-slice dependency management,
-  and slice-level container access. Use when building a sub-application, isolating a bounded
-  context, or wiring slice dependencies in a Hanami 2.x project.
-ecosystem_sources:
+  Use when creating and configuring Slices in Hanami 2.x, including running `hanami
+  generate slice`, registering slices as modular sub-containers, configuring slice
+  routes, setting up inter-slice dependencies with import/export, and structuring
+  a modular architecture with bounded contexts. Covers slice directory generation,
+  route configuration, cross-slice dependency management, and slice-level container
+  access. Use when building a sub-application, isolating a bounded context, or wiring
+  slice dependencies in a Hanami 2.x project.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
-tags:
+  tags:
   - slices
   - modules
   - bounded-contexts
   - containers
+  version: 1.0.0
 ---
 
 # create-slice

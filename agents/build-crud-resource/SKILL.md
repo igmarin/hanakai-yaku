@@ -1,18 +1,19 @@
 ---
 name: build-crud-resource
-version: "1.0.0"
 license: MIT
 description: >
-  Use when implementing a full CRUD resource in Hanami 2.x. Chains entity,
-  relation, repository, action, view, write-request-spec, and review-code.
-ecosystem_sources:
+  Use when implementing a full CRUD resource in Hanami 2.x. Chains entity, relation,
+  repository, action, view, write-request-spec, and review-code.
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - rom-rb/rom
-tags:
+  tags:
   - agents
   - crud
   - resources
   - full-stack
+  version: 1.0.0
 ---
 
 # build-crud-resource

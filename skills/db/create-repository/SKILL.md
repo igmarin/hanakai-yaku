@@ -1,22 +1,23 @@
 ---
 name: create-repository
-version: "1.0.0"
 license: MIT
 description: >
-  Use when creating ROM Repositories in Hanami 2.x, including CRUD operations, defining custom
-  queries, configuring associations, setting up aggregate roots, entity mapping, transaction
-  handling, and implementing the Repository as your domain persistence layer. Relevant for
-  database access, rom-rb relations, sequel adapter setup, and wiring repositories into
-  actions via dependency injection.
-ecosystem_sources:
+  Use when creating ROM Repositories in Hanami 2.x, including CRUD operations, defining
+  custom queries, configuring associations, setting up aggregate roots, entity mapping,
+  transaction handling, and implementing the Repository as your domain persistence
+  layer. Relevant for database access, rom-rb relations, sequel adapter setup, and
+  wiring repositories into actions via dependency injection.
+metadata:
+  ecosystem_sources:
   - rom-rb/rom
   - rom-rb/rom-sql
   - hanami/hanami-db
-tags:
+  tags:
   - db
   - rom
   - repositories
   - persistence
+  version: 1.0.0
 ---
 
 # create-repository
@@ -27,28 +28,21 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
 
 ## Quick Reference
 
-| Scenario | Approach |
+| Action | Approach |
 |---|---|
-| Create a Repository | Class includes `ROM::Repository[:relation_name]` or inherits from a base repo |
-| Inject a Relation | `include Deps["relations.users"]` |
-| Read all records | `repo.all` |
-| Find by ID | `repo.by_id(id)` |
-| Create a record | `repo.create(attrs)` |
-| Update a record | `repo.update(id, attrs)` |
-| Delete a record | `repo.delete(id)` |
-| Wrap operations in a transaction | `repo.transaction { ... }` |
-| Return an Entity | Configure `struct_namespace` and use `auto_struct true` |
+| Create Repository | Inherit from `Hanami::DB::Repo[:relation_name]` |
+| Inject Repository | `include Deps["repos.user_repo"]` |
+| Execute transaction | `repo.transaction { ... }` (details in [REPOSITORIES.md](REPOSITORIES.md)) |
 
 ---
 
 ## Core Rules
 
-1. **Create the Repository file** in the app or slice:
+1. **Create the Repository file**:
+   Place repositories under `app/repos/`:
 
    ```ruby
    # app/repos/user_repo.rb
-   # frozen_string_literal: true
-
    module MyApp
      module Repos
        class UserRepo < Hanami::DB::Repo[:users]
@@ -57,30 +51,22 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-   **Verify registration:** After creating the file, confirm the repo is wired into the container by booting the app and checking `MyApp::App["repos.user_repo"]`. If it raises a key error, check the file path and module nesting.
-
-2. **Inject the Repository into Actions** using the Deps mixin:
+2. **Inject into Actions**:
+   Inject repositories using the container dependency injection (`Deps`):
 
    ```ruby
    # app/actions/users/index.rb
-   # frozen_string_literal: true
+   class Index < MyApp::Action
+     include Deps["repos.user_repo"]
 
-   module MyApp
-     module Actions
-       module Users
-         class Index < MyApp::Action
-           include Deps["repos.user_repo"]
-
-           def handle(request, response)
-             response.render(view, users: user_repo.all)
-           end
-         end
-       end
+     def handle(request, response)
+       response.render(view, users: user_repo.all)
      end
    end
    ```
 
-3. **Add domain methods** that express intent, not just data access:
+3. **Add domain methods**:
+   Write specific read and write methods to isolate your actions from raw relation access:
 
    ```ruby
    def active
@@ -90,37 +76,20 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    def find_by_email(email)
      users.by_email(email).one
    end
-
-   def create_with_defaults(attrs)
-     create(attrs.merge(created_at: Time.now))
-   end
    ```
 
-4. **Use transactions** for multi-step writes, and handle failures explicitly. Always guard against `one` returning `nil` before mutating state:
+4. **Use transactions for multi-step writes**:
+   Wrap mutations in transaction blocks. For details and Failure result handling, see [REPOSITORIES.md](REPOSITORIES.md#transaction-handling).
 
    ```ruby
-   def transfer_funds(from_id, to_id, amount)
-     transaction do
-       from_account = accounts.by_id(from_id).one
-       to_account   = accounts.by_id(to_id).one
-
-       # Guard against missing records before mutating state
-       return Failure(:account_not_found) if from_account.nil? || to_account.nil?
-       return Failure(:insufficient_funds) if from_account.balance < amount
-
-       accounts.update(from_id, balance: from_account.balance - amount)
-       accounts.update(to_id,   balance: to_account.balance + amount)
-
-       Success(true)
-     end
-   rescue => e
-     Failure(e.message)
+   transaction do
+     accounts.update(from_id, balance: from_account.balance - amount)
+     accounts.update(to_id,   balance: to_account.balance + amount)
    end
    ```
 
-   If you don't need monadic results, raise an explicit error inside the transaction block so ROM automatically rolls back.
-
-5. **Return Entities/Structs**, not raw hashes. Configure the Repository:
+5. **Map to custom Entities**:
+   Configure the `struct_namespace` to automatically map SQL relation rows to custom Entity domain models. See [REPOSITORIES.md](REPOSITORIES.md#custom-entity-mapping).
 
    ```ruby
    class UserRepo < Hanami::DB::Repo[:users]
@@ -129,9 +98,8 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-6. **Never expose Relations directly**. Actions receive data from Repositories, not Relations.
-
-7. **Keep Repositories focused**. One Repository per bounded context or entity. Do not create a single "God" Repository.
+6. **Do not expose Relations directly**:
+   Actions must fetch and modify data via Repositories. Bypassing repositories to query relations directly in actions/views is an anti-pattern.
 
 ---
 
@@ -139,8 +107,7 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
 
 | Related Skill | When to chain |
 |---|---|
-| **define-relation** | Repository wraps a Relation. Define the Relation first, then the Repository. |
-| **define-entity** | Repository returns Entity objects. Define the Entity schema to match. |
-| **create-action** | Actions inject Repositories via `Deps` and pass data to Views. |
-| **handle-result-pattern** | Complex Repository operations return `Success`/`Failure` for explicit error handling. |
-| **write-rom-spec** (testing) | Test Repository methods with in-memory ROM. |
+| **define-relation** | [define-relation](../define-relation/SKILL.md) — Relations map table schemas before repositories query them. |
+| **define-entity** | [define-entity](../define-entity/SKILL.md) — Represents the struct objects returned by the repository. |
+| **create-action** | Actions inject repositories to read/write data. |
+| **write-rom-spec** | Test repository methods inside in-memory ROM database specs. |

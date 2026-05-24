@@ -1,19 +1,20 @@
 ---
 name: add-table-column
-version: "1.0.0"
 license: MIT
 description: >
-  Use when adding a column to an existing table in Hanami 2.x. Chains
-  write-migration, define-relation, define-entity, create-repository, and write-request-spec.
-ecosystem_sources:
+  Use when adding a column to an existing table in Hanami 2.x. Chains write-migration,
+  define-relation, define-entity, create-repository, and write-request-spec.
+metadata:
+  ecosystem_sources:
   - jeremyevans/sequel
   - rom-rb/rom
   - hanami/hanami
-tags:
+  tags:
   - agents
   - migrations
   - schema-changes
   - database
+  version: 1.0.0
 ---
 
 # add-table-column

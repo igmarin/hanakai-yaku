@@ -1,6 +1,5 @@
 ---
 name: configure-slice
-version: "1.0.0"
 license: MIT
 description: >
   Creates and configures Hanami 2.x Slices by registering providers, setting up container
@@ -8,14 +7,16 @@ description: >
   Use when configuring slice setup, modular app structure, Hanami component registration,
   dependency injection, provider registration, container imports/exports, or autoloading
   for a Hanami 2.x Slice.
-ecosystem_sources:
+metadata:
+  ecosystem_sources:
   - hanami/hanami
   - dry-rb/dry-system
-tags:
+  tags:
   - slices
   - configuration
   - settings
   - providers
+  version: 1.0.0
 ---
 
 # configure-slice
