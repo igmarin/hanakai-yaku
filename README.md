@@ -1,4 +1,5 @@
 # hanakai-yaku
+![hanakai-yaku logo](https://github.com/user-attachments/assets/3126b6e0-bbbf-4e00-a226-e3178486becc)
 
 **hanakai-yaku turns AI coding assistants into disciplined Hanami collaborators.**
 
