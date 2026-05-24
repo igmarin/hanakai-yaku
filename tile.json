@@ -1,6 +1,6 @@
 {
   "name": "igmarin/hanakai-yaku",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, and validation. Uses Markdown + Front-matter architecture.",
   "docs": "docs/index.md",
   "skills": {
