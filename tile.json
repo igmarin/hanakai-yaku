@@ -1,8 +1,9 @@
 {
   "name": "igmarin/hanakai-yaku",
-  "version": "0.2.1",
-  "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, and validation. Uses Markdown + Front-matter architecture.",
+  "version": "0.3.0",
+  "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, and validation. Shared Ruby process skills have moved to ruby-core-skills. Uses Markdown + Front-matter architecture.",
   "docs": "docs/index.md",
+  "depends_on": ["igmarin/ruby-core-skills"],
   "skills": {
     "build-json-api": {
       "path": "skills/actions/build-json-api/SKILL.md"
@@ -73,9 +74,6 @@
     "implement-di": {
       "path": "skills/providers/implement-di/SKILL.md"
     },
-    "refactor-code": {
-      "path": "skills/refactor-code/SKILL.md"
-    },
     "review-security": {
       "path": "skills/review-security/SKILL.md"
     },
@@ -97,9 +95,6 @@
     "test-slice": {
       "path": "skills/slices/test-slice/SKILL.md"
     },
-    "plan-tests": {
-      "path": "skills/testing/plan-tests/SKILL.md"
-    },
     "write-action-spec": {
       "path": "skills/testing/write-action-spec/SKILL.md"
     },
@@ -114,6 +109,18 @@
     },
     "decorate-with-parts": {
       "path": "skills/views/decorate-with-parts/SKILL.md"
+    }
+  },
+  "deprecated_skills": {
+    "refactor-code": {
+      "moved_to": "igmarin/ruby-core-skills",
+      "message": "Generic refactoring process has moved to ruby-core-skills as refactor-process. Hanami-specific refactoring is handled by slice and provider skills.",
+      "removed_in": "0.4.0"
+    },
+    "plan-tests": {
+      "moved_to": "igmarin/ruby-core-skills",
+      "message": "Generic test planning has moved to ruby-core-skills as test-planning-process. Hanami-specific test patterns are in write-request-spec, write-action-spec, write-rom-spec.",
+      "removed_in": "0.4.0"
     }
   }
 }

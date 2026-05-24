@@ -2,7 +2,7 @@
 name: tdd-loop
 license: MIT
 description: >
-  Use when implementing a Hanami 2.x feature using TDD. Chains plan-tests, write-request-spec
+  Use when implementing a Hanami 2.x feature using TDD. Chains test-planning-process (from ruby-core-skills), write-request-spec
   or write-action-spec, implementation, and code-review.
 metadata:
   ecosystem_sources:
@@ -13,6 +13,11 @@ metadata:
   - testing
   - development
   version: 1.0.0
+  dependencies:
+    - source: self
+      skills: [load-context, write-request-spec, review-code]
+    - source: ruby-core-skills
+      skills: [tdd-process, test-planning-process]
 ---
 
 # tdd-loop
@@ -27,7 +32,7 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
 
 | Step | Skill | Handoff Condition |
 |---|---|---|
-| 1. Plan tests | `plan-tests` | Test plan written, right test type chosen |
+| 1. Plan tests | `test-planning-process` *(from ruby-core-skills)* | Test plan written, right test type chosen |
 | 2. Write failing test | `write-request-spec` or `write-action-spec` | Test exists and fails for the right reason |
 | 3. Implement | — | Test passes |
 | 4. Review | `review-code` | No violations found |
@@ -36,7 +41,7 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
 
 ## Core Process
 
-1. **[Plan Tests]** — Load skill: `plan-tests`
+1. **[Plan Tests]** — Load skill: `test-planning-process` *(from ruby-core-skills)*
    - Decide: request spec, action unit spec, relation spec, or repository spec?
    - Document the test plan: what behavior, what inputs, what assertions
    - Handoff condition: Test plan is written and reviewed
@@ -45,7 +50,7 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
    - Write the test that describes the desired behavior
    - Run the test and confirm it FAILS
    - Confirm it fails for the right reason (feature missing, not a typo)
-   - **HARD-GATE (TDD)**: Do not proceed until the test fails for the right reason.
+   - **HARD-GATE (TDD — `tdd-process` *(from ruby-core-skills)*)**: Do not proceed until the test fails for the right reason.
    - Handoff condition: Failing test committed or saved
 
 3. **[Implement]** — Write minimal code to make the test pass
@@ -88,7 +93,7 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
 
 | Related Skill | When to chain |
 |---|---|
-| **plan-tests** | Step 1: Choose the right test type. |
+| **test-planning-process** *(from ruby-core-skills)* | Step 1: Choose the right test type. |
 | **write-request-spec** | Step 2: For full-stack HTTP behavior. |
 | **write-action-spec** | Step 2: For isolated Action logic. |
 | **write-rom-spec** | Step 2: For Relation/Repository testing. |

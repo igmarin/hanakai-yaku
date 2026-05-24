@@ -166,6 +166,7 @@ Follow this sequence when performing a security review:
 | **settings** | Secrets and configuration must use Settings, not hardcoded values. |
 | **code-review** | Security review is part of every code review. |
 | **setup-authentication** | For implementing auth strategies. |
+| Process discipline | `security-review-process` *(from ruby-core-skills)* | OWASP checklist, Ruby-level security concerns |
 
 ---
 
