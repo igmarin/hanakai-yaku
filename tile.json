@@ -3,7 +3,9 @@
   "version": "0.3.0",
   "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, and validation. Shared Ruby process skills have moved to ruby-core-skills. Uses Markdown + Front-matter architecture.",
   "docs": "docs/index.md",
-  "depends_on": ["igmarin/ruby-core-skills"],
+  "depends_on": [
+    "igmarin/ruby-core-skills"
+  ],
   "skills": {
     "build-json-api": {
       "path": "skills/actions/build-json-api/SKILL.md"
