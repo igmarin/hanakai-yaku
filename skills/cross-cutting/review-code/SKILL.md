@@ -148,4 +148,4 @@ expect(user_repo).to receive(:active)
 | **create-view** | Verify View simplicity and no DB access. |
 | **write-request-spec** | Verify test coverage for all endpoints. |
 | **review-security** | Cross-reference security concerns during code review. |
-| Process discipline | `review-process` *(from ruby-core-skills)* | Severity levels, structured findings format, re-review criteria |
+| **review-process** *(from ruby-core-skills)* | Severity levels, structured findings format, re-review criteria. |
