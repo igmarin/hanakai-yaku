@@ -13,6 +13,23 @@ Write test -> Run test -> Verify it FAILS for the right reason -> Implement -> V
 
 That TDD gate is encoded directly into the skills and agents.
 
+## Part of the AI Skill Ecosystem
+
+This repo is one of 6 in a composable AI skill ecosystem:
+
+| Repo | Role |
+|------|------|
+| [`ruby-core-skills`](https://github.com/igmarin/ruby-core-skills) | 15 shared Ruby skills + process discipline |
+| [`rails-agent-skills`](https://github.com/igmarin/rails-agent-skills) | 28 Rails-specific skills + 9 agents |
+| [**`hanakai-yaku`**](https://github.com/igmarin/hanakai-yaku) | 35 Hanami/dry-rb skills + 10 agents |
+| [`agnostic-planning-skills`](https://github.com/igmarin/agnostic-planning-skills) | 10 planning skills + 4 agents |
+| [`agent-mcp-runtime`](https://github.com/igmarin/agent-mcp-runtime) | Rust CLI runtime (pack resolution, MCP) |
+| [`ruby-skill-bench`](https://github.com/igmarin/ruby-skill-bench) | Benchmark/eval engine |
+
+See the [Ecosystem Overview](https://github.com/igmarin/agent-mcp-runtime/blob/main/docs/ecosystem.md) for the full architecture.
+
+*This repo depends on `ruby-core-skills`. See [Migration Guide](https://github.com/igmarin/agent-mcp-runtime/blob/main/docs/migration-guide.md).*
+
 > Supported agent environments
 >
 > [![Claude](https://img.shields.io/badge/Claude-D97757?logo=claude&logoColor=fff)](#)
