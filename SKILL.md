@@ -9,13 +9,13 @@ description: >
   actions, views, routing, cli, testing.
 ---
 # hanakai-yaku
- 
+
 Master entry point. Navigate and activate 35 Hanami, dry-rb, and ROM development skills plus 10 orchestration agents.
- 
+
 **Core principle:** Atomic, task-specific instructions that turn AI coding assistants into disciplined Hanami collaborators through TDD and idiomatic patterns.
- 
+
 ## Quick Reference
- 
+
 | Task | Primary Skill |
 |------|---------------|
 | **Load app context** | `load-context` |
@@ -95,11 +95,11 @@ Implementation code CANNOT be written until:
 | `add-background-jobs` | Background job setup with providers |
 | `validation-contract` | Validation contract creation |
 | `slice-lifecycle` | Slice development: Create → Test → Review → Extract |
- 
+
 *See `tile.json` for the complete skill registry and `agents.json` for the agent registry.*
- 
+
 ## Integration
- 
+
 - **Source of Truth:** `tile.json` (skill registry), `agents.json` (agent registry)
 - **Reference:** `docs/reference/skill-catalog.md`, `docs/reference/integration-matrix.md`
 - **Glossary:** `CONTEXT.md` (domain terms)
