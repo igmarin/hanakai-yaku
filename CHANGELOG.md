@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- GitHub Actions workflow (`.github/workflows/tile-check.yml`) to perform local `tile.json` integrity validation.
+
 ### Fixed
 - Fixed agent dependencies syntax (from string to YAML list of hashes) in `hanami-setup` and `slice-lifecycle` agents to pass ecosystem consistency audit.
 - Added `new_name` fields to `deprecated_skills` in `tile.json` to resolve name redirects correctly.
