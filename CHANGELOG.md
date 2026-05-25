@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- Fixed agent dependencies syntax (from string to YAML list of hashes) in `hanami-setup` and `slice-lifecycle` agents to pass ecosystem consistency audit.
+- Added `new_name` fields to `deprecated_skills` in `tile.json` to resolve name redirects correctly.
+
 ## [0.3.0] - 2026-05-24
 
 ### Breaking Changes

@@ -12,7 +12,9 @@ metadata:
   entry_point: "Invoke when creating a new Hanami slice, auditing slice architecture, or extracting code into a slice"
   phases: "Phase 1: Slice Creation, Phase 2: Slice Testing, Phase 3: Boundary Review, Phase 4: Extraction Support"
   hard_gates: "Tests Pass in Isolation, Boundaries Verified"
-  dependencies: "create-slice, test-slice, review-slice-boundaries, extract-slice"
+  dependencies:
+    - source: self
+      skills: [create-slice, test-slice, review-slice-boundaries, extract-slice]
   keywords: slice, hanami, lifecycle, create, test, review, extract, boundaries, modular
 ---
 # Slice Lifecycle Agent
