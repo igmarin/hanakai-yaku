@@ -37,12 +37,6 @@
       "original_snippets": "**Verify** — ensure the provider boots without errors. If it needs external resources (database, API), handle connection failures gracefully.",
       "relevant_when": "When a user asks for Hanami work that should trigger configure-providers.",
       "why_given": "new knowledge"
-    },
-    {
-      "instruction": "Load these files only when needed:",
-      "original_snippets": "Load these files only when needed:",
-      "relevant_when": "When a user asks for Hanami work that should trigger configure-providers.",
-      "why_given": "new knowledge"
     }
   ]
 }

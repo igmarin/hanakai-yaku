@@ -2,12 +2,12 @@
   "target_skill": "build-json-api",
   "total_scenarios": 1,
   "instructions_coverage": {
-    "total_instructions": 4,
-    "instructions_tested": 4,
+    "total_instructions": 7,
+    "instructions_tested": 7,
     "coverage_percentage": 100
   },
   "reason_distribution": {
-    "new knowledge": 3,
-    "preference": 1
+    "new knowledge": 6,
+    "reminder": 1
   }
 }

@@ -2,9 +2,8 @@
 name: load-context
 license: MIT
 description: >
-  Loads the Hanami application context before any code, spec, or review work.
-  Discovers slices, providers, settings, routes, relations, and established
-  patterns. The non-negotiable first step for every Hanami task.
+  Loads the Hanami application context before any code, spec, or review work — discovers slices, providers, settings, routes, ROM setup, test framework, DI conventions, and existing patterns, with a mandatory security gate to redact all passwords/credentials/tokens/API keys before note-taking, and a rule to never propose code without first running load-context.
+  The non-negotiable first step for every Hanami task.
   Trigger words: load context, before I code, what does this app use, match
   existing style, load-context, show me the app, discover structure, context.
 metadata:

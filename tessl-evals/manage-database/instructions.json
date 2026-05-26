@@ -15,22 +15,28 @@
       "why_given": "reminder"
     },
     {
-      "instruction": "**Create the database**:",
-      "original_snippets": "**Create the database**:",
+      "instruction": "**Create the database:**",
+      "original_snippets": "**Create the database:**",
       "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Check migration version**:",
-      "original_snippets": "**Check migration version**:",
+      "instruction": "**Run migrations** (validate with `hanami db version` - prints timestamp of last applied migration):",
+      "original_snippets": "**Run migrations** (validate with `hanami db version` - prints timestamp of last applied migration):",
       "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Never run `db drop` in production**. Always confirm `HANAMI_ENV`:",
-      "original_snippets": "**Never run `db drop` in production**. Always confirm `HANAMI_ENV`:",
+      "instruction": "**Run seed data** (`db/seeds.rb` is executed):",
+      "original_snippets": "**Run seed data** (`db/seeds.rb` is executed):",
       "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
-      "why_given": "preference"
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "> **`hanami db drop` deletes all data and cannot be undone. Always validate before proceeding.**",
+      "original_snippets": "> **`hanami db drop` deletes all data and cannot be undone. Always validate before proceeding.**",
+      "relevant_when": "When a user asks for Hanami work that should trigger manage-database.",
+      "why_given": "reminder"
     }
   ]
 }

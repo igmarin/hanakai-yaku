@@ -15,12 +15,6 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "Write test → Run test → Verify it FAILS → Implement → Verify it PASSES",
-      "original_snippets": "Write test → Run test → Verify it FAILS → Implement → Verify it PASSES",
-      "relevant_when": "When a user asks for Hanami work that should trigger create-changeset.",
-      "why_given": "new knowledge"
-    },
-    {
       "instruction": "DO NOT call relation.command(:create).call(...) directly. Use a changeset.",
       "original_snippets": "DO NOT call relation.command(:create).call(...) directly. Use a changeset.",
       "relevant_when": "When a user asks for Hanami work that should trigger create-changeset.",
@@ -39,14 +33,20 @@
       "why_given": "new knowledge"
     },
     {
+      "instruction": "**Run the spec to verify changeset transforms input correctly** before wiring into the repository:",
+      "original_snippets": "**Run the spec to verify changeset transforms input correctly** before wiring into the repository:",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-changeset.",
+      "why_given": "new knowledge"
+    },
+    {
       "instruction": "**Use in the repository** — the repository's `create` method delegates to the changeset:",
       "original_snippets": "**Use in the repository** — the repository's `create` method delegates to the changeset:",
       "relevant_when": "When a user asks for Hanami work that should trigger create-changeset.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Compose changesets** — chain multiple changesets with `.data` for multi-step writes.",
-      "original_snippets": "**Compose changesets** — chain multiple changesets with `.data` for multi-step writes.",
+      "instruction": "**Compose changesets** — chain multiple changesets with `.data` for multi-step writes:",
+      "original_snippets": "**Compose changesets** — chain multiple changesets with `.data` for multi-step writes:",
       "relevant_when": "When a user asks for Hanami work that should trigger create-changeset.",
       "why_given": "new knowledge"
     },

@@ -2,12 +2,12 @@
   "target_skill": "create-slice",
   "total_scenarios": 1,
   "instructions_coverage": {
-    "total_instructions": 5,
-    "instructions_tested": 5,
-    "coverage_percentage": 100
+    "total_instructions": 12,
+    "instructions_tested": 10,
+    "coverage_percentage": 83
   },
   "reason_distribution": {
-    "new knowledge": 4,
-    "reminder": 1
+    "new knowledge": 9,
+    "preference": 3
   }
 }

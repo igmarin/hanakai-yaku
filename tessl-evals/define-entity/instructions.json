@@ -15,14 +15,20 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Use dry-types for coercion and constraints**:",
-      "original_snippets": "**Use dry-types for coercion and constraints**:",
+      "instruction": "Entities cannot be mutated in place. Use `#copy` to return a new instance with updated attributes:",
+      "original_snippets": "Entities cannot be mutated in place. Use `#copy` to return a new instance with updated attributes:",
       "relevant_when": "When a user asks for Hanami work that should trigger define-entity.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Register the Entity namespace** in the Repository:",
-      "original_snippets": "**Register the Entity namespace** in the Repository:",
+      "instruction": "**Register the Entity namespace in Repositories**:",
+      "original_snippets": "**Register the Entity namespace in Repositories**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-entity.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Keep entity class attributes manually updated with database schema modifications. Verify using the Hanami console or spec suite:",
+      "original_snippets": "Keep entity class attributes manually updated with database schema modifications. Verify using the Hanami console or spec suite:",
       "relevant_when": "When a user asks for Hanami work that should trigger define-entity.",
       "why_given": "new knowledge"
     }

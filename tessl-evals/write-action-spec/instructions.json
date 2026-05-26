@@ -9,22 +9,34 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Use verified doubles** to catch interface mismatches:",
-      "original_snippets": "**Use verified doubles** to catch interface mismatches:",
+      "instruction": "RSpec.describe MyApp::Actions::Users::Create, type: :action do",
+      "original_snippets": "RSpec.describe MyApp::Actions::Users::Create, type: :action do",
       "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Do not test the framework**. Do not assert that `render` was called or that `halt` works. Test your Action's logic.",
-      "original_snippets": "**Do not test the framework**. Do not assert that `render` was called or that `halt` works. Test your Action's logic.",
+      "instruction": "Run RSpec and confirm the spec fails because the implementation is missing (not due to setup issues):",
+      "original_snippets": "Run RSpec and confirm the spec fails because the implementation is missing (not due to setup issues):",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Write only the minimal code in the action to make the specs pass.",
+      "original_snippets": "Write only the minimal code in the action to make the specs pass.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Verify all specs pass green.",
+      "original_snippets": "Verify all specs pass green.",
+      "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Use request specs for integration; unit specs must not hit the database or HTTP stack.",
+      "original_snippets": "Use request specs for integration; unit specs must not hit the database or HTTP stack.",
       "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
       "why_given": "preference"
-    },
-    {
-      "instruction": "**Use `subject` sparingly**. Prefer explicit `action.call` for clarity.",
-      "original_snippets": "**Use `subject` sparingly**. Prefer explicit `action.call` for clarity.",
-      "relevant_when": "When a user asks for Hanami work that should trigger write-action-spec.",
-      "why_given": "new knowledge"
     }
   ]
 }

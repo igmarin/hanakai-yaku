@@ -2,12 +2,13 @@
   "target_skill": "handle-result-pattern",
   "total_scenarios": 1,
   "instructions_coverage": {
-    "total_instructions": 7,
-    "instructions_tested": 7,
-    "coverage_percentage": 100
+    "total_instructions": 11,
+    "instructions_tested": 10,
+    "coverage_percentage": 91
   },
   "reason_distribution": {
-    "new knowledge": 6,
-    "preference": 1
+    "new knowledge": 9,
+    "preference": 1,
+    "reminder": 1
   }
 }

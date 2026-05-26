@@ -2,11 +2,11 @@
   "target_skill": "define-entity",
   "total_scenarios": 1,
   "instructions_coverage": {
-    "total_instructions": 4,
-    "instructions_tested": 4,
+    "total_instructions": 5,
+    "instructions_tested": 5,
     "coverage_percentage": 100
   },
   "reason_distribution": {
-    "new knowledge": 4
+    "new knowledge": 5
   }
 }

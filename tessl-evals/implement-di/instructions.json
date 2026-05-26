@@ -33,14 +33,14 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "RSpec.describe Api::Actions::Users::Create do",
-      "original_snippets": "RSpec.describe Api::Actions::Users::Create do",
+      "instruction": "If the key is unregistered, dry-system raises `Dry::Container::Error: Nothing registered with the key`. Check that the provider file exists, the key matches exactly (dot-namespaced, snake_case), and `auto_registration` covers the file path.",
+      "original_snippets": "If the key is unregistered, dry-system raises `Dry::Container::Error: Nothing registered with the key`. Check that the provider file exists, the key matches exactly (dot-namespaced, snake_case), and `auto_registration` covers the file path.",
       "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "Load these files only when needed:",
-      "original_snippets": "Load these files only when needed:",
+      "instruction": "RSpec.describe Api::Actions::Users::Create do",
+      "original_snippets": "RSpec.describe Api::Actions::Users::Create do",
       "relevant_when": "When a user asks for Hanami work that should trigger implement-di.",
       "why_given": "new knowledge"
     }

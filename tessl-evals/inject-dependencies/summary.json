@@ -2,12 +2,12 @@
   "target_skill": "inject-dependencies",
   "total_scenarios": 1,
   "instructions_coverage": {
-    "total_instructions": 6,
-    "instructions_tested": 6,
+    "total_instructions": 5,
+    "instructions_tested": 5,
     "coverage_percentage": 100
   },
   "reason_distribution": {
-    "new knowledge": 2,
+    "new knowledge": 1,
     "preference": 2,
     "reminder": 2
   }

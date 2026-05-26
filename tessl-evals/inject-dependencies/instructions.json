@@ -27,12 +27,6 @@
       "why_given": "reminder"
     },
     {
-      "instruction": "**Inject multiple dependencies** at once:",
-      "original_snippets": "**Inject multiple dependencies** at once:",
-      "relevant_when": "When a user asks for Hanami work that should trigger inject-dependencies.",
-      "why_given": "new knowledge"
-    },
-    {
       "instruction": "**Never access the container directly**:",
       "original_snippets": "**Never access the container directly**:",
       "relevant_when": "When a user asks for Hanami work that should trigger inject-dependencies.",

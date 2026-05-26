@@ -9,10 +9,10 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Always verify generated files** after running a generator. Check that:",
-      "original_snippets": "**Always verify generated files** after running a generator. Check that:",
+      "instruction": "**Always verify generated files**:",
+      "original_snippets": "**Always verify generated files**:",
       "relevant_when": "When a user asks for Hanami work that should trigger generate-components.",
-      "why_given": "new knowledge"
+      "why_given": "reminder"
     }
   ]
 }

@@ -9,46 +9,28 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Actions must be single-responsibility HTTP handlers**:",
-      "original_snippets": "**Actions must be single-responsibility HTTP handlers**:",
+      "instruction": "**Check Action responsibility** — Is the Action ≤ ~10 lines? Does it delegate business logic to services or repositories? Flag any SQL, filtering, or domain logic inline in the Action.",
+      "original_snippets": "**Check Action responsibility** — Is the Action ≤ ~10 lines? Does it delegate business logic to services or repositories? Flag any SQL, filtering, or domain logic inline in the Action.",
       "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
-      "why_given": "preference"
+      "why_given": "new knowledge"
     },
     {
-      "instruction": "**Dependencies must be injected via `Deps`**:",
-      "original_snippets": "**Dependencies must be injected via `Deps`**:",
+      "instruction": "**Verify DI usage** — Are all dependencies declared via `include Deps[...]`? Flag any `Hanami.app['key']` direct access.",
+      "original_snippets": "**Verify DI usage** — Are all dependencies declared via `include Deps[...]`? Flag any `Hanami.app['key']` direct access.",
       "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
-      "why_given": "preference"
+      "why_given": "new knowledge"
     },
     {
-      "instruction": "**All database queries must be in Repositories or Relations**:",
-      "original_snippets": "**All database queries must be in Repositories or Relations**:",
+      "instruction": "**Review Views** — Do `expose` blocks receive pre-fetched data only? Flag any DB calls or business logic.",
+      "original_snippets": "**Review Views** — Do `expose` blocks receive pre-fetched data only? Flag any DB calls or business logic.",
       "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
-      "why_given": "preference"
+      "why_given": "new knowledge"
     },
     {
-      "instruction": "**Repositories must return Entities, not raw hashes**:",
-      "original_snippets": "**Repositories must return Entities, not raw hashes**:",
+      "instruction": "**Check error handling** — Are exceptions logged and generic messages returned? Flag any `e.message` or `e.backtrace` in responses.",
+      "original_snippets": "**Check error handling** — Are exceptions logged and generic messages returned? Flag any `e.message` or `e.backtrace` in responses.",
       "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
-      "why_given": "preference"
-    },
-    {
-      "instruction": "**Views must not contain database queries or business logic**:",
-      "original_snippets": "**Views must not contain database queries or business logic**:",
-      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
-      "why_given": "preference"
-    },
-    {
-      "instruction": "**Tests must cover behavior, not implementation**:",
-      "original_snippets": "**Tests must cover behavior, not implementation**:",
-      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
-      "why_given": "preference"
-    },
-    {
-      "instruction": "**Error responses must be meaningful and not leak internals**:",
-      "original_snippets": "**Error responses must be meaningful and not leak internals**:",
-      "relevant_when": "When a user asks for Hanami work that should trigger review-code.",
-      "why_given": "preference"
+      "why_given": "new knowledge"
     }
   ]
 }

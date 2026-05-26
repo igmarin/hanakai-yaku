@@ -9,6 +9,12 @@
       "why_given": "new knowledge"
     },
     {
+      "instruction": "**Verify:** Run `hanami routes` and confirm the new slice's routes appear in the output.",
+      "original_snippets": "**Verify:** Run `hanami routes` and confirm the new slice's routes appear in the output.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    },
+    {
       "instruction": "**Register the Slice** in the app:",
       "original_snippets": "**Register the Slice** in the app:",
       "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
@@ -21,16 +27,52 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Keep Slices self-contained**. A Slice should be able to function independently. Minimize cross-slice dependencies.",
-      "original_snippets": "**Keep Slices self-contained**. A Slice should be able to function independently. Minimize cross-slice dependencies.",
-      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
-      "why_given": "reminder"
-    },
-    {
-      "instruction": "**Use Slices for bounded contexts**:",
-      "original_snippets": "**Use Slices for bounded contexts**:",
+      "instruction": "**Verify:** Run `hanami routes` and confirm `/api/users` and `/api/users/:id` are listed.",
+      "original_snippets": "**Verify:** Run `hanami routes` and confirm `/api/users` and `/api/users/:id` are listed.",
       "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
       "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Verify:** Boot the app (`hanami console`) and resolve the imported component: `MyApp::Slices::Api::Container[\"main.repositories.users\"]`.",
+      "original_snippets": "**Verify:** Boot the app (`hanami console`) and resolve the imported component: `MyApp::Slices::Api::Container[\"main.repositories.users\"]`.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Verify:** In `hanami console`, confirm the consuming slice can resolve the exported key.",
+      "original_snippets": "**Verify:** In `hanami console`, confirm the consuming slice can resolve the exported key.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Keep Slices self-contained** and minimize cross-slice dependencies. Use `import`/`export` as the formal contract between slices.",
+      "original_snippets": "**Keep Slices self-contained** and minimize cross-slice dependencies. Use `import`/`export` as the formal contract between slices.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Use Slices for bounded contexts** — each slice encapsulates a distinct domain concern such as a public API, admin dashboard, billing, or main web application.",
+      "original_snippets": "**Use Slices for bounded contexts** — each slice encapsulates a distinct domain concern such as a public API, admin dashboard, billing, or main web application.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Circular slice dependencies**: Slices should be acyclic. If Slice A imports from Slice B, Slice B must not import from Slice A.",
+      "original_snippets": "**Circular slice dependencies**: Slices should be acyclic. If Slice A imports from Slice B, Slice B must not import from Slice A.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Direct container access across slices**: Use `import`/`export` for cross-slice communication. Never access `Hanami.app[\"slices.other.component\"]` directly.",
+      "original_snippets": "**Direct container access across slices**: Use `import`/`export` for cross-slice communication. Never access `Hanami.app[\"slices.other.component\"]` directly.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "**Misaligned namespaces**: Slice components live under `MyApp::Slices::Api::`. File paths and module namespaces must align.",
+      "original_snippets": "**Misaligned namespaces**: Slice components live under `MyApp::Slices::Api::`. File paths and module namespaces must align.",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-slice.",
+      "why_given": "preference"
     }
   ]
 }

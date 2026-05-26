@@ -1,0 +1,21 @@
+{
+  "context": "Checks whether the final artifact follows the review-slice-boundaries instructions from the published hanakai-yaku tile.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "instruction-1",
+      "description": "The submitted artifact follows this skill instruction: Audit slice isolation. Every slice should be a self-contained module — dependencies across boundaries must be intentional and through public interfaces.",
+      "max_score": 34
+    },
+    {
+      "name": "instruction-2",
+      "description": "The submitted artifact follows this skill instruction: EVERY finding MUST cite the specific file and line as evidence.",
+      "max_score": 33
+    },
+    {
+      "name": "instruction-3",
+      "description": "The submitted artifact follows this skill instruction: **Provider leaks** — Does a provider register something that should be slice-scoped?",
+      "max_score": 33
+    }
+  ]
+}

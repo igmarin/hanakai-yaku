@@ -33,10 +33,22 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "Load these files only when needed:",
-      "original_snippets": "Load these files only when needed:",
+      "instruction": "RSpec.describe Api::Operations::Users::Create, :slice do",
+      "original_snippets": "RSpec.describe Api::Operations::Users::Create, :slice do",
       "relevant_when": "When a user asks for Hanami work that should trigger test-slice.",
       "why_given": "new knowledge"
+    },
+    {
+      "instruction": "result = Api::Actions::Users::Create.new.call(params: { email: \"c@example.com\", name: \"Carol\" })",
+      "original_snippets": "result = Api::Actions::Users::Create.new.call(params: { email: \"c@example.com\", name: \"Carol\" })",
+      "relevant_when": "When a user asks for Hanami work that should trigger test-slice.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Cross-slice testing** — test interactions between slices through their public API only. When a slice boundary must be exercised, stub the public interface or use a shared test helper rather than instantiating the other slice's internals:",
+      "original_snippets": "**Cross-slice testing** — test interactions between slices through their public API only. When a slice boundary must be exercised, stub the public interface or use a shared test helper rather than instantiating the other slice's internals:",
+      "relevant_when": "When a user asks for Hanami work that should trigger test-slice.",
+      "why_given": "preference"
     }
   ]
 }

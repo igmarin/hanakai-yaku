@@ -9,8 +9,8 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Use Rack::Test helpers** to make requests:",
-      "original_snippets": "**Use Rack::Test helpers** to make requests:",
+      "instruction": "Confirm it fails because the route or action is unimplemented. Use the **create-action** skill to implement the corresponding Hanami endpoint and route before proceeding.",
+      "original_snippets": "Confirm it fails because the route or action is unimplemented. Use the **create-action** skill to implement the corresponding Hanami endpoint and route before proceeding.",
       "relevant_when": "When a user asks for Hanami work that should trigger write-request-spec.",
       "why_given": "new knowledge"
     }

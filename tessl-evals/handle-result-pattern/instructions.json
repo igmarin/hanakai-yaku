@@ -43,6 +43,30 @@
       "original_snippets": "**Keep service objects focused**. One operation = one class. Do not create monolithic operation classes.",
       "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
       "why_given": "preference"
+    },
+    {
+      "instruction": "Reviewers and developers should check for these patterns:",
+      "original_snippets": "Reviewers and developers should check for these patterns:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "reminder"
+    },
+    {
+      "instruction": "[ ] Raising exceptions for expected domain errors (validation, resource missing). Use `Failure` instead.",
+      "original_snippets": "[ ] Raising exceptions for expected domain errors (validation, resource missing). Use `Failure` instead.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "[ ] Unsafely unwrapping monadic Results with `value!` without verifying status. Use pattern matching (`in Success(v)`) or flow-based chains (`bind`/`fmap`).",
+      "original_snippets": "[ ] Unsafely unwrapping monadic Results with `value!` without verifying status. Use pattern matching (`in Success(v)`) or flow-based chains (`bind`/`fmap`).",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "[ ] Writing deeply nested `bind` blocks. Use `Do` notation (`yield`) to flatten sequential operations.",
+      "original_snippets": "[ ] Writing deeply nested `bind` blocks. Use `Do` notation (`yield`) to flatten sequential operations.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-result-pattern.",
+      "why_given": "new knowledge"
     }
   ]
 }

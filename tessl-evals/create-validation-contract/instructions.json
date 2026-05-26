@@ -33,16 +33,10 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Compose contracts** — inherit or include shared contract modules for common fields (e.g., pagination params).",
-      "original_snippets": "**Compose contracts** — inherit or include shared contract modules for common fields (e.g., pagination params).",
+      "instruction": "expect(result.errors[:email]).to include(\"must be a valid email\")",
+      "original_snippets": "expect(result.errors[:email]).to include(\"must be a valid email\")",
       "relevant_when": "When a user asks for Hanami work that should trigger create-validation-contract.",
-      "why_given": "new knowledge"
-    },
-    {
-      "instruction": "Load these files only when needed:",
-      "original_snippets": "Load these files only when needed:",
-      "relevant_when": "When a user asks for Hanami work that should trigger create-validation-contract.",
-      "why_given": "new knowledge"
+      "why_given": "preference"
     }
   ]
 }

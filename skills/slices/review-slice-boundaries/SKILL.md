@@ -2,9 +2,7 @@
 name: review-slice-boundaries
 license: MIT
 description: >
-  Reviews Hanami slice boundaries for violations: cross-slice coupling,
-  shared internals, import leaks, and boundary design. Produces findings
-  with severity and concrete recommendations. Use when auditing slice
+  Reviews Hanami slice boundaries for violations — cross-slice coupling, shared internals, import leaks, provider leaks where a provider registers something that should be slice-scoped, and boundary design — producing findings with severity and concrete recommendations, every finding citing the specific file and line as evidence. Use when auditing slice
   architecture or preparing for extraction.
   Trigger words: review slice, slice boundaries, slice coupling, cross-slice,
   boundary review, slice audit, architecture review, bounded context.

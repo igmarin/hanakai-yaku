@@ -31,6 +31,12 @@
       "original_snippets": "**Keep configuration minimal**. Only override defaults when necessary. Prefer convention over configuration.",
       "relevant_when": "When a user asks for Hanami work that should trigger configure-slice.",
       "why_given": "reminder"
+    },
+    {
+      "instruction": "**Verify configuration after changes**. Run `bundle exec hanami console` and confirm components resolve correctly:",
+      "original_snippets": "**Verify configuration after changes**. Run `bundle exec hanami console` and confirm components resolve correctly:",
+      "relevant_when": "When a user asks for Hanami work that should trigger configure-slice.",
+      "why_given": "new knowledge"
     }
   ]
 }

@@ -21,16 +21,10 @@
       "why_given": "preference"
     },
     {
-      "instruction": "before completing load-context. You must know the app's structure.",
-      "original_snippets": "before completing load-context. You must know the app's structure.",
+      "instruction": "> **Security Gate:** Always redact all passwords, credentials, tokens, and API keys. Replace them with `[REDACTED]` or `*****` in any notes or summaries.",
+      "original_snippets": "> **Security Gate:** Always redact all passwords, credentials, tokens, and API keys. Replace them with `[REDACTED]` or `*****` in any notes or summaries.",
       "relevant_when": "When a user asks for Hanami work that should trigger load-context.",
-      "why_given": "preference"
-    },
-    {
-      "instruction": "Load these files only when needed:",
-      "original_snippets": "Load these files only when needed:",
-      "relevant_when": "When a user asks for Hanami work that should trigger load-context.",
-      "why_given": "new knowledge"
+      "why_given": "reminder"
     }
   ]
 }

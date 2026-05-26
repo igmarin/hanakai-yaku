@@ -9,8 +9,50 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "class Create < MyApp::Action",
-      "original_snippets": "class Create < MyApp::Action",
+      "instruction": "**Validate params** — Check every Action for a `params` block. Grep: `grep -rn 'request.params' app/actions/ | grep -v 'params do'`",
+      "original_snippets": "**Validate params** — Check every Action for a `params` block. Grep: `grep -rn 'request.params' app/actions/ | grep -v 'params do'`",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-security.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Verify CSRF config** — Confirm `config.actions.csrf_protection = true` in `config/app.rb` for HTML apps.",
+      "original_snippets": "**Verify CSRF config** — Confirm `config.actions.csrf_protection = true` in `config/app.rb` for HTML apps.",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-security.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Check authorization** — Confirm role/permission checks exist in Actions or service objects beyond mere authentication.",
+      "original_snippets": "**Check authorization** — Confirm role/permission checks exist in Actions or service objects beyond mere authentication.",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-security.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Check logging** — Grep: `grep -rn 'logger' app/ | grep 'password\\|token\\|secret'`",
+      "original_snippets": "**Check logging** — Grep: `grep -rn 'logger' app/ | grep 'password\\|token\\|secret'`",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-security.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Check SQL safety** — Grep: `grep -rn 'where(\"' app/` to find potential string interpolation in queries.",
+      "original_snippets": "**Check SQL safety** — Grep: `grep -rn 'where(\"' app/` to find potential string interpolation in queries.",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-security.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Check template output** — Grep: `grep -rn 'raw ' app/` to find unescaped output.",
+      "original_snippets": "**Check template output** — Grep: `grep -rn 'raw ' app/` to find unescaped output.",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-security.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Review session config** — Confirm `config.sessions` has a secret from settings, not hardcoded.",
+      "original_snippets": "**Review session config** — Confirm `config.sessions` has a secret from settings, not hardcoded.",
+      "relevant_when": "When a user asks for Hanami work that should trigger review-security.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Review error messages** — Confirm auth failures return generic messages (no user enumeration).",
+      "original_snippets": "**Review error messages** — Confirm auth failures return generic messages (no user enumeration).",
       "relevant_when": "When a user asks for Hanami work that should trigger review-security.",
       "why_given": "new knowledge"
     },

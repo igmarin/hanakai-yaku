@@ -43,12 +43,6 @@
       "original_snippets": "**Use operations from actions** — the action calls the operation and maps the result to an HTTP response.",
       "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
       "why_given": "new knowledge"
-    },
-    {
-      "instruction": "Load these files only when needed:",
-      "original_snippets": "Load these files only when needed:",
-      "relevant_when": "When a user asks for Hanami work that should trigger create-operation.",
-      "why_given": "new knowledge"
     }
   ]
 }

@@ -9,28 +9,40 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Use the built-in database provider** (already configured by Hanami):",
-      "original_snippets": "**Use the built-in database provider** (already configured by Hanami):",
+      "instruction": "Use `prepare` for requiring dependencies and `start` for component initialization. Keep providers focused on a single external dependency or library.",
+      "original_snippets": "Use `prepare` for requiring dependencies and `start` for component initialization. Keep providers focused on a single external dependency or library.",
       "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Register third-party API clients** as providers:",
-      "original_snippets": "**Register third-party API clients** as providers:",
+      "instruction": "**Use the built-in database provider**:",
+      "original_snippets": "**Use the built-in database provider**:",
       "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Keep providers focused**. One external service = one provider. Do not create a monolithic provider.",
-      "original_snippets": "**Keep providers focused**. One external service = one provider. Do not create a monolithic provider.",
+      "instruction": "**Register third-party API clients using settings**:",
+      "original_snippets": "**Register third-party API clients using settings**:",
+      "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Always load keys and URLs through `target[:settings]`. Do not reference raw environment variables via `ENV` in providers.",
+      "original_snippets": "Always load keys and URLs through `target[:settings]`. Do not reference raw environment variables via `ENV` in providers.",
       "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
       "why_given": "preference"
     },
     {
-      "instruction": "**Use `target[:settings]`** to access application settings within providers:",
-      "original_snippets": "**Use `target[:settings]`** to access application settings within providers:",
+      "instruction": "**Verify a provider is correctly registered** using the Hanami console or a smoke test:",
+      "original_snippets": "**Verify a provider is correctly registered** using the Hanami console or a smoke test:",
       "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
       "why_given": "new knowledge"
+    },
+    {
+      "instruction": "> [WARNING] Rescue and log errors in `start`. A failed provider should not crash the app boot.",
+      "original_snippets": "> [WARNING] Rescue and log errors in `start`. A failed provider should not crash the app boot.",
+      "relevant_when": "When a user asks for Hanami work that should trigger register-provider.",
+      "why_given": "reminder"
     }
   ]
 }

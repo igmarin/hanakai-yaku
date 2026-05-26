@@ -27,8 +27,8 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Keep routes RESTful**. Avoid custom routes when RESTful ones suffice. Use `resources` and `resource`.",
-      "original_snippets": "**Keep routes RESTful**. Avoid custom routes when RESTful ones suffice. Use `resources` and `resource`.",
+      "instruction": "This lists every route with its HTTP method, path, and action target. Use it to confirm routes are correctly registered before running tests or the server.",
+      "original_snippets": "This lists every route with its HTTP method, path, and action target. Use it to confirm routes are correctly registered before running tests or the server.",
       "relevant_when": "When a user asks for Hanami work that should trigger define-routes.",
       "why_given": "new knowledge"
     }

@@ -27,16 +27,22 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Define associations** to navigate between Relations:",
-      "original_snippets": "**Define associations** to navigate between Relations:",
+      "instruction": "**Define associations**:",
+      "original_snippets": "**Define associations**:",
       "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Never put business logic in Relations**. Relations filter and fetch data. Business decisions belong in Repositories, interactors, or service objects.",
-      "original_snippets": "**Never put business logic in Relations**. Relations filter and fetch data. Business decisions belong in Repositories, interactors, or service objects.",
+      "instruction": "Use the association DSL macros for basic and advanced linkage between tables:",
+      "original_snippets": "Use the association DSL macros for basic and advanced linkage between tables:",
       "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
-      "why_given": "preference"
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "If not using `infer: true`, manually sync explicit schema declarations when migrations alter the database. Verify using the console:",
+      "original_snippets": "If not using `infer: true`, manually sync explicit schema declarations when migrations alter the database. Verify using the console:",
+      "relevant_when": "When a user asks for Hanami work that should trigger define-relation.",
+      "why_given": "new knowledge"
     }
   ]
 }

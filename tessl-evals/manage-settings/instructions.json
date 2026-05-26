@@ -9,8 +9,8 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Define settings in `config/settings.rb`**:",
-      "original_snippets": "**Define settings in `config/settings.rb`**:",
+      "instruction": "Use `.env` files for local development (supported via the `dotenv` gem).",
+      "original_snippets": "Use `.env` files for local development (supported via the `dotenv` gem).",
       "relevant_when": "When a user asks for Hanami work that should trigger manage-settings.",
       "why_given": "new knowledge"
     }

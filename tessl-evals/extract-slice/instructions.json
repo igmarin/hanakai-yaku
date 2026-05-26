@@ -27,8 +27,8 @@
       "why_given": "preference"
     },
     {
-      "instruction": "**Verify** — run the full test suite. Every test that passed before must pass after.",
-      "original_snippets": "**Verify** — run the full test suite. Every test that passed before must pass after.",
+      "instruction": "**Verify** — run the full test suite. Every test that passed before must pass after:",
+      "original_snippets": "**Verify** — run the full test suite. Every test that passed before must pass after:",
       "relevant_when": "When a user asks for Hanami work that should trigger extract-slice.",
       "why_given": "preference"
     },

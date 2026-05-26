@@ -21,16 +21,40 @@
       "why_given": "new knowledge"
     },
     {
-      "instruction": "**Never expose internal details** in error responses. Log the full exception internally, return a generic message externally:",
-      "original_snippets": "**Never expose internal details** in error responses. Log the full exception internally, return a generic message externally:",
+      "instruction": "Halt immediately with a status code and response body for early returns. Do not rely on default success status codes (e.g. 200) for error conditions.",
+      "original_snippets": "Halt immediately with a status code and response body for early returns. Do not rely on default success status codes (e.g. 200) for error conditions.",
       "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
       "why_given": "preference"
     },
     {
-      "instruction": "**Invalid params halt automatically**. Do not manually check `request.params.valid?` unless you need custom behavior:",
-      "original_snippets": "**Invalid params halt automatically**. Do not manually check `request.params.valid?` unless you need custom behavior:",
+      "instruction": "> **Common Mistake:** Match the error response format to the action format. Do not use `halt` with HTML error pages/strings in a JSON API action.",
+      "original_snippets": "> **Common Mistake:** Match the error response format to the action format. Do not use `halt` with HTML error pages/strings in a JSON API action.",
       "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
       "why_given": "preference"
+    },
+    {
+      "instruction": "Always rescue `StandardError` (never rescue `Exception` as it catches system-level interrupts like `SIGTERM` or `NoMemoryError`). Log full backtraces internally, but return generic messages externally. Never rescue exceptions silently.",
+      "original_snippets": "Always rescue `StandardError` (never rescue `Exception` as it catches system-level interrupts like `SIGTERM` or `NoMemoryError`). Log full backtraces internally, but return generic messages externally. Never rescue exceptions silently.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "Do not manually inspect `request.params.valid?` or duplicate validation inside `#handle`. The action automatically halts with `422 Unprocessable Entity` before `#handle` runs if params validation fails.",
+      "original_snippets": "Do not manually inspect `request.params.valid?` or duplicate validation inside `#handle`. The action automatically halts with `422 Unprocessable Entity` before `#handle` runs if params validation fails.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "preference"
+    },
+    {
+      "instruction": "Always write tests asserting on expected HTTP error status codes (e.g., 404, 422, 500) and verified error payload shapes.",
+      "original_snippets": "Always write tests asserting on expected HTTP error status codes (e.g., 404, 422, 500) and verified error payload shapes.",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "reminder"
+    },
+    {
+      "instruction": "Reviewers should check for these red flags:",
+      "original_snippets": "Reviewers should check for these red flags:",
+      "relevant_when": "When a user asks for Hanami work that should trigger handle-errors.",
+      "why_given": "reminder"
     }
   ]
 }

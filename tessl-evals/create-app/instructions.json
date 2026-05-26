@@ -9,6 +9,12 @@
       "why_given": "new knowledge"
     },
     {
+      "instruction": "hanami db version     # Verify migrations applied successfully",
+      "original_snippets": "hanami db version     # Verify migrations applied successfully",
+      "relevant_when": "When a user asks for Hanami work that should trigger create-app.",
+      "why_given": "new knowledge"
+    },
+    {
       "instruction": "**Run the development server**:",
       "original_snippets": "**Run the development server**:",
       "relevant_when": "When a user asks for Hanami work that should trigger create-app.",

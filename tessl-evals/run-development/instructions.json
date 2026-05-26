@@ -9,10 +9,40 @@
       "why_given": "new knowledge"
     },
     {
+      "instruction": "**Verify:** Once started, confirm the server is responding:",
+      "original_snippets": "**Verify:** Once started, confirm the server is responding:",
+      "relevant_when": "When a user asks for Hanami work that should trigger run-development.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Server fails to start: Check `config/app.rb` and `config/routes.rb` for syntax errors",
+      "original_snippets": "Server fails to start: Check `config/app.rb` and `config/routes.rb` for syntax errors",
+      "relevant_when": "When a user asks for Hanami work that should trigger run-development.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Database connection refused: Verify `DATABASE_URL` is set and database server is running",
+      "original_snippets": "Database connection refused: Verify `DATABASE_URL` is set and database server is running",
+      "relevant_when": "When a user asks for Hanami work that should trigger run-development.",
+      "why_given": "new knowledge"
+    },
+    {
+      "instruction": "Boot errors: Check `config/providers/` for missing dependencies or configuration issues",
+      "original_snippets": "Boot errors: Check `config/providers/` for missing dependencies or configuration issues",
+      "relevant_when": "When a user asks for Hanami work that should trigger run-development.",
+      "why_given": "new knowledge"
+    },
+    {
       "instruction": "**Use the console for exploration**:",
       "original_snippets": "**Use the console for exploration**:",
       "relevant_when": "When a user asks for Hanami work that should trigger run-development.",
       "why_given": "new knowledge"
+    },
+    {
+      "instruction": "**Environment awareness**: Always verify `HANAMI_ENV` before running destructive operations in the console — it defaults to `development` but is easy to misconfigure.",
+      "original_snippets": "**Environment awareness**: Always verify `HANAMI_ENV` before running destructive operations in the console — it defaults to `development` but is easy to misconfigure.",
+      "relevant_when": "When a user asks for Hanami work that should trigger run-development.",
+      "why_given": "reminder"
     }
   ]
 }

@@ -2,8 +2,7 @@
 name: implement-di
 license: MIT
 description: >
-  Implements dependency injection patterns in Hanami using dry-system's
-  auto_inject. Covers `include Deps[...]`, constructor injection, and
+  Inject dependencies through the constructor using Hanami's `auto_inject` and `Deps["provider_key"]` — never call `Hanami.app["key"]` outside of providers, dependencies must be registered by a provider first, pass `instance_double` test doubles through the constructor in specs, and validate key resolution to avoid `Dry::Container::Error` on unregistered keys. Covers constructor injection, and
   testing with injected dependencies. Use when adding DI to actions,
   operations, or repositories.
   Trigger words: dependency injection, DI, auto_inject, Deps, inject,
