@@ -12,7 +12,9 @@ metadata:
   entry_point: "Invoke when setting up a new Hanami project, onboarding, or configuring providers and DI"
   phases: "Phase 1: Context Loading, Phase 2: Provider Configuration, Phase 3: DI Implementation, Phase 4: Verification"
   hard_gates: "Context Loaded, Providers Verified"
-  dependencies: "load-context, configure-providers, implement-di"
+  dependencies:
+    - source: self
+      skills: [load-context, configure-providers, implement-di]
   keywords: hanami, setup, onboarding, providers, DI, dependency injection, configuration, boot
 ---
 # Hanami Setup Agent

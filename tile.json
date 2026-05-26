@@ -116,11 +116,13 @@
   "deprecated_skills": {
     "refactor-code": {
       "moved_to": "igmarin/ruby-core-skills",
+      "new_name": "refactor-process",
       "message": "Generic refactoring process has moved to ruby-core-skills as refactor-process. Hanami-specific refactoring is handled by slice and provider skills.",
       "removed_in": "0.4.0"
     },
     "plan-tests": {
       "moved_to": "igmarin/ruby-core-skills",
+      "new_name": "test-planning-process",
       "message": "Generic test planning has moved to ruby-core-skills as test-planning-process. Hanami-specific test patterns are in write-request-spec, write-action-spec, write-rom-spec.",
       "removed_in": "0.4.0"
     }
