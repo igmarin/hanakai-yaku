@@ -53,16 +53,16 @@ Use this skill when creating a new Hanami 2.x application.
    ```
    my_app/
    ├── app/                    # Default application slice
-   │   ├── actions/           # Action classes (one class per endpoint)
+   │   ├── actions/           # Action classes
    │   ├── views/             # View classes
    │   ├── templates/         # HTML/JSON templates
-   │   ├── relations/         # ROM Relations (SQL queries)
-   │   ├── repos/             # ROM Repositories (data access)
-   │   └── entities/          # ROM Entities (immutable data structs)
+   │   ├── relations/         # ROM Relations
+   │   ├── repos/             # ROM Repositories
+   │   └── entities/          # ROM Entities
    ├── config/
-   │   ├── app.rb             # Main application configuration
-   │   ├── routes.rb          # Routing definitions
-   │   ├── settings.rb        # Typed settings loaded from environment
+   │   ├── app.rb             # App class, slice registration, plugin config
+   │   ├── routes.rb          # Root route and resource routing
+   │   ├── settings.rb        # Typed environment variable declarations
    │   └── providers/         # External dependency providers
    ├── db/
    │   ├── migrate/           # Database migration files
@@ -74,22 +74,14 @@ Use this skill when creating a new Hanami 2.x application.
    └── README.md
    ```
 
-3. **Key generated files** (non-obvious entries):
-
-   | File | Purpose |
-   |---|---|
-   | `config/app.rb` | App class, slice registration, plugin config |
-   | `config/routes.rb` | Root route and resource routing |
-   | `config/settings.rb` | Typed environment variable declarations |
-
-4. **Environment detection**:
+3. **Environment detection**:
 
    Hanami detects the environment via `HANAMI_ENV`:
    - `development` (default) — code reloading enabled
    - `test` — used by RSpec
    - `production` — code reloading disabled, logging to stdout
 
-5. **Initial configuration**:
+4. **Initial configuration**:
 
    ```ruby
    # config/app.rb
@@ -101,21 +93,22 @@ Use this skill when creating a new Hanami 2.x application.
    end
    ```
 
-6. **Database configuration** is read from `DATABASE_URL`:
+5. **Database configuration** is read from `DATABASE_URL`:
 
    ```bash
    DATABASE_URL=postgres://localhost/my_app_development
    ```
 
-7. **Install dependencies and set up the database**:
+6. **Install dependencies and set up the database**:
 
    ```bash
    bundle install
    hanami db create      # Creates the database
    hanami db migrate     # Applies migrations
+   hanami db version     # Verify migrations applied successfully
    ```
 
-8. **Run the development server**:
+7. **Run the development server**:
 
    ```bash
    hanami dev
@@ -141,4 +134,3 @@ Use this skill when creating a new Hanami 2.x application.
 | **manage-database** | [manage-database](../manage-database/SKILL.md) — Run migrations and seed files. |
 | **define-relation** | [define-relation](../../db/define-relation/SKILL.md) — Establish ROM database schema connections. |
 | **create-repository** | [create-repository](../../db/create-repository/SKILL.md) — Set up data query boundaries. |
-

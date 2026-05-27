@@ -57,11 +57,16 @@ DO use settings for all environment-dependent configuration.
 6. **Register with a descriptive key** — `"redis"`, `"http_client"`, not generic names.
 7. **Verify** — ensure the provider boots without errors. If it needs external resources (database, API), handle connection failures gracefully.
 
-## Extended Resources (Progressive Disclosure)
+## Common Provider Patterns
 
-Load these files only when needed:
+Apply these patterns for frequently encountered service types:
 
-- **[PROVIDER_PATTERNS.md](./PROVIDER_PATTERNS.md)** — Common provider patterns: ROM connections, HTTP clients, background job adapters, cache stores.
+- **ROM/database connection** — register the ROM container in `start`; use `target["settings"]` for the database URL; depend on the `:persistence` provider in consumers.
+- **HTTP client** — require the HTTP library in `prepare`; instantiate with base URL and headers from settings in `start`; register as `"http_client"` or a service-specific key.
+- **Background job adapter** — configure the adapter class and queue connection in `start`; register as `"jobs.adapter"` so job classes can resolve it via `Deps`.
+- **Cache store** — require the cache library in `prepare`; build the store with TTL and connection settings from `target["settings"]` in `start`.
+
+> If a `PROVIDER_PATTERNS.md` file is present in the bundle, load it for extended code examples for the above patterns.
 
 ## Output Style
 

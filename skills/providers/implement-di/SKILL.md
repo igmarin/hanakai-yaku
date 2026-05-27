@@ -73,27 +73,29 @@ DO inject dependencies through the constructor — use `include Deps[...]`.
      end
    end
    ```
-5. **Test with stubs** — inject test doubles through the constructor:
+5. **Validate resolution** — after adding the injection, confirm the key resolves correctly:
+   ```bash
+   bundle exec hanami console
+   # Then in the console:
+   # Hanami.app["operations.users.create_user"]  # should return the registered object
+   ```
+   If the key is unregistered, dry-system raises `Dry::Container::Error: Nothing registered with the key`. Check that the provider file exists, the key matches exactly (dot-namespaced, snake_case), and `auto_registration` covers the file path.
+6. **Test with stubs** — inject test doubles through the constructor:
    ```ruby
    RSpec.describe Api::Actions::Users::Create do
      let(:create_user) { instance_double(Users::CreateUser, call: Dry::Monads::Success(user)) }
+     # Pass each dep as a keyword arg; use instance_double (not double) so RSpec
+     # validates the method exists on the real class.
+     # For failure paths, return Dry::Monads::Failure(...) to test error branches.
+     # For multiple deps: described_class.new(repo:, notifier:)
      let(:action) { described_class.new(create_user:) }
+
+     it "calls the operation with request params" do
+       result = action.call({ "user" => { "email" => "test@example.com" } })
+       expect(create_user).to have_received(:call).with(hash_including("user"))
+     end
    end
    ```
-   See [TESTING_DI.md](./TESTING_DI.md) for detailed testing patterns.
-
-## Extended Resources (Progressive Disclosure)
-
-Load these files only when needed:
-
-- **[TESTING_DI.md](./TESTING_DI.md)** — Testing patterns for injected dependencies: stubs, mocks, contract verification.
-
-## Output Style
-
-1. **Class with DI** — the complete class with `include Deps[...]`.
-2. **Provider key** — the exact key used for registration.
-3. **Test example** — how to pass a test double through the constructor.
-4. **English only** unless user requests otherwise.
 
 ## Integration
 

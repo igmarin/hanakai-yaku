@@ -51,11 +51,10 @@ Use this skill when running Hanami 2.x development commands.
    curl http://localhost:2300
    ```
 
-   A valid HTTP response (even a 404 or 200) confirms the server is running.
-
    **Error recovery:**
    - Port already in use: `lsof -ti:2300 | xargs kill -9` or change port in `config/app.rb`
    - Server fails to start: Check `config/app.rb` and `config/routes.rb` for syntax errors
+   - Does not reload configuration files (requires restart after editing `config/app.rb` or `config/routes.rb`)
 
 2. **Start the console**:
 
@@ -70,6 +69,8 @@ Use this skill when running Hanami 2.x development commands.
    ```bash
    hanami console
    ```
+
+   Uses `development` environment by default; override with `HANAMI_ENV=test hanami console`.
 
    Access components directly:
 
@@ -100,23 +101,10 @@ Use this skill when running Hanami 2.x development commands.
    Hanami.app["relations.users"].active.to_a
    ```
 
-4. **Development server behavior**:
-   - Does not reload configuration files (requires restart)
-
-5. **Console environment**:
-   - Loads the full Hanami application
-   - Uses `development` environment by default
-   - Can override with `HANAMI_ENV=test hanami console`
-
-6. **List routes**:
+4. **List routes and middleware**:
 
    ```bash
    hanami routes
-   ```
-
-7. **List middleware**:
-
-   ```bash
    hanami middleware
    ```
 
@@ -124,8 +112,7 @@ Use this skill when running Hanami 2.x development commands.
 
 ## Common Mistakes
 
-- **Config files don't reload**: `hanami dev` reloads Ruby code, not configuration. Restart the server after editing `config/app.rb` or `config/routes.rb`.
-- **Missing `DATABASE_URL`**: The console loads the full app and requires `DATABASE_URL` to connect. Run `echo $DATABASE_URL` before starting.
+- **Config files don't reload**: `hanami dev` reloads Ruby code only. Restart the server after editing configuration files.
 - **Environment awareness**: Always verify `HANAMI_ENV` before running destructive operations in the console — it defaults to `development` but is easy to misconfigure.
 
 ---

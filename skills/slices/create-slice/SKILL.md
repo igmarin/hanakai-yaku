@@ -58,8 +58,6 @@ Use this skill when creating and configuring Hanami 2.x Slices.
 
    ```ruby
    # config/app.rb
-   # frozen_string_literal: true
-
    module MyApp
      class App < Hanami::App
        slice :api, at: "/api" do
@@ -73,8 +71,6 @@ Use this skill when creating and configuring Hanami 2.x Slices.
 
    ```ruby
    # slices/api/config/routes.rb
-   # frozen_string_literal: true
-
    module MyApp
      module Slices
        module Api
@@ -87,15 +83,11 @@ Use this skill when creating and configuring Hanami 2.x Slices.
    end
    ```
 
+   Routes map to action files under `slices/api/actions/` (e.g. `/api/users` → `slices/api/actions/users/index.rb`).
+
    **Verify:** Run `hanami routes` and confirm `/api/users` and `/api/users/:id` are listed.
 
-4. **Access Slice Actions** from routes:
-
-   ```ruby
-   # Full path: /api/users → slices/api/actions/users/index.rb
-   ```
-
-5. **Import dependencies from another Slice**:
+4. **Import dependencies from another Slice**:
 
    ```ruby
    # config/app.rb
@@ -112,7 +104,7 @@ Use this skill when creating and configuring Hanami 2.x Slices.
 
    **Verify:** Boot the app (`hanami console`) and resolve the imported component: `MyApp::Slices::Api::Container["main.repositories.users"]`.
 
-6. **Export Slice components** for use by other slices:
+5. **Export Slice components** for use by other slices:
 
    ```ruby
    # slices/api/config/slice.rb
@@ -129,9 +121,9 @@ Use this skill when creating and configuring Hanami 2.x Slices.
 
    **Verify:** In `hanami console`, confirm the consuming slice can resolve the exported key.
 
-7. **Keep Slices self-contained**. A Slice should be able to function independently. Minimize cross-slice dependencies.
+6. **Keep Slices self-contained** and minimize cross-slice dependencies. Use `import`/`export` as the formal contract between slices.
 
-8. **Use Slices for bounded contexts** — common examples include `slice :api` for public endpoints, `slice :admin` for dashboards, `slice :billing` for payments, and `slice :main` for the default web application.
+7. **Use Slices for bounded contexts** — each slice encapsulates a distinct domain concern such as a public API, admin dashboard, billing, or main web application.
 
 ---
 

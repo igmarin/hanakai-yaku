@@ -2,8 +2,10 @@
 name: build-api-slice
 license: MIT
 description: >
-  Use when creating an API-only Slice in Hanami 2.x. Chains create-slice, create-action,
-  define-routes, write-request-spec, and code-review.
+  Use when building a REST API, scaffolding API endpoints, or creating a JSON API resource
+  in a Hanami 2.x application. Creates a new Hanami slice, generates controller actions,
+  defines RESTful routes, writes request specs, and performs a code review. Handles JSON
+  serialization, parameter validation, and error responses for API endpoints.
 metadata:
   ecosystem_sources:
   - hanami/hanami
@@ -22,17 +24,7 @@ Use this workflow when creating an API-only Slice in Hanami 2.x.
 
 **Core principle:** API slices are self-contained. They have their own routes, actions, and dependencies, but share the app's database and settings.
 
----
-
-## Quick Reference
-
-| Step | Skill | Handoff Condition |
-|---|---|---|
-| 1. Create Slice | `create-slice` | Slice directory structure exists, registered in app |
-| 2. Define Actions | `create-action` | Actions for all API endpoints exist |
-| 3. Configure routes | `define-routes` | Routes mounted at `/api` |
-| 4. Write tests | `write-request-spec` | All endpoints return correct JSON |
-| 5. Review | `review-code` | No violations found |
+> **Note:** Each step in this workflow delegates to a separate installed skill (`create-slice`, `create-action`, `define-routes`, `write-request-spec`, `review-code`). These must be available in your skill set.
 
 ---
 
@@ -42,6 +34,7 @@ Use this workflow when creating an API-only Slice in Hanami 2.x.
    - Generate slice: `hanami generate slice api`
    - Register in `config/app.rb`: `slice :api, at: "/api"`
    - Define slice routes in `slices/api/config/routes.rb`
+   - **Validate:** `bundle exec hanami routes` — confirm `/api` prefix appears
    - Handoff condition: Slice is registered and routes respond
 
 2. **[Define Actions]** — Load skill: `create-action`
@@ -49,17 +42,20 @@ Use this workflow when creating an API-only Slice in Hanami 2.x.
    - Use `build-json-api` for serialization
    - Use `validate-params` for input validation
    - Use `handle-errors` for error responses
+   - **Validate:** `bundle exec hanami routes` lists expected action mappings
    - Handoff condition: All Actions return correct JSON
 
 3. **[Configure Routes]** — Load skill: `define-routes`
    - Define RESTful routes in `slices/api/config/routes.rb`
    - Use `resources` for standard CRUD
+   - **Validate:** `bundle exec hanami routes` shows full resource routes
    - Handoff condition: Routes map to correct Actions
 
 4. **[Write Tests]** — Load skill: `write-request-spec`
    - Write request specs for all API endpoints
    - Assert on JSON shape and status codes
    - Test error cases (400, 401, 404, 422)
+   - **Validate:** `bundle exec rspec spec/requests/` — all tests green
    - Handoff condition: All tests pass
 
 5. **[Review]** — Load skill: `review-code`
@@ -70,50 +66,52 @@ Use this workflow when creating an API-only Slice in Hanami 2.x.
 
 ---
 
-## Common Mistakes
+## Minimal API Action Example
 
-| Mistake | Reality |
-|---|---|
-| "I'll put API routes in the main app routes" | API routes belong in the slice's `config/routes.rb`. Keep the main app routes clean. |
-| "I'll share database tables without clear ownership" | Each slice should own its tables. If the API slice needs user data, import the user Repository from the main slice. |
-| "I'll skip authentication because it's an internal API" | Always authenticate API endpoints. Use `handle-errors` for 401/403 responses. |
-| "I'll return different JSON shapes for the same resource" | Consistent serialization is critical for APIs. Use the same serializer for a resource across all endpoints. |
-| "I'll forget to set `response.format = :json`" | Always set the response format for API Actions. |
+This is the canonical pattern for a JSON API action in a Hanami 2.x slice:
 
----
+```ruby
+# slices/api/actions/users/index.rb
+module Api
+  module Actions
+    module Users
+      class Index < Api::Action
+        include Deps[repo: "repositories.user_repo"]
 
-## Red Flags
+        def handle(request, response)
+          response.format = :json
+          users = repo.all
+          response.body = JSON.generate(users.map(&:to_h))
+        end
+      end
+    end
+  end
+end
+```
 
-- API routes in main app instead of slice
-- Shared database tables without clear ownership
-- Missing API authentication
-- Inconsistent JSON shapes
-- Missing `response.format = :json`
-- HTML responses from API endpoints
-- Missing error case tests
+Key points:
+- Always set `response.format = :json`
+- Serialize via a consistent serializer or `to_h` — never ad-hoc hashes
+- Inject dependencies via `Deps[]` rather than hard-coding
 
----
+### Parameter Validation
 
-## Integration
+```ruby
+def handle(request, response)
+  halt 422, JSON.generate(errors: ["name is required"]) unless request.params[:name]
+  # proceed with validated params
+end
+```
 
-| Related Skill | When to chain |
-|---|---|
-| **create-slice** | Step 1: Create the API slice. |
-| **create-action** | Step 2: Define API Actions. |
-| **build-json-api** | Step 2: JSON serialization for API responses. |
-| **define-routes** | Step 3: Configure API routes. |
-| **write-request-spec** | Step 4: Test API endpoints. |
-| **code-review** | Step 5: Review the API implementation. |
+### Error Response Pattern
 
----
+```ruby
+def handle(request, response)
+  response.format = :json
+  user = repo.find(request.params[:id])
+  halt 404, JSON.generate(error: "not found") unless user
+  response.body = JSON.generate(user.to_h)
+end
+```
 
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (API Slice) |
-|---|---|
-| `namespace :api do resources :users end` | `slice :api, at: "/api"` + `resources :users` in slice routes |
-| `Api::UsersController` | `MyApp::Slices::Api::Actions::Users::Index` |
-| `respond_to :json` | `response.format = :json` |
-| `rails api` | No separate API mode. Create an API slice. |
-| `jbuilder` views | Custom serializer classes or `to_h` methods |
-| API-only routes | `slice :api` with its own routes file |
+Use consistent `{ error: "message" }` or `{ errors: [...] }` shapes across all endpoints.

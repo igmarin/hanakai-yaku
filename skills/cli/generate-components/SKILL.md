@@ -91,7 +91,21 @@ Use this skill when generating Hanami 2.x components via the CLI.
    - `db/migrate/{timestamp}_create_users.rb`
 
 5. **Always verify generated files**:
-   Generators will fail if target files already exist. Always check:
+   Generators will fail if target files already exist. After generating, confirm the expected files are present and correctly named:
+
+   ```bash
+   # Confirm the action file exists
+   ls app/actions/users/index.rb
+
+   # Confirm the view and template were created together
+   ls app/views/users/index.rb app/templates/users/index.html.erb
+
+   # Confirm class name matches module nesting by grepping the generated file
+   grep 'class Index' app/actions/users/index.rb
+   # Expected: class Index < MyApp::Action (or equivalent)
+   ```
+
+   Key checks:
    - File paths match the expected pattern.
    - Class names align with module nesting (e.g. `users.index` → `MyApp::Actions::Users::Index`).
    - Slices are correctly prefixed: `<slice>.<resource>.<action>` (omitting this places components in the default `app/` folder).

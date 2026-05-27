@@ -74,7 +74,7 @@ Use this skill when defining ROM Relations that map to database tables in Hanami
    end
    ```
 
-4. **Add query methods** for reusable filters:
+4. **Add query methods** for reusable filters. Encapsulate all query filters inside public relation methods — keep business logic, validations, and side effects out of Relations:
 
    ```ruby
    def active
@@ -87,25 +87,31 @@ Use this skill when defining ROM Relations that map to database tables in Hanami
    ```
 
 5. **Define associations**:
-   Link related tables using association DSL macros. For complete association setup and advanced configurations, see [RELATIONS.md](RELATIONS.md).
+   Use the association DSL macros for basic and advanced linkage between tables:
 
    ```ruby
    associations do
+     # Basic cases
      many_to_one :users, as: :author
      one_to_many :posts, as: :posts
+
+     # Aliased foreign key
+     many_to_one :users, foreign_key: :author_id, as: :author
+
+     # Nested / through association
+     one_to_many :comments, through: :posts
    end
    ```
 
-6. **Filter queries via custom methods**:
-   Encapsulate query filters inside public relation methods:
+   **Loading strategies:** use `combine` to eagerly load associations in a single composed query, or `load` to issue a separate query:
 
    ```ruby
-   def active
-     where(status: "active")
-   end
+   # In a repository or relation method:
+   users.combine(:posts)           # eager-load posts into each user struct
+   users.combine(posts: :comments) # nested eager-load
    ```
 
-7. **Keep Relations in sync with migrations**:
+6. **Keep Relations in sync with migrations**:
    If not using `infer: true`, manually sync explicit schema declarations when migrations alter the database. Verify using the console:
 
    ```bash
@@ -113,8 +119,7 @@ Use this skill when defining ROM Relations that map to database tables in Hanami
    # check app["relations.users"].schema
    ```
 
-8. **Never put business logic in Relations**:
-   Relations are the query construction layer. Do not place validations or side effects here; those belong in Operations, Repositories, or actions.
+   **If schema mismatch or boot failure:** check migration status → run pending migrations (`bundle exec hanami db migrate`) → restart the console → re-verify the schema. If `infer: true` fails at boot, confirm the table exists in the database and that the connection configuration is correct.
 
 ---
 

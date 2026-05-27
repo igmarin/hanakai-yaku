@@ -2,8 +2,7 @@
 name: tdd-loop
 license: MIT
 description: >
-  Use when implementing a Hanami 2.x feature using TDD. Chains test-planning-process (from ruby-core-skills), write-request-spec
-  or write-action-spec, implementation, and code-review.
+  Use when implementing a Hanami 2.x feature, Hanami action, Hanami slice, or any Hanami controller logic using test-driven development (TDD / red-green-refactor). Orchestrates test planning, generates request specs or action unit specs, drives the implementation of Hanami action classes and route configurations, and performs a final code review. Use when starting a new Hanami feature from scratch, adding integration tests for an existing Hanami action, or following a red-green-refactor cycle for any Hanami 2.x component.
 metadata:
   ecosystem_sources:
   - hanami/hanami
@@ -48,14 +47,14 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
 
 2. **[Write Failing Test]** — Load skill: `write-request-spec` or `write-action-spec`
    - Write the test that describes the desired behavior
-   - Run the test and confirm it FAILS
-   - Confirm it fails for the right reason (feature missing, not a typo)
+   - Run the test: `bundle exec rspec spec/requests/...` (request spec) or `bundle exec rspec spec/actions/...` (action spec)
+   - Confirm it FAILS and fails for the right reason (feature missing, not a typo)
    - **HARD-GATE (TDD — `tdd-process` *(from ruby-core-skills)*)**: Do not proceed until the test fails for the right reason.
    - Handoff condition: Failing test committed or saved
 
 3. **[Implement]** — Write minimal code to make the test pass
    - Start with the simplest implementation that satisfies the test
-   - Run the test after each change
+   - Run `bundle exec rspec` after each change
    - Refactor only after the test passes
    - Handoff condition: Test passes
 
@@ -68,44 +67,41 @@ Use this workflow when implementing any Hanami 2.x feature using Test-Driven Dev
 
 ---
 
-## Common Mistakes
+## Minimal Example
 
-| Mistake | Reality |
-|---|---|
-| "I'll write the implementation before the test" | TDD means test first. No exceptions. |
-| "I'll skip the HARD-GATE and assume the test fails" | Always run the test and verify the failure. A passing "failing test" means the test is wrong. |
-| "I'll write all tests at once before implementing" | Write one failing test, implement, then write the next. Incremental progress. |
-| "I'll refactor while the test is failing" | Refactor only when tests are green. Red = implement, Green = refactor. |
+**Failing request spec** (`spec/requests/posts/create_spec.rb`):
+```ruby
+RSpec.describe "POST /posts", type: :request do
+  it "creates a post and redirects" do
+    post "/posts", params: { post: { title: "Hello" } }
+    expect(last_response.status).to eq(302)
+  end
+end
+```
+Run: `bundle exec rspec spec/requests/posts/create_spec.rb` → expect a failure such as `ActionNotFound` or `404`.
+
+**Minimal implementation** — generate the action and register the route:
+```ruby
+# app/actions/posts/create.rb
+module MyApp
+  module Actions
+    module Posts
+      class Create < MyApp::Action
+        def handle(request, response)
+          response.redirect_to "/posts"
+        end
+      end
+    end
+  end
+end
+```
+Run: `bundle exec rspec spec/requests/posts/create_spec.rb` → expect green.
 
 ---
 
-## Red Flags
+## Common Mistakes & Red Flags
 
-- Implementation written before any test
-- Skipping the HARD-GATE verification
-- Multiple failing tests written before any implementation
-- Refactoring during red phase
-- Tests that pass immediately (indicating wrong test or existing feature)
-
----
-
-## Integration
-
-| Related Skill | When to chain |
+| Mistake / Red Flag | Why it matters |
 |---|---|
-| **test-planning-process** *(from ruby-core-skills)* | Step 1: Choose the right test type. |
-| **write-request-spec** | Step 2: For full-stack HTTP behavior. |
-| **write-action-spec** | Step 2: For isolated Action logic. |
-| **write-rom-spec** | Step 2: For Relation/Repository testing. |
-| **review-code** | Step 4: Review the implementation. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (TDD Workflow) |
-|---|---|
-| Write controller spec → implement controller | Write request spec → implement Action |
-| Write model spec → implement model | Write ROM spec → implement Relation/Repository |
-| `rails generate scaffold` then test | No scaffold generator. Write test, then generate components individually. |
-| `before_action` callbacks tested implicitly | Explicit auth checks tested in request specs |
+| Implementation written before any test | TDD means test first. No exceptions. |
+| Skipping the HARD-GATE — assuming the test fails without running it | A passing 

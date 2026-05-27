@@ -72,7 +72,7 @@ Follow this sequence when performing a security review:
      required(:password).value(:string, min_size?: 8)
    end
 
-   # BAD — mass assignment risk
+   # BAD
    user_repo.create(request.params)
    ```
 
@@ -99,9 +99,7 @@ Follow this sequence when performing a security review:
    ```ruby
    # GOOD
    logger.info("Login attempt: #{params[:email]}")
-
-   # BAD
-   logger.info("Login: #{params[:email]}, password: #{params[:password]}")
+   # BAD: logger.info("Login: #{params[:email]}, password: #{params[:password]}")
    ```
 
 5. **Store secrets in settings**, never in code:
@@ -118,21 +116,15 @@ Follow this sequence when performing a security review:
 6. **Prevent SQL injection** using ROM's query interface:
 
    ```ruby
-   # GOOD
-   users.where(email: params[:email]).one
-
-   # BAD
-   users.where("email = '#{params[:email]}'")
+   # GOOD: users.where(email: params[:email]).one
+   # BAD:  users.where("email = '#{params[:email]}'").one
    ```
 
-7. **Escape output in templates** to prevent XSS:
+7. **Escape output in templates** — ERB auto-escapes by default; never use `raw` on user input:
 
    ```erb
    <!-- GOOD -->
    <p><%= user.bio %></p>
-
-   <!-- BAD -->
-   <p><%= raw user.bio %></p>
    ```
 
 8. **Use secure session configuration**:
@@ -148,11 +140,8 @@ Follow this sequence when performing a security review:
 9. **Return generic error messages** for auth failures:
 
    ```ruby
-   # GOOD
-   halt 401, { error: "Invalid credentials" }.to_json
-
-   # BAD — reveals account existence
-   halt 401, { error: "User not found" }.to_json
+   # GOOD: halt 401, { error: "Invalid credentials" }.to_json
+   # BAD:  halt 401, { error: "User not found" }.to_json
    ```
 
 ---
@@ -167,16 +156,3 @@ Follow this sequence when performing a security review:
 | **code-review** | Security review is part of every code review. |
 | **setup-authentication** | For implementing auth strategies. |
 | **security-review-process** *(from ruby-core-skills)* | OWASP checklist, Ruby-level security concerns. |
-
----
-
-## Rails → Hanami
-
-| Rails | Hanami 2.x |
-|---|---|
-| `protect_from_forgery` | `config.actions.csrf_protection = true` |
-| `before_action :authenticate_user!` | Explicit `before :authenticate!` in each Action |
-| `strong_parameters` | Params DSL with type coercion and constraints |
-| `Rails.application.credentials` | Settings with environment variables |
-| `html_safe` / `raw` | ERB auto-escapes; avoid `raw` on user input |
-| `config.session_store` | `config.sessions = :cookie, { ... }` in `config/app.rb` |

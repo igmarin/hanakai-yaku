@@ -23,7 +23,14 @@ metadata:
 
 Use this skill when building JSON API endpoints in Hanami 2.x Actions.
 
-**Core principle:** JSON APIs must produce predictable, parseable output. Implement round-trip parse → serialize → parse verification for all serializers.
+---
+
+## End-to-End Workflow: Creating a JSON Endpoint
+
+1. **Create the action** and set `response.format = :json`
+2. **Add a dedicated serializer** for the entity being returned
+3. **Write a round-trip test** asserting serialize → parse produces correct fields
+4. **Verify**: run the test; fix serializer if fields are missing or misformatted
 
 ---
 
@@ -38,8 +45,8 @@ Use this skill when building JSON API endpoints in Hanami 2.x Actions.
    end
    ```
 
-2. **Use dedicated serializers** to encode response bodies:
-   Isolate serialization representation from your Actions. Instantiating a dedicated serializer class keeps action handlers clean. For implementation details and conventions, see [SERIALIZERS.md](SERIALIZERS.md).
+2. **Use dedicated serializers** to encode response bodies.
+   For implementation details and conventions, see [SERIALIZERS.md](SERIALIZERS.md).
 
    ```ruby
    def handle(request, response)
@@ -51,7 +58,7 @@ Use this skill when building JSON API endpoints in Hanami 2.x Actions.
    ```
 
 3. **Verify round-trip serialization**:
-   Always assert that a serialized object can be parsed back into equivalent data to prevent schema regressions. For the step-by-step troubleshooting workflow, see the [SERIALIZERS.md Verification Guide](SERIALIZERS.md#round-trip-verification-workflow).
+   Always assert that a serialized object can be parsed back into equivalent data. Format all date/time fields with `.iso8601`. If the assertion fails, check that the serializer maps all fields and that timestamps use `.iso8601`.
 
    ```ruby
    # In tests:
@@ -59,10 +66,11 @@ Use this skill when building JSON API endpoints in Hanami 2.x Actions.
    parsed = JSON.parse(serialized, symbolize_names: true)
 
    assert_equal user.email, parsed[:email]
+   assert_equal user.created_at.iso8601, parsed[:created_at]
+   # If assertion fails: verify serializer field mapping and timestamp formatting
    ```
 
 4. **Handle request body parsing** via `request.params`:
-   JSON request payloads are automatically parsed by the framework and accessible directly under params.
 
    ```ruby
    def handle(request, response)
@@ -103,15 +111,3 @@ Use this skill when building JSON API endpoints in Hanami 2.x Actions.
      halt 400, { error: "Invalid JSON body" }.to_json
    end
    ```
-
----
-
-## Checklist: Common Mistakes & Red Flags
-
-- [ ] `response.format = :json` is set on every JSON action
-- [ ] Every entity is serialized through a dedicated serializer class — never raw repository structures
-- [ ] Round-trip parse → serialize → parse verified for all serializers
-- [ ] Timestamps formatted to ISO 8601 via `.iso8601`
-- [ ] Error responses follow a consistent shape (`{ error: { message: ..., details: ... } }`)
-- [ ] `JSON::ParserError` rescued with 400 response
-

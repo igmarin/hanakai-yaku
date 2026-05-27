@@ -2,8 +2,11 @@
 name: setup-authentication
 license: MIT
 description: >
-  Use when implementing authentication in Hanami 2.x. Chains inject-dependencies,
-  providers, create-action, and handle-errors.
+  Use when implementing authentication in Hanami 2.x, including login, logout, signup, session
+  management, password hashing, and protecting endpoints. Sets up login/logout flows, configures
+  session-based or token-based auth, adds password hashing with bcrypt, and returns correct 401/403
+  responses for auth failures. Use when a user asks about auth, login, signup, JWT, sessions,
+  passwords, or securing Hanami actions.
 metadata:
   ecosystem_sources:
   - hanami/hanami
@@ -24,41 +27,157 @@ Use this workflow when implementing authentication in Hanami 2.x.
 
 ---
 
-## Quick Reference
+## Workflow
 
-| Step | Skill | Handoff Condition |
-|---|---|---|
-| 1. Setup DI | `inject-dependencies` | Auth service injectable via `Deps` |
-| 2. Register provider | `register-provider` | Auth service registered in container |
-| 3. Create Actions | `create-action` | Login, logout, protected endpoints |
-| 4. Handle errors | `handle-errors` | 401/403 responses for auth failures |
+### Step 1 — Inject Auth Service (`inject-dependencies`)
+
+- Create an authentication service object
+- Register it in the DI container
+- Inject it into Actions that need auth
+- **Handoff condition:** Auth service accessible via `Deps["authentication"]`
+
+### Step 2 — Register Provider (`register-provider`)
+
+- Create `config/providers/authentication.rb`
+- Register the auth service in the `start` block
+- **Handoff condition:** Auth service registered and injectable
+
+**Example — `config/providers/authentication.rb`:**
+```ruby
+Hanami.app.register_provider(:authentication) do
+  start do
+    require "bcrypt"
+
+    register("authentication", MyApp::Authentication::Service.new)
+  end
+end
+```
+
+### Step 3 — Create Actions (`create-action`)
+
+- Create login Action: validates credentials, sets session/token
+- Create logout Action: clears session/token
+- Create protected Actions: check auth before processing
+- **Handoff condition:** Login/logout work, protected endpoints require auth
+
+**Example — minimal auth service:**
+```ruby
+# app/authentication/service.rb
+module MyApp
+  module Authentication
+    class Service
+      def authenticate(email:, password:, session:)
+        user = UserRepository.new.find_by_email(email)
+        return false unless user
+        return false unless BCrypt::Password.new(user.password_digest) == password
+
+        session[:user_id] = user.id
+        true
+      end
+
+      def current_user(session)
+        return nil unless session[:user_id]
+
+        UserRepository.new.find(session[:user_id])
+      end
+
+      def authenticated?(session)
+        !current_user(session).nil?
+      end
+    end
+  end
+end
+```
+
+**Example — login Action:**
+```ruby
+# app/actions/sessions/create.rb
+module MyApp
+  module Actions
+    module Sessions
+      class Create < MyApp::Action
+        include Deps["authentication"]
+
+        params do
+          required(:email).filled(:string)
+          required(:password).filled(:string)
+        end
+
+        def handle(request, response)
+          halt 422 unless request.params.valid?
+
+          authenticated = authentication.authenticate(
+            email: request.params[:email],
+            password: request.params[:password],
+            session: request.session
+          )
+
+          if authenticated
+            response.redirect_to "/dashboard"
+          else
+            response.status = 401
+            response.body = { error: "Invalid credentials" }.to_json
+          end
+        end
+      end
+    end
+  end
+end
+```
+
+**Example — protected Action:**
+```ruby
+# app/actions/dashboard/show.rb
+module MyApp
+  module Actions
+    module Dashboard
+      class Show < MyApp::Action
+        include Deps["authentication"]
+
+        def handle(request, response)
+          halt 401 unless authentication.authenticated?(request.session)
+
+          user = authentication.current_user(request.session)
+          response.body = { user: user.email }.to_json
+        end
+      end
+    end
+  end
+end
+```
+
+### Step 4 — Handle Errors (`handle-errors`)
+
+- Return 401 for missing/invalid credentials
+- Return 403 for insufficient permissions
+- Log auth failures (but not passwords)
+- **Handoff condition:** Correct error responses for auth failures
 
 ---
 
-## Core Process
+## Verification
 
-1. **[Setup DI]** — Load skill: `inject-dependencies`
-   - Create an authentication service object
-   - Register it in the DI container
-   - Inject it into Actions that need auth
-   - Handoff condition: Auth service accessible via `Deps["authentication"]`
+After each step, verify the workflow is progressing correctly:
 
-2. **[Register Provider]** — Load skill: `register-provider`
-   - Create `config/providers/authentication.rb`
-   - Register the auth service in the `start` block
-   - Handoff condition: Auth service is registered and injectable
+```bash
+# Verify provider is registered
+bundle exec hanami console
+> Hanami.app["authentication"]  # Should return auth service instance
 
-3. **[Create Actions]** — Load skill: `create-action`
-   - Create login Action: validates credentials, sets session/token
-   - Create logout Action: clears session/token
-   - Create protected Actions: check auth before processing
-   - Handoff condition: Login/logout work, protected endpoints require auth
+# Test login endpoint
+curl -X POST http://localhost:2300/sessions \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"secret"}'
+# Expect: redirect or 200 with session cookie on success; 401 on failure
 
-4. **[Handle Errors]** — Load skill: `handle-errors`
-   - Return 401 for missing/invalid credentials
-   - Return 403 for insufficient permissions
-   - Log auth failures (but not passwords)
-   - Handoff condition: Correct error responses for auth failures
+# Test protected endpoint without auth
+curl http://localhost:2300/dashboard
+# Expect: 401 Unauthorized
+
+# Test protected endpoint with session cookie
+curl http://localhost:2300/dashboard --cookie "<session-cookie>"
+# Expect: 200 with user data
+```
 
 ---
 
@@ -70,40 +189,4 @@ Use this workflow when implementing authentication in Hanami 2.x.
 | "I'll store passwords in plain text" | Always hash passwords with bcrypt or argon2. |
 | "I'll skip session security configuration" | Configure secure sessions with `http_only`, `secure`, and `same_site`. |
 | "I'll return specific error messages that reveal valid emails" | Return generic "Invalid credentials" for both missing user and wrong password. |
-| "I'll forget to protect all endpoints that need auth" | Every Action that requires auth must explicitly check it. There is no automatic protection. |
-
----
-
-## Red Flags
-
-- Assumed auth by convention rather than explicit check
-- Plain text password storage
-- Missing session security config
-- Specific error messages revealing valid users
-- Unprotected endpoints that should require auth
-- Auth logic scattered across Actions instead of centralized service
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| **inject-dependencies** | Step 1: Inject auth service via `Deps`. |
-| **register-provider** | Step 2: Register auth service in container. |
-| **create-action** | Step 3: Create login/logout/protected Actions. |
-| **handle-errors** | Step 4: Handle 401/403 responses. |
-| **security-review** | Cross-reference security concerns. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Authentication) |
-|---|---|
-| `before_action :authenticate_user!` | Explicit auth check in each Action |
-| `Devise` gem | Custom auth service + provider + Actions |
-| `has_secure_password` | `BCrypt::Password.create` in auth service |
-| `session[:user_id] = user.id` | Session management in Action or auth service |
-| `current_user` helper | `include Deps["authentication"]` + `authentication.current_user(request)` |
-| `sign_in`, `sign_out` | Custom login/logout Actions |
+| Auth logic scattered across Actions | Centralise all auth logic in the auth service; Actions only call it. |

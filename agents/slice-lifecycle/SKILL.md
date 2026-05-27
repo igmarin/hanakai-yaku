@@ -4,8 +4,10 @@ license: MIT
 description: >
   Orchestrates the full Hanami slice lifecycle: creates the slice, tests it in
   isolation, reviews boundary design, and supports extraction from the app module.
-  Use when building a new slice, auditing existing slices, or extracting code
-  into a dedicated slice.
+  Use when building a new Hanami slice, auditing existing slices for bounded context
+  violations, extracting monolithic code into a modular architecture, or enforcing
+  slice generator conventions. Trigger terms: bounded context, Hanami module, modular
+  architecture, slice boundaries, slice extraction, slice generator.
 metadata:
   version: 1.0.0
   user-invocable: "true"
@@ -19,27 +21,36 @@ metadata:
 ---
 # Slice Lifecycle Agent
 
-Orchestrates the full slice lifecycle: from creation through testing, boundary review, and extraction. Chains four skills through four phases.
-
-## When to Use
-
-- Creating a new Hanami slice and need the full setup verified
-- Auditing existing slices for boundary violations
-- Extracting monolithic code into a dedicated slice
-- Ensuring slice isolation is maintained across the app
+Orchestrates the full slice lifecycle: from creation through testing, boundary review, and extraction. Chains four phases with hard gates between them.
 
 ## Anti-Patterns
 
 - Do not create a slice without a clear bounded context — one domain per slice
 - Do not skip boundary review — coupling accumulates silently
-- Do not extract without tests — characterization tests must exist first
+- Do not extract without characterization tests in place first
 - Do not leave extracted code in the app module — remove dead code after extraction
 
 ## Agent Phases
 
 ### Phase 1: Slice Creation
 
-1. Activate **slices/create-slice**: Scaffold the new slice with proper structure.
+1. Scaffold the new slice using the generator:
+   ```bash
+   bundle exec hanami generate slice <name>
+   ```
+   Expected output structure:
+   ```
+   slices/
+   └── <name>/
+       ├── action.rb
+       ├── actions/
+       ├── lib/
+       │   └── <name>/
+       │       ├── operations/
+       │       ├── repositories/
+       │       └── views/
+       └── config/
+   ```
 2. Define the slice's public interface (actions).
 3. Set up the slice's internal structure (operations, repositories, relations, views).
 
@@ -52,10 +63,28 @@ Orchestrates the full slice lifecycle: from creation through testing, boundary r
 
 ### Phase 2: Slice Testing
 
-1. Activate **slices/test-slice**: Set up isolated test infrastructure.
+1. Set up isolated test infrastructure.
 2. Write or verify action specs at the HTTP boundary.
 3. Write or verify operation specs with stubbed dependencies.
 4. Write or verify repository specs against test data.
+
+Example action spec (RSpec):
+```ruby
+# spec/slices/<name>/actions/index_spec.rb
+RSpec.describe <Name>::Actions::Index do
+  let(:app) { <Name>::Slice.rack_app }
+
+  it "returns 200" do
+    get "/"
+    expect(last_response.status).to eq(200)
+  end
+end
+```
+
+Run the slice in isolation:
+```bash
+HANAMI_SLICE=<name> bundle exec rspec spec/slices/<name>/
+```
 
 **HARD GATE — Tests Pass in Isolation:**
 ```text
@@ -68,10 +97,19 @@ Fix isolation issues before continuing.
 
 ### Phase 3: Boundary Review
 
-1. Activate **slices/review-slice-boundaries**: Audit all slices for boundary violations.
+1. Audit all slices for boundary violations.
 2. Check for direct imports of another slice's internal modules.
 3. Verify cross-slice communication uses public interfaces only.
 4. Classify findings as Critical, Suggestion, or Note.
+
+**Boundary Violation vs. Valid Cross-Slice Call:**
+```ruby
+# ❌ Direct import — VIOLATION
+require "slices/billing/lib/billing/repositories/invoice_repo"
+
+# ✅ Public API call — CORRECT
+Hanami.app["billing.actions.invoices.create"].call(params)
+```
 
 **HARD GATE — Boundaries Verified:**
 ```text
@@ -84,9 +122,20 @@ DO NOT proceed with unaddressed isolation breaches.
 
 ### Phase 4: Extraction Support
 
-1. Activate **slices/extract-slice**: Move code from the app module into the target slice.
+1. Move code from the app module into the target slice.
 2. Follow the extraction process: characterize → create → move → update → verify → remove.
-3. Run the full test suite after extraction — every test that passed before must pass after.
+3. Update `Deps` keys and require paths after moving files:
+   ```ruby
+   # Before (app module)
+   include Deps["repositories.users"]
+
+   # After (inside target slice)
+   include Deps["<name>.repositories.users"]
+   ```
+4. Run the full test suite after extraction — every test that passed before must pass after:
+   ```bash
+   bundle exec rspec
+   ```
 
 ---
 

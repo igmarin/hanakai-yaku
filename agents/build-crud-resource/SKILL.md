@@ -2,8 +2,10 @@
 name: build-crud-resource
 license: MIT
 description: >
-  Use when implementing a full CRUD resource in Hanami 2.x. Chains entity, relation,
-  repository, action, view, write-request-spec, and review-code.
+  Use when implementing a full CRUD resource in Hanami 2.x, including when asked to scaffold,
+  generate a resource, create a REST endpoint, or build a new API resource. Chains entity,
+  relation, repository, action, view, write-request-spec, and review-code to build the
+  complete data-to-HTTP pipeline.
 metadata:
   ecosystem_sources:
   - hanami/hanami
@@ -24,70 +26,135 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
 
 ---
 
-## Quick Reference
+## Pipeline
 
-| Step | Skill | Handoff Condition |
-|---|---|---|
-| 1. Define Entity | `define-entity` | Entity class exists with typed attributes |
-| 2. Run Migration | `write-migration` | Migration applied and schema up-to-date |
-| 3. Define Relation | `define-relation` | Relation schema matches database |
-| 4. Define Repository | `create-repository` | Repository exposes CRUD methods |
-| 5. Create Actions | `create-action` | Index, Show, Create, Update, Destroy Actions exist |
-| 6. Create Views | `create-view` | Views render for HTML endpoints |
-| 7. Write tests | `write-request-spec` | All endpoints have passing request specs |
-| 8. Review | `review-code` | No violations found |
+| Step | Skill | Key Actions | Handoff Condition | If Step Fails |
+|---|---|---|---|---|
+| 1. Define Entity | [`define-entity`](skills/define-entity.md) | Create Entity class with dry-types attributes | Entity class exists and is valid | Check dry-types attribute definitions; ensure module nesting matches app namespace |
+| 2. Run Migration | [`write-migration`](skills/write-migration.md) | Generate migration; run `hanami db migrate` | Migration applied, schema up-to-date | Check for schema conflicts; roll back with `hanami db rollback` and revise |
+| 3. Define Relation | [`define-relation`](skills/define-relation.md) | `schema :table_name, infer: true`; add query methods | Relation queries work in console | Confirm table name matches migration; re-run migration if schema is stale |
+| 4. Define Repository | [`create-repository`](skills/create-repository.md) | Implement `all`, `by_id`, `create`, `update`, `delete`; `auto_struct true` | Repository methods return Entities | Verify relation is registered in ROM container; check `auto_struct` setting |
+| 5. Create Actions | [`create-action`](skills/create-action.md) | Index, Show, Create, Update, Destroy; inject Repo via `Deps`; validate params; handle errors | All Actions respond to HTTP requests | Check DI key spelling; confirm routes are registered in `config/routes.rb` |
+| 6. Create Views | [`create-view`](skills/create-view.md) | `expose` data points; templates in `app/templates/` | Views render without errors | Verify `expose` keys match template variable names |
+| 7. Write Tests | [`write-request-spec`](skills/write-request-spec.md) | Happy paths + error cases (404, 422); run full suite | All tests pass | Fix failing specs before proceeding; do not skip to review with red tests |
+| 8. Review | [`review-code`](skills/review-code.md) | Check Action responsibility, DI, Repository encapsulation, test coverage | No critical violations | Address critical violations before marking resource complete |
+
+> **Tip:** Run `bundle exec rspec spec/requests/` after Steps 5 and 7 to catch regressions early. If tests fail at any point, fix them before advancing to the next step.
 
 ---
 
-## Core Process
+## Expected File Structure
 
-1. **[Define Entity]** — Load skill: `define-entity`
-   - Create Entity class with attributes matching the intended schema
-   - Use dry-types for coercion and constraints
-   - Handoff condition: Entity class exists and is valid
+After completing all steps, the resource should produce this layout (example: `users`):
 
-2. **[Run Migration]** — Load skill: `write-migration`
-   - Generate migration file matching the Entity attributes
-   - Run `hanami db migrate` to apply the schema change
-   - Handoff condition: Migration applied and schema up-to-date
+```
+app/
+  entities/
+    user.rb                        # Step 1
+  db/
+    migrate/
+      YYYYMMDDHHMMSS_create_users.rb  # Step 2
+  relations/
+    users.rb                       # Step 3
+  repositories/
+    users_repository.rb            # Step 4
+  actions/
+    users/
+      index.rb                     # Step 5
+      show.rb
+      create.rb
+      update.rb
+      destroy.rb
+  views/
+    users/
+      index.rb                     # Step 6
+      show.rb
+  templates/
+    users/
+      index.html.erb
+      show.html.erb
+spec/
+  requests/
+    users_spec.rb                  # Step 7
+```
 
-3. **[Define Relation]** — Load skill: `define-relation`
-   - Create Relation with `schema :table_name, infer: true`
-   - Add query methods if needed (`active`, `by_email`, etc.)
-   - Handoff condition: Relation queries work in console
+---
 
-4. **[Define Repository]** — Load skill: `create-repository`
-   - Create Repository wrapping the Relation
-   - Implement CRUD methods: `all`, `by_id`, `create`, `update`, `delete`
-   - Configure `auto_struct true` and `struct_namespace`
-   - Handoff condition: Repository methods return Entities
+## Code Examples
 
-5. **[Create Actions]** — Load skill: `create-action`
-   - Generate Actions: Index, Show, Create, Update, Destroy
-   - Inject Repository via `Deps`
-   - Implement `#handle` for each endpoint
-   - Use `validate-params` for Create/Update
-   - Use `handle-errors` for error responses
-   - Handoff condition: All Actions respond to HTTP requests
+### Step 1 — Entity (`app/entities/user.rb`)
+```ruby
+module MyApp
+  module Entities
+    class User < Hanami::Entity
+      attribute :id,    Types::Integer
+      attribute :name,  Types::String
+      attribute :email, Types::String
+    end
+  end
+end
+```
 
-6. **[Create Views]** — Load skill: `create-view`
-   - Create Views for HTML endpoints (Index, Show)
-   - Define `expose` for each data point
-   - Create templates in `app/templates/`
-   - Handoff condition: Views render without errors
+### Step 3 — Relation (`app/relations/users.rb`)
+```ruby
+module MyApp
+  module Relations
+    class Users < ROM::Relation[:sql]
+      schema :users, infer: true
 
-7. **[Write Tests]** — Load skill: `write-request-spec`
-   - Write request specs for all CRUD endpoints
-   - Test happy paths and error cases (404, 422)
-   - Run full test suite
-   - Handoff condition: All tests pass
+      def by_id(id)
+        where(id: id)
+      end
+    end
+  end
+end
+```
 
-8. **[Review]** — Load skill: `review-code`
-   - Check Action responsibility
-   - Check DI usage
-   - Check Repository encapsulation
-   - Check test coverage
-   - Handoff condition: No critical violations
+### Step 4 — Repository (`app/repositories/users_repository.rb`)
+```ruby
+module MyApp
+  module Repositories
+    class UsersRepository < MyApp::Repository[:users]
+      def all
+        users.to_a
+      end
+
+      def by_id(id)
+        users.by_id(id).one!
+      end
+
+      def create(attrs)
+        users.changeset(:create, attrs).commit
+      end
+
+      def update(id, attrs)
+        users.by_id(id).changeset(:update, attrs).commit
+      end
+
+      def delete(id)
+        users.by_id(id).delete
+      end
+    end
+  end
+end
+```
+
+### Step 5 — Action (`app/actions/users/index.rb`)
+```ruby
+module MyApp
+  module Actions
+    module Users
+      class Index < MyApp::Action
+        include Deps[repo: "repositories.users_repository"]
+
+        def handle(request, response)
+          response.render view, users: repo.all
+        end
+      end
+    end
+  end
+end
+```
 
 ---
 
@@ -95,47 +162,8 @@ Use this workflow when implementing a full CRUD resource (Create, Read, Update, 
 
 | Mistake | Reality |
 |---|---|
-| "I'll start with Actions and work backwards" | Start with the data layer (Entity → Relation → Repository), then the HTTP layer. |
-| "I'll skip the Entity and return raw hashes" | Always define Entities. They are the data contract between layers. |
-| "I'll put all CRUD in one Action class" | One Action per endpoint. `Users::Index`, `Users::Show`, etc. |
-| "I'll skip Views for JSON-only APIs" | Even JSON APIs benefit from explicit Action structure. Skip Views only if truly API-only. |
-| "I'll write tests after everything is implemented" | Follow the TDD workflow: write failing request specs for each endpoint before implementing. |
-
----
-
-## Red Flags
-
-- Starting with Actions instead of data layer
-- Missing Entity definitions
-- Multiple endpoints in one Action class
-- Raw hashes passed between layers
-- Tests written after full implementation
-- Missing error case tests
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| **define-entity** | Step 1: Define the Entity. |
-| **write-migration** | Step 2: Run the migration. |
-| **define-relation** | Step 3: Define the Relation. |
-| **create-repository** | Step 4: Define the Repository. |
-| **create-action** | Step 5: Create Actions. |
-| **create-view** | Step 6: Create Views. |
-| **write-request-spec** | Step 7: Write tests. |
-| **review-code** | Step 8: Review the implementation. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (CRUD Resource) |
-|---|---|
-| `rails generate scaffold User` | No single scaffold. Generate components individually. |
-| `app/models/user.rb` | `app/entities/user.rb` + `app/relations/users.rb` |
-| `app/controllers/users_controller.rb` | `app/actions/users/index.rb`, `show.rb`, `create.rb`, etc. |
-| `app/views/users/*.html.erb` | `app/views/users/index.rb` + `app/templates/users/index.html.erb` |
-| `config/routes.rb` resources | `config/routes.rb` `resources :users` |
-| `spec/requests/users_spec.rb` | `spec/requests/users_spec.rb` (same path) |
+| Starting with Actions and working backwards | Start with the data layer (Entity → Relation → Repository), then the HTTP layer. |
+| Skipping the Entity and returning raw hashes | Always define Entities. They are the data contract between layers. |
+| Putting all CRUD in one Action class | One Action per endpoint: `Users::Index`, `Users::Show`, etc. |
+| Skipping Views for JSON-only APIs | Even JSON APIs benefit from explicit Action structure. Skip Views only if truly API-only. |
+| Writing tests only after everything is implemented | Follow the TDD workflow: write failing request specs for each endpoint before implementing. |

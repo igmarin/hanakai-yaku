@@ -32,11 +32,11 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
 |---|---|
 | Create Repository | Inherit from `Hanami::DB::Repo[:relation_name]` |
 | Inject Repository | `include Deps["repos.user_repo"]` |
-| Execute transaction | `repo.transaction { ... }` (details in [REPOSITORIES.md](REPOSITORIES.md)) |
+| Execute transaction | `repo.transaction { ... }` |
 
 ---
 
-## Core Rules
+## Essentials
 
 1. **Create the Repository file**:
    Place repositories under `app/repos/`:
@@ -51,7 +51,17 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-2. **Inject into Actions**:
+2. **Verify container registration**:
+   After creating the repository, confirm it is correctly registered in the Hanami container before wiring it into actions. Run in the console:
+
+   ```ruby
+   MyApp::App["repos.user_repo"]
+   # => #<MyApp::Repos::UserRepo ...>
+   ```
+
+   If this raises a key error, check the file path and module namespace match the expected container key.
+
+3. **Inject into Actions**:
    Inject repositories using the container dependency injection (`Deps`):
 
    ```ruby
@@ -65,7 +75,7 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-3. **Add domain methods**:
+4. **Add domain methods**:
    Write specific read and write methods to isolate your actions from raw relation access:
 
    ```ruby
@@ -78,8 +88,12 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-4. **Use transactions for multi-step writes**:
-   Wrap mutations in transaction blocks. For details and Failure result handling, see [REPOSITORIES.md](REPOSITORIES.md#transaction-handling).
+---
+
+## Advanced Topics
+
+5. **Use transactions for multi-step writes**:
+   Wrap mutations in transaction blocks. If the block raises an error, the transaction is automatically rolled back and the error is re-raised.
 
    ```ruby
    transaction do
@@ -88,8 +102,8 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-5. **Map to custom Entities**:
-   Configure the `struct_namespace` to automatically map SQL relation rows to custom Entity domain models. See [REPOSITORIES.md](REPOSITORIES.md#custom-entity-mapping).
+6. **Map to custom Entities**:
+   Configure the `struct_namespace` to automatically map SQL relation rows to custom Entity domain models.
 
    ```ruby
    class UserRepo < Hanami::DB::Repo[:users]
@@ -98,7 +112,7 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
    end
    ```
 
-6. **Do not expose Relations directly**:
+7. **Do not expose Relations directly**:
    Actions must fetch and modify data via Repositories. Bypassing repositories to query relations directly in actions/views is an anti-pattern.
 
 ---

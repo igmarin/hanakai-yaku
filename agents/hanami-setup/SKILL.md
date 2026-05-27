@@ -4,8 +4,9 @@ license: MIT
 description: >
   Orchestrates Hanami project onboarding: loads application context, configures
   providers, implements dependency injection patterns, and verifies the setup.
-  Use when setting up a new Hanami project, onboarding a developer, or
-  configuring services and DI.
+  Use when setting up a new Hanami project, onboarding a developer, configuring
+  services and DI, or wiring up dry-container, dry-system, IoC containers, or
+  Hanami app configuration with providers and dependency injection.
 metadata:
   version: 1.0.0
   user-invocable: "true"
@@ -15,25 +16,26 @@ metadata:
   dependencies:
     - source: self
       skills: [load-context, configure-providers, implement-di]
-  keywords: hanami, setup, onboarding, providers, DI, dependency injection, configuration, boot
+  keywords: hanami, setup, onboarding, providers, DI, dependency injection, configuration, boot, dry-container, dry-system, IoC
 ---
 # Hanami Setup Agent
 
 Orchestrates project onboarding: from context discovery through provider configuration to DI implementation. Chains three skills through four phases with verification gates.
 
-## When to Use
+## Constraints
 
-- Setting up a new Hanami project and need providers, settings, and DI configured
-- Onboarding a developer — "show me how this app is structured"
-- Adding new services that need providers and DI
-- Verifying an existing setup is correct
+```text
+- Context MUST be fully loaded before any configuration work.
+  DO NOT proceed without a complete slice map, provider inventory, and settings summary.
+  If the app cannot load context (broken boot), fix that first.
+- DO NOT configure providers without understanding existing ones.
+- DO NOT implement DI without registered providers.
+- DO NOT use direct container calls outside of providers.
+- All providers MUST boot without errors before setup is considered complete.
+- The test suite MUST pass with DI configured.
+```
 
-## Anti-Patterns
-
-- Do not skip context loading — every phase depends on knowing the app structure
-- Do not configure providers without understanding existing ones
-- Do not implement DI without registered providers
-- Do not skip verification — an unverified setup leads to boot failures
+---
 
 ## Agent Phases
 
@@ -42,13 +44,6 @@ Orchestrates project onboarding: from context discovery through provider configu
 1. Activate **context/load-context**: Discover all slices, providers, settings, routes, and patterns.
 2. Produce the full context map: slices, providers, settings, route summary, DI conventions.
 
-**HARD GATE — Context Loaded:**
-```text
-Context MUST be fully loaded before any configuration work.
-DO NOT proceed without a complete slice map, provider inventory, and settings summary.
-If the app cannot load context (broken boot), fix that first.
-```
-
 ---
 
 ### Phase 2: Provider Configuration
@@ -56,6 +51,33 @@ If the app cannot load context (broken boot), fix that first.
 1. Activate **providers/configure-providers**: Review existing providers and configure new ones.
 2. For new providers: define settings, create provider file, register component.
 3. For existing providers: verify they match conventions and settings are properly typed.
+
+**Example — provider file (`config/providers/redis.rb`):**
+```ruby
+Hanami.app.register_provider(:redis) do
+  prepare do
+    require "redis"
+  end
+
+  start do
+    settings = target["settings"]
+    register("redis", Redis.new(url: settings.redis_url))
+  end
+
+  stop do
+    target["redis"].quit
+  end
+end
+```
+
+**Example — corresponding settings entry (`config/settings.rb`):**
+```ruby
+module MyApp
+  class Settings < Hanami::Settings
+    setting :redis_url, constructor: Types::String
+  end
+end
+```
 
 **Quality Check:**
 - Every external service has a provider.
@@ -70,6 +92,55 @@ If the app cannot load context (broken boot), fix that first.
 2. Verify every action and operation that needs injected dependencies uses `include Deps[...]`.
 3. Confirm test patterns support constructor injection of test doubles.
 
+**Example — action with DI (`app/actions/users/create.rb`):**
+```ruby
+module MyApp
+  module Actions
+    module Users
+      class Create < MyApp::Action
+        include Deps["operations.users.create"]
+
+        def handle(request, response)
+          result = create.(request.params[:user])
+          response.status = result.success? ? 201 : 422
+        end
+      end
+    end
+  end
+end
+```
+
+**Example — operation as DI consumer (`app/operations/users/create.rb`):**
+```ruby
+module MyApp
+  module Operations
+    module Users
+      class Create
+        include Deps["redis", "repositories.users"]
+
+        def call(params)
+          # redis and repositories.users are injected automatically
+        end
+      end
+    end
+  end
+end
+```
+
+**Example — test with constructor injection:**
+```ruby
+RSpec.describe MyApp::Operations::Users::Create do
+  subject(:operation) { described_class.new(redis: fake_redis, "repositories.users": fake_repo) }
+
+  let(:fake_redis) { instance_double(Redis) }
+  let(:fake_repo)  { instance_double(MyApp::Repositories::Users) }
+
+  it "creates a user" do
+    # ...
+  end
+end
+```
+
 **Quality Check:**
 - No direct container calls exist outside of providers.
 - Deps keys match provider registration keys exactly.
@@ -79,17 +150,18 @@ If the app cannot load context (broken boot), fix that first.
 
 ### Phase 4: Verification
 
-1. Boot the app and verify all providers start without errors.
-2. Run the test suite to confirm injected dependencies resolve correctly.
+1. Boot the app and verify all providers start without errors:
+   ```bash
+   bundle exec hanami console --env=development
+   # or for a quick boot check:
+   bundle exec hanami db migrate --dry-run 2>&1 | head -20
+   ```
+2. Run the test suite to confirm injected dependencies resolve correctly:
+   ```bash
+   bundle exec rspec
+   ```
 3. Verify the slice map matches expectations.
 4. Check that settings are properly typed and environment values are set.
-
-**HARD GATE — Providers Verified:**
-```text
-All providers MUST boot without errors.
-The test suite MUST pass with DI configured.
-DO NOT consider setup complete if any provider fails to start.
-```
 
 ---
 

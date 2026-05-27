@@ -60,26 +60,52 @@ RSpec.describe MyApp::Actions::Users::Index, type: :action do
 end
 ```
 
-### Step 2 — Run the test to verify it fails
+### Step 2 — Params validation pattern
+Test that invalid params produce the expected status and that valid params expose the right values:
+
+```ruby
+# spec/actions/users/create_spec.rb
+RSpec.describe MyApp::Actions::Users::Create, type: :action do
+  let(:stub_repo) { instance_double(MyApp::Repos::UserRepo, create: user) }
+  let(:user) { double("user") }
+
+  it "returns 422 when required params are missing" do
+    action = described_class.new(user_repo: stub_repo)
+    response = action.call({})
+
+    expect(response.status).to eq(422)
+  end
+
+  it "returns 201 and sets Location header on success" do
+    action = described_class.new(user_repo: stub_repo)
+    response = action.call({ name: "Alice", email: "alice@example.com" })
+
+    expect(response.status).to eq(201)
+    expect(response.headers["Location"]).to eq("/users")
+  end
+end
+```
+
+### Step 3 — Run the test to verify it fails
 Run RSpec and confirm the spec fails because the implementation is missing (not due to setup issues):
 ```bash
 bundle exec rspec spec/actions/users/index_spec.rb
 ```
 
-### Step 3 — Implement the Action
+### Step 4 — Implement the Action
 Write only the minimal code in the action to make the specs pass.
 
-### Step 4 — Run specs to verify they pass
+### Step 5 — Run specs to verify they pass
 Verify all specs pass green.
 
 ---
 
 ## Common Mistakes
 
-- **Testing the Framework:** Asserting that `render` was called or that `halt` works. Test your Action's logic and returned attributes/exposures, not Hanami's internal routing.
-- **Unstubbed Dependencies:** The Action crashes with a missing container dependency. Ensure all items declared in `Deps[...]` are stubbed via `described_class.new(stub_dep: stub)`.
-- **Database/HTTP access:** Unit specs must be isolated and fast. If you need to hit the database or route requests, use request specs instead.
-- **Testing private methods:** Action specs should only verify the public `#call` signature.
+- Only test your Action's exposures and returned attributes — not `render` or `halt`.
+- Stub all `Deps[...]` items via `described_class.new(dep: stub)`.
+- Use request specs for integration; unit specs must not hit the database or HTTP stack.
+- Only verify the public `#call` signature.
 
 ---
 

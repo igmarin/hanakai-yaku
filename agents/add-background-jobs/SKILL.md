@@ -2,8 +2,10 @@
 name: add-background-jobs
 license: MIT
 description: >
-  Use when integrating background jobs in Hanami 2.x. Chains providers, inject-dependencies,
-  create-action, and write-action-spec.
+  Use when integrating background jobs, async jobs, or background processing in Hanami 2.x — including
+  Sidekiq integration, GoodJob worker setup, or any job queue configuration. Sets up background job
+  providers, injects job-adapter dependencies into Hanami actions, creates job-triggering actions, and
+  generates corresponding RSpec tests.
 metadata:
   ecosystem_sources:
   - hanami/hanami
@@ -21,17 +23,6 @@ metadata:
 Use this workflow when integrating background jobs in Hanami 2.x.
 
 **Core principle:** Background jobs are registered components. They are enqueued from Actions and executed asynchronously.
-
----
-
-## Quick Reference
-
-| Step | Skill | Handoff Condition |
-|---|---|---|
-| 1. Register job adapter | `register-provider` | Job adapter registered in container |
-| 2. Inject into Action | `inject-dependencies` | Job adapter injectable via `Deps` |
-| 3. Enqueue from Action | `create-action` | Action enqueues job correctly |
-| 4. Write job specs | `write-action-spec` | Job class tested in isolation |
 
 ---
 
@@ -56,6 +47,8 @@ Use this workflow when integrating background jobs in Hanami 2.x.
    end
    ```
 
+   **Validation:** Verify registration with `MyApp::App["jobs.client"]` in a Hanami console or container lookup spec. It should return `Sidekiq::Client` without raising `Dry::Container::Error`.
+
 2. **[Inject into Action]** — Load skill: `inject-dependencies`
    - Inject job adapter into Action
    - Handoff condition: Adapter injectable
@@ -69,7 +62,7 @@ Use this workflow when integrating background jobs in Hanami 2.x.
 3. **[Enqueue from Action]** — Load skill: `create-action`
    - Define job class
    - Enqueue job from Action after successful operation
-   - Handle enqueue failures gracefully
+   - Handle enqueue failures gracefully — rescue enqueue errors and log them; do not crash the Action
    - Handoff condition: Jobs are enqueued and executed
 
    ```ruby
@@ -99,57 +92,64 @@ Use this workflow when integrating background jobs in Hanami 2.x.
        in Failure(error)
          response.status = 422
        end
+     rescue => e
+       Hanami.logger.error("Job enqueue failed: #{e.message}")
+       response.status = 201 # Still succeed; enqueue failure is non-fatal
      end
    end
    ```
+
+   **Validation:** Confirm jobs are being enqueued by checking the Sidekiq dashboard (`/sidekiq`) or inspecting the Redis queue directly (`Sidekiq::Queue.new.size`). In tests, use `Sidekiq::Testing.fake!` and assert on `MyApp::Jobs::WelcomeEmail.jobs`.
 
 4. **[Write Job Specs]** — Load skill: `write-action-spec`
    - Test job class in isolation with stubbed dependencies
    - Test that Action enqueues the job
    - Handoff condition: Job specs pass
 
+   ```ruby
+   # spec/unit/my_app/jobs/welcome_email_spec.rb
+   RSpec.describe MyApp::Jobs::WelcomeEmail do
+     subject(:job) { described_class.new }
+
+     let(:user_repo) { instance_double(MyApp::Repos::UserRepo) }
+     let(:mailer)    { instance_double(MyApp::Mailers::Welcome) }
+     let(:user)      { instance_double(MyApp::Entities::User, id: 42, email: "user@example.com") }
+
+     before do
+       allow(user_repo).to receive(:by_id).with(42).and_return(double(one: user))
+       allow(mailer).to receive(:deliver)
+       job.instance_variable_set(:@user_repo, user_repo)
+       job.instance_variable_set(:@mailer, mailer)
+     end
+
+     it "delivers a welcome email to the user" do
+       job.perform(42)
+       expect(mailer).to have_received(:deliver).with(to: "user@example.com", subject: "Welcome!")
+     end
+   end
+
+   # spec/requests/users/create_spec.rb (enqueue assertion)
+   RSpec.describe "POST /users" do
+     before { Sidekiq::Testing.fake! }
+     after  { Sidekiq::Worker.clear_all }
+
+     it "enqueues a WelcomeEmail job on success" do
+       expect {
+         post "/users", params: { user: { name: "Alice", email: "alice@example.com" } }
+       }.to change(MyApp::Jobs::WelcomeEmail.jobs, :size).by(1)
+
+       expect(last_response.status).to eq(201)
+     end
+   end
+   ```
+
 ---
 
-## Common Mistakes
+## Common Pitfalls
 
-| Mistake | Reality |
-|---|---|
-| "I'll run background logic synchronously in the Action" | Use jobs for anything that can be deferred: emails, notifications, exports. |
-| "I'll forget to handle job enqueue failures" | Rescue enqueue errors and log them. Do not crash the Action. |
-| "I'll access the container directly in the job" | Jobs should receive all data as arguments. If they need Repositories, inject them. |
-| "I'll pass complex objects to the job" | Jobs serialize to JSON. Pass IDs or simple data, not objects. |
-
----
-
-## Red Flags
-
-- Synchronous execution of deferrable work
-- Missing job enqueue error handling
-- Direct container access in jobs
-- Complex objects passed as job arguments
-- Missing job tests
-- Jobs not registered in DI container
-
----
-
-## Integration
-
-| Related Skill | When to chain |
-|---|---|
-| **register-provider** | Step 1: Register job adapter. |
-| **inject-dependencies** | Step 2: Inject adapter into Actions. |
-| **create-action** | Step 3: Enqueue jobs from Actions. |
-| **write-action-spec** | Step 4: Test job classes. |
-
----
-
-## Rails → Hanami
-
-| Rails (ActiveRecord) | Hanami 2.x (Background Jobs) |
-|---|---|
-| `UserMailer.welcome(user).deliver_later` | Enqueue `WelcomeEmail` job from Action |
-| `ActiveJob` | Sidekiq, GoodJob, or custom job adapter |
-| `perform_later` | `jobs.client.push(class: "...", args: [...])` |
-| `rails generate job WelcomeEmail` | Custom job class + provider registration |
-| `config.active_job.queue_adapter` | Provider `start` block configures adapter |
-| `set_queue_name` | Configured in job class or adapter setup |
+- **Synchronous execution of deferrable work** — Use jobs for emails, notifications, exports, or anything that can be deferred.
+- **Missing enqueue error handling** — Rescue enqueue errors and log them. Do not crash the Action on transient queue failures.
+- **Direct container access in jobs** — Inject dependencies via DI container; do not access the container directly inside jobs.
+- **Passing complex objects as job arguments** — Jobs serialize to JSON. Pass IDs or simple scalar data, never Ruby objects.
+- **Missing job tests** — Always test the job class in isolation and verify the Action enqueues correctly.
+- **Jobs not registered in DI container** — The job adapter client must be registered as a provider before it can be injected.

@@ -24,8 +24,6 @@ Use this skill when writing RSpec request specs for Hanami 2.x Actions.
 
 ## Workflow
 
-Follow these steps in order, treating each as a checkpoint:
-
 ### Step 1 — Create the spec file
 Place it under `spec/requests/`:
 
@@ -43,17 +41,13 @@ RSpec.describe "Users", type: :request do
 end
 ```
 
-### Step 2 — Run the test to verify it fails
-Run RSpec and confirm the spec fails because the route or action is unimplemented:
+### Step 2 — Verify the spec fails
 ```bash
 bundle exec rspec spec/requests/users_spec.rb
 ```
+Confirm it fails because the route or action is unimplemented. Use the **create-action** skill to implement the corresponding Hanami endpoint and route before proceeding.
 
-### Step 3 — Implement the Endpoint
-Write only the minimal code in the action and routing to make the spec pass.
-
-### Step 4 — Run specs to verify they pass
-Verify all specs pass green:
+### Step 3 — Verify specs pass
 ```bash
 bundle exec rspec spec/requests/users_spec.rb
 ```
@@ -86,17 +80,25 @@ bundle exec rspec spec/requests/users_spec.rb
    end
    ```
 
-3. **Isolate database state** — wrap specs that touch the database in transactions to ensure clean tests:
+3. **Isolate database state** — wrap specs that touch the database in a shared transaction context defined in `spec/support/database_cleaner.rb`:
 
    ```ruby
-   around do |example|
-     Hanami.app["db.rom"] do |rom|
-       rom.gateways[:default].transaction do |t|
-         example.run
-         t.rollback
+   # spec/support/database_cleaner.rb
+   RSpec.shared_context "db transaction" do
+     around do |example|
+       Hanami.app["db.rom"] do |rom|
+         rom.gateways[:default].transaction do |t|
+           example.run
+           t.rollback
+         end
        end
      end
    end
+   ```
+
+   Include in specs with:
+   ```ruby
+   include_context "db transaction"
    ```
 
 ---
@@ -108,4 +110,3 @@ bundle exec rspec spec/requests/users_spec.rb
 | **create-action** | Action definition precedes request spec implementation. |
 | **validate-params** | Test validation contract parameters (422 responses). |
 | **create-repository** | Database interactions are verified using real repositories. |
-

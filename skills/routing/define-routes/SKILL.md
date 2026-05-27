@@ -106,13 +106,20 @@ Use this skill when defining routes in Hanami 2.x.
 
 ---
 
-## Common Mistakes & Red Flags
+## Verifying Routes
 
-- **Shadowed Wildcard Routes:** Placing general routes (like `:id`) before specific static paths (like `new`), which intercepts the request.
-- **Custom CRUD Routes:** Defining manual routes for standard REST operations instead of using `resources`.
-- **String Interpolation:** Using interpolation instead of static paths and `:param` syntax for dynamic values.
-- **Missing Named Helpers:** Forgetting `as:` named parameters for routes that are referenced in views.
-- **Pluralization Confusion:** Forgetting that `resources` automatically generates plural routing helper suffixes (`users_path`).
+After defining routes, inspect all registered routes with the Hanami CLI:
+
+```bash
+bundle exec hanami routes
+```
+
+This lists every route with its HTTP method, path, and action target. Use it to confirm routes are correctly registered before running tests or the server.
+
+**Common pitfalls:**
+- A route returning a 404 unexpectedly often means the corresponding Action file does not exist or its path doesn't match the `to:` identifier.
+- If a more general route (e.g. `get "/users/:id"`) appears before a specific one (e.g. `get "/users/new"`), the specific route will never be reached — always check ordering with `hanami routes`.
+- Forgetting to restart the server after changing `config/routes.rb` can cause stale routing behaviour.
 
 ---
 
@@ -123,9 +130,3 @@ Use this skill when defining routes in Hanami 2.x.
 | **create-action** | Routes point to Actions. Define routes after Actions exist. |
 | **create-slice** | Slices can define their own routes. Understand slices before nesting routes. |
 | **write-request-spec** (testing) | Test routes by making requests to them. |
-
----
-
-## Rails → Hanami Reference
-
-For developers transitioning from Rails routing syntax, see the [RAILS_COMPARISON.md](RAILS_COMPARISON.md) guide.
