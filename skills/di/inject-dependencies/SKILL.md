@@ -2,8 +2,7 @@
 name: inject-dependencies
 license: MIT
 description: >
-  Use when injecting dependencies in Hanami 2.x. Covers include Deps[], container
-  keys, auto-registration rules, no_auto_register_paths, and testing with stubs.
+  Use when injecting dependencies in Hanami 2.x — always use `include Deps["dir.name"]` to inject (never call `Hanami.app["key"]` directly outside of providers), derive container keys from file paths via `app/{dir}/{name}.rb` → `"{dir}.{name}"`, exclude ROM-managed relations/structs/entities from auto-registration via `no_auto_register_paths`, access the dependency by its last key segment — for example `Deps["repos.user_repo"]` → use `user_repo`, and override dependencies in tests by passing stubs to `.new(keyword:)`. Covers container keys, auto-registration rules, no_auto_register_paths, and testing with stubs.
 metadata:
   ecosystem_sources:
   - dry-rb/dry-system

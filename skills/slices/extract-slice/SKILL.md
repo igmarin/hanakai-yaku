@@ -2,7 +2,7 @@
 name: extract-slice
 license: MIT
 description: >
-  Extracts code from the Hanami app module into a dedicated slice. Covers
+  Extract code from the Hanami app module into a dedicated slice without changing behavior — DO NOT change behavior during extraction, every existing test must pass after the move, identify the bounded context, create the target slice with `create-slice`, move files via `git mv` from old namespace to slices/<slice>/ preserving history, update namespaces from App::X to X (for example App::Payments → Payments), update all imports including `Deps[...]` keys and route definitions, and run the full test suite before and after to verify every existing test still passes. Covers
   identifying extraction boundaries, moving files while preserving history,
   updating imports and dependencies, and verifying the extraction.
   Trigger words: extract slice, extract to slice, move to slice, create slice

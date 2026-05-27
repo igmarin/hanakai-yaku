@@ -2,8 +2,7 @@
 name: handle-result-pattern
 license: MIT
 description: >
-  Use when using dry-monads Result pattern in Hanami 2.x. Covers Success/Failure wrapping,
-  bind/fmap chaining, and use in service objects registered in the DI container.
+  Use when using the dry-monads Result pattern in Hanami 2.x — wrap outcomes in `Success(value)` or `Failure(error_object)`, chain operations with `Do notation` using `include Dry::Monads::Do.for(:call)` and `yield` inside the `call` method for sequential flows, inject the service object via `Deps["key"]` after registering it in a provider, handle results in Actions with pattern matching (`case result; in Success(v); ...; in Failure(e); ...; end`) rather than unsafe `value!` unwrapping, and model expected failures as data not exceptions. Covers bind/fmap chaining, and use in service objects registered in the DI container.
 metadata:
   ecosystem_sources:
   - dry-rb/dry-monads

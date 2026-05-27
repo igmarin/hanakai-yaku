@@ -4,7 +4,7 @@
 
 A Hanami team needs help with a task in this area:
 
-Use when defining ROM relation classes, configuring schema inference from database tables, building custom query methods, or setting up one-to-many, many-to-one, and other associations in Hanami 2.x.
+Use when defining ROM Relations that map to database tables in Hanami 2.x — inherit from `Hanami::DB::Relation` with `schema :table_name, infer: true` for automatic schema introspection or explicit `schema :table_name do ...
 
 The team has asked for a concise implementation artifact that a reviewer can inspect without needing to observe the agent's process.
 

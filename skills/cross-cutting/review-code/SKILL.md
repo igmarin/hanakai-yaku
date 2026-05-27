@@ -2,10 +2,7 @@
 name: review-code
 license: MIT
 description: >
-  Use when reviewing Hanami 2.x code, a Hanami app, or any hanami slice for quality
-  and convention adherence. Covers single-responsibility Actions, dependency injection
-  via Deps[], no direct container access, ROM query encapsulation in Repositories,
-  entity usage, View simplicity, error handling, and test coverage. Triggers on phrases
+  Use when reviewing Hanami 2.x code for quality and convention adherence — check Action responsibility at ≤~10 lines delegating business logic, verify DI via `include Deps[]` with no `Hanami.app["key"]` direct access, audit query locations ensuring all DB queries live in Repositories/Relations, inspect Repositories returning Entities not raw hashes, review Views receiving pre-fetched data only, check error handling logging+generic messages without exposing e.message, and assess test coverage for 400/404/422/500 paths. Triggers on phrases
   like 'review my Hanami code', 'check my action', 'code review', or 'dry-rb patterns'.
 metadata:
   ecosystem_sources:

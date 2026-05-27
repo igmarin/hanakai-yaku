@@ -2,11 +2,7 @@
 name: review-security
 license: MIT
 description: >
-  Use when conducting a security audit, vulnerability check, or code review on Hanami
-  2.x applications. Validates parameter handling, detects CSRF misconfigurations,
-  audits authentication integration points, flags SQL injection and XSS risks, enforces
-  input sanitization, and identifies secrets management and session configuration
-  issues.
+  Use when conducting a security audit on Hanami 2.x applications — validate params via the Params DSL in every Action, verify CSRF protection is enabled in config/app.rb, audit authentication checks via explicit `before :authenticate!`, check authorization with role/permission checks, never log passwords/tokens/secrets, use ROM query interface to prevent SQL injection (no string interpolation in `where("...")`), never use `raw` on user input in templates, store secrets in settings not hardcoded, and return generic error messages for auth failures. Validates parameter handling, CSRF, auth integration, XSS, and session configuration.
 metadata:
   ecosystem_sources:
   - hanami/hanami

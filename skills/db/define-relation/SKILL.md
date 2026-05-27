@@ -2,13 +2,7 @@
 name: define-relation
 license: MIT
 description: >
-  Use when defining ROM relation classes, configuring schema inference from database
-  tables, building custom query methods, or setting up one-to-many, many-to-one, and
-  other associations in Hanami 2.x. Covers the full relation class lifecycle: schema
-  inference via rom-sql, explicit attribute declarations, dataset filters, repository
-  queries, and the Relation as the data query layer. Trigger terms: ROM Relations,
-  Hanami 2.x, relation class, database relations, rom-sql, auto_struct, schema inference,
-  associations, query methods.
+  Use when defining ROM Relations that map to database tables in Hanami 2.x — inherit from `Hanami::DB::Relation` with `schema :table_name, infer: true` for automatic schema introspection or explicit `schema :table_name do ... end` with typed attributes, add custom query methods as public relation methods returning filtered/reordered relations, define associations via `many_to_one`/`one_to_many` with `as:` aliases and load strategies using `combine` for eager-loading, and keep relations in sync with migrations by verifying via console. Trigger terms: ROM Relations, schema inference, associations, query methods, combine, eager-loading.
 metadata:
   ecosystem_sources:
   - rom-rb/rom

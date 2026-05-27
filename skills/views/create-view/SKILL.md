@@ -2,10 +2,7 @@
 name: create-view
 license: MIT
 description: >
-  Use when creating Hanami 2.x view classes, exposing data to templates via the expose
-  macro, configuring Tilt/ERB template rendering, setting up layouts, or working with
-  the hanami-view gem and Hanami view layer. Covers view class structure, expose macro,
-  context, rendering HTML templates, and integration with Actions and Parts.
+  Use when creating Hanami 2.x Views — define a View class inheriting from `Hanami::View` in `app/views/`, declare exposures via `expose :name` that receive pre-fetched data from Actions (never query the database in Views or templates), place templates alongside Views matching the namespace path, use Parts for decorator-style logic via `expose :model, as: :model_part`, and avoid instance variables in templates (templates receive locals from `expose`). Covers View class structure, expose macro, Tilt/ERB template rendering, layouts, and integration with Actions and Parts.
 metadata:
   ecosystem_sources:
   - hanami/hanami-view

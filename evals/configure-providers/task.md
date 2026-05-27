@@ -4,7 +4,7 @@
 
 A Hanami team needs help with a task in this area:
 
-Configures Hanami providers for external services, database connections, and application-wide components.
+Configure Hanami providers at `config/providers/<name>.rb` using `Hanami.app.register_provider(:name) do ...
 
 The team has asked for a concise implementation artifact that a reviewer can inspect without needing to observe the agent's process.
 
