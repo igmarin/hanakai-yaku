@@ -99,22 +99,25 @@ Use this skill when registering external dependencies (database, mailer, cache, 
    - **Re-raise the error** if the service is required and a missing provider should halt boot.
 
    ```ruby
-   # config/providers/payment.rb
-   Hanami.app.register_provider(:payment) do
+   # config/providers/storage.rb
+   Hanami.app.register_provider(:storage) do
      prepare do
-       require "stripe"
+       require "aws-sdk-s3"
      end
 
      start do
-       Stripe.api_key = target[:settings].stripe_api_key
-       client = Stripe::Client.new
-       register("payment.client", client)
+       client = Aws::S3::Client.new(
+         access_key_id: [REDACTED:API key param],
+         secret_access_key: target[:settings].cloud_storage_secret,
+         region: target[:settings].cloud_storage_region
+       )
+       register("storage.client", client)
      rescue StandardError => e
-       target[:logger].error("[provider:payment] failed to start: #{e.message}")
+       target[:logger].error("[provider:storage] failed to start: #{e.message}")
        # Re-raise if this provider is required for the app to function:
        raise
        # Or register a null object and swallow if the service is optional:
-       # register("payment.client", NullPaymentClient.new)
+       # register("storage.client", NullStorageClient.new)
      end
    end
    ```
