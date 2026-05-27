@@ -2,7 +2,7 @@
 name: review-security
 license: MIT
 description: >
-  Use when conducting a security audit on Hanami 2.x applications — validate params via the Params DSL in every Action, verify CSRF protection is enabled in config/app.rb, audit authentication checks via explicit `before :authenticate!`, check authorization with role/permission checks, never log passwords/tokens/secrets, use ROM query interface to prevent SQL injection (no string interpolation in `where("...")`), never use `raw` on user input in templates, store secrets in settings not hardcoded, and return generic error messages for auth failures. Validates parameter handling, CSRF, auth integration, XSS, and session configuration.
+  Use when conducting a security audit, security review, vulnerability assessment, vulnerability check, or secure coding review on Hanami 2.x applications — validate params via the Params DSL in every Action, verify CSRF protection is enabled in config/app.rb, audit authentication checks via explicit `before :authenticate!`, check authorization with role/permission checks, never log passwords/tokens/secrets, use ROM query interface to prevent SQL injection (no string interpolation in `where("...")`), never use `raw` on user input in templates, store secrets in settings not hardcoded, and return generic error messages for auth failures. Validates parameter handling, CSRF, auth integration, XSS, session configuration, and hardening posture.
 metadata:
   ecosystem_sources:
   - hanami/hanami
@@ -25,39 +25,35 @@ Use this skill when reviewing Hanami 2.x code for security concerns.
 
 ## Review Workflow
 
-Follow this sequence when performing a security review:
+Follow this sequence when performing a security review. For each step, the **Red Flag** column indicates a failing condition; if a red flag is found, apply the remediation noted in **Core Rules** below.
 
-1. **Validate params** — Check every Action for a `params` block. Grep: `grep -rn 'request.params' app/actions/ | grep -v 'params do'`
-2. **Verify CSRF config** — Confirm `config.actions.csrf_protection = true` in `config/app.rb` for HTML apps.
-3. **Audit auth checks** — Confirm every sensitive Action has an explicit `before :authenticate!` or equivalent. Grep: `grep -rn 'def handle' app/actions/` and cross-check with `grep -rn 'authenticate'`
-4. **Check authorization** — Confirm role/permission checks exist in Actions or service objects beyond mere authentication.
-5. **Scan for secrets in code** — Grep: `grep -rn 'secret\|password\|api_key\|token' app/ config/ --include='*.rb' | grep -v 'settings\|ENV'`
-6. **Check logging** — Grep: `grep -rn 'logger' app/ | grep 'password\|token\|secret'`
-7. **Check SQL safety** — Grep: `grep -rn 'where("' app/` to find potential string interpolation in queries.
-8. **Check template output** — Grep: `grep -rn 'raw ' app/` to find unescaped output.
-9. **Review session config** — Confirm `config.sessions` has a secret from settings, not hardcoded.
-10. **Review error messages** — Confirm auth failures return generic messages (no user enumeration).
+| # | Concern | Grep / Check | Red Flag | Severity |
+|---|---|---|---|---|
+| 1 | **Param validation** | `grep -rn 'request.params' app/actions/ \| grep -v 'params do'` | `request.params` used directly in business logic without a `params` block | Critical |
+| 2 | **CSRF protection** | Check `config/app.rb` for `config.actions.csrf_protection` | Missing `csrf_protection = true` for HTML endpoints | Critical |
+| 3 | **Authentication** | `grep -rn 'def handle' app/actions/` cross-checked with `grep -rn 'authenticate'` | Auth assumed by convention, no explicit `before :authenticate!` | Critical |
+| 4 | **Authorization** | Review Actions and service objects for role/permission checks | Only authn present, no authz | High |
+| 5 | **Secrets in code** | `grep -rn 'secret\|password\|api_key\|token' app/ config/ --include='*.rb' \| grep -v 'settings\|ENV'` | Hardcoded strings for keys/secrets in source files | Critical |
+| 6 | **Logging** | `grep -rn 'logger' app/ \| grep 'password\|token\|secret'` | `params[:password]` or tokens in log calls | High |
+| 7 | **SQL injection** | `grep -rn 'where("' app/` | String interpolation in `where("...")` | Critical |
+| 8 | **XSS / template output** | `grep -rn 'raw ' app/` | `raw` or `html_safe` on user input | Critical |
+| 9 | **Session config** | Review `config.sessions` in `config/app.rb` | No secret, hardcoded secret, or no expiration | High |
+| 10 | **Error messages** | Review auth failure responses | Messages like "User not found" or "Password incorrect" (user enumeration) | Advisory |
 
----
+### Completion Checkpoint
 
-## Quick Reference Checklist
+After completing all steps, compile findings into a summary:
+- **Critical** — Must be fixed before merge; these are exploitable vulnerabilities (SQL injection, missing auth, hardcoded secrets, missing CSRF, direct param use, XSS).
+- **High** — Should be fixed soon; meaningful risk but harder to exploit directly (missing authz, sensitive logging, insecure session config).
+- **Advisory** — Best-practice improvements with lower immediate risk (generic error messages, structural hardening).
 
-| Concern | Red Flag |
-|---|---|
-| Param validation | `request.params` used directly in business logic |
-| CSRF protection | Missing `csrf_protection = true` for HTML endpoints |
-| Authentication | Auth assumed by convention, not explicit check |
-| Authorization | Only authn, no authz |
-| Error messages | Messages like "User not found" or "Password incorrect" |
-| Logging | `params[:password]` or tokens in log calls |
-| Secrets | Hardcoded strings for keys/secrets in source files |
-| SQL injection | String interpolation in `where("...")` |
-| XSS | `raw` or `html_safe` on user input |
-| Session management | No secret, no expiration, or hardcoded secret |
+For each finding, report: location (file + line), severity, what was found, and the recommended fix (see Core Rules).
 
 ---
 
 ## Core Rules
+
+Detailed remediation patterns for each finding category.
 
 1. **Validate all params** via the Params DSL:
 

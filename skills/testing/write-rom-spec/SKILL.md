@@ -103,20 +103,9 @@ bundle exec rspec spec/repos/users_spec.rb   # expect green
 
 ---
 
-## Core Rules
-
-1. **Use transactional rollback** — every spec must roll back via the shared context configured in Step 0. Never rely on manual teardown.
-
-2. **Test custom Relation query methods** — assert on collections returned by custom filters with fully defined test data. See the relation spec example in Step 1.
-
-3. **Verify Repository CRUD operations** — verify custom read, write, update, and edge-case methods. See the repo spec examples in Step 1, including `one!` raising `ROM::TupleCountMismatchError` for missing tuples.
-
----
-
 ## Common Mistakes
 
 - **Skipping Database Transactions:** Failing to wrap specs in a transactional rollback pollutes test databases and creates flaky/order-dependent tests.
-- **Testing ROM Framework Internals:** Verifying ROM's native `where`/`insert`/`update` mechanics rather than your custom repository queries.
 - **Persistent State Pollution:** Using `before(:all)` for database data setup, which operates outside individual test transaction boundaries.
 - **Direct Entity Instantiation:** Manually instantiating ROM Structs instead of writing to the DB via repository/changeset calls to test lookup.
 

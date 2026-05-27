@@ -9,7 +9,7 @@ description: >
   Trigger words: operation, dry-operation, dry-transaction, business logic,
   workflow, service, Dry::Operation, step, compose operations.
 metadata:
-  version: 1.0.0
+  version: "1.0.0"
   user-invocable: "true"
 ---
 # Creating a dry-operation

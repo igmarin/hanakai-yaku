@@ -7,18 +7,6 @@
       "original_snippets": "Use this skill when writing specs for ROM Relations and Repositories in Hanami 2.x.",
       "relevant_when": "When a user asks for Hanami work that should trigger write-rom-spec.",
       "why_given": "new knowledge"
-    },
-    {
-      "instruction": "**Use transactional rollback** — every spec must roll back via the shared context configured in Step 0. Never rely on manual teardown.",
-      "original_snippets": "**Use transactional rollback** — every spec must roll back via the shared context configured in Step 0. Never rely on manual teardown.",
-      "relevant_when": "When a user asks for Hanami work that should trigger write-rom-spec.",
-      "why_given": "preference"
-    },
-    {
-      "instruction": "**Verify Repository CRUD operations** — verify custom read, write, update, and edge-case methods. See the repo spec examples in Step 1, including `one!` raising `ROM::TupleCountMismatchError` for missing tuples.",
-      "original_snippets": "**Verify Repository CRUD operations** — verify custom read, write, update, and edge-case methods. See the repo spec examples in Step 1, including `one!` raising `ROM::TupleCountMismatchError` for missing tuples.",
-      "relevant_when": "When a user asks for Hanami work that should trigger write-rom-spec.",
-      "why_given": "new knowledge"
     }
   ]
 }

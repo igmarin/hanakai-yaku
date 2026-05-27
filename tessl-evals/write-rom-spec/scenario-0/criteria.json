@@ -5,17 +5,7 @@
     {
       "name": "instruction-1",
       "description": "The submitted artifact follows this skill instruction: Use this skill when writing specs for ROM Relations and Repositories in Hanami 2.x.",
-      "max_score": 34
-    },
-    {
-      "name": "instruction-2",
-      "description": "The submitted artifact follows this skill instruction: **Use transactional rollback** — every spec must roll back via the shared context configured in Step 0. Never rely on manual teardown.",
-      "max_score": 33
-    },
-    {
-      "name": "instruction-3",
-      "description": "The submitted artifact follows this skill instruction: **Verify Repository CRUD operations** — verify custom read, write, update, and edge-case methods. See the repo spec examples in Step 1, including `one!` raising `ROM::TupleCountMismatchError` for missing tuples.",
-      "max_score": 33
+      "max_score": 100
     }
   ]
 }

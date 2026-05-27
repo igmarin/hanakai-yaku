@@ -5,52 +5,17 @@
     {
       "name": "instruction-1",
       "description": "The submitted artifact follows this skill instruction: Use this skill when reviewing Hanami 2.x code for security concerns.",
-      "max_score": 10
+      "max_score": 34
     },
     {
       "name": "instruction-2",
-      "description": "The submitted artifact follows this skill instruction: **Validate params** — Check every Action for a `params` block. Grep: `grep -rn 'request.params' app/actions/ | grep -v 'params do'`",
-      "max_score": 10
+      "description": "The submitted artifact follows this skill instruction: **Never log sensitive data**:",
+      "max_score": 33
     },
     {
       "name": "instruction-3",
-      "description": "The submitted artifact follows this skill instruction: **Verify CSRF config** — Confirm `config.actions.csrf_protection = true` in `config/app.rb` for HTML apps.",
-      "max_score": 10
-    },
-    {
-      "name": "instruction-4",
-      "description": "The submitted artifact follows this skill instruction: **Check authorization** — Confirm role/permission checks exist in Actions or service objects beyond mere authentication.",
-      "max_score": 10
-    },
-    {
-      "name": "instruction-5",
-      "description": "The submitted artifact follows this skill instruction: **Check logging** — Grep: `grep -rn 'logger' app/ | grep 'password\\|token\\|secret'`",
-      "max_score": 10
-    },
-    {
-      "name": "instruction-6",
-      "description": "The submitted artifact follows this skill instruction: **Check SQL safety** — Grep: `grep -rn 'where(\"' app/` to find potential string interpolation in queries.",
-      "max_score": 10
-    },
-    {
-      "name": "instruction-7",
-      "description": "The submitted artifact follows this skill instruction: **Check template output** — Grep: `grep -rn 'raw ' app/` to find unescaped output.",
-      "max_score": 10
-    },
-    {
-      "name": "instruction-8",
-      "description": "The submitted artifact follows this skill instruction: **Review session config** — Confirm `config.sessions` has a secret from settings, not hardcoded.",
-      "max_score": 10
-    },
-    {
-      "name": "instruction-9",
-      "description": "The submitted artifact follows this skill instruction: **Review error messages** — Confirm auth failures return generic messages (no user enumeration).",
-      "max_score": 10
-    },
-    {
-      "name": "instruction-10",
-      "description": "The submitted artifact follows this skill instruction: **Never log sensitive data**:",
-      "max_score": 10
+      "description": "The submitted artifact follows this skill instruction: **Use secure session configuration**:",
+      "max_score": 33
     }
   ]
 }

@@ -2,7 +2,7 @@
 name: handle-errors
 license: MIT
 description: >
-  Use when handling errors and halting requests in Hanami 2.x Actions — fail fast with `halt <code>, {error:}.to_json` for early returns, rescue `StandardError` (never `Exception`) logging full details internally but returning generic messages to clients, let invalid params halt automatically with 422 before `#handle` runs without manual `params.valid?` checks, and match error response format to action format (no HTML errors in JSON actions). Demonstrates halt status codes (404, 422, 500), rescue patterns, and consistent error shapes.
+  Use when handling errors and halting requests in Hanami 2.x Actions — fail fast with `halt STATUS, {error:}.to_json` for early returns, rescue `StandardError` (never `Exception`) logging full details internally but returning generic messages to clients, let invalid params halt automatically with 422 before `#handle` runs without manual `params.valid?` checks, and match error response format to action format (no HTML errors in JSON actions). Demonstrates halt status codes (404, 422, 500), rescue patterns, and consistent error shapes.
   Use when implementing error handling patterns, exception handling, or returning
   JSON error responses in Hanami actions.
 metadata:
@@ -13,7 +13,7 @@ metadata:
   - errors
   - halt
   - exceptions
-  version: 1.0.0
+  version: "1.0.0"
 ---
 
 # handle-errors
