@@ -6,6 +6,7 @@ on:
     paths:
       - 'skills/**'
       - 'docs/**'
+      - 'tessl-evals/**'
       - 'tile.json'
       - 'tessl.json'
       - 'scripts/generate-tessl-evals.rb'

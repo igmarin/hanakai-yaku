@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'skills/**'
+      - 'tessl-evals/**'
       - 'tile.json'
       - 'tessl.json'
       - 'scripts/changed-tessl-skill-paths.rb'
