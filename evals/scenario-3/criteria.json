@@ -1,0 +1,61 @@
+{
+  "context": "Tests whether the agent uses the Hanami params block DSL correctly: type coercion, enum constraints, nested hash params, array or cross-field rules, and returns 422 with structured errors on validation failure.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "params block in Action",
+      "description": "The `params do ... end` block is defined inside the Action class body — NOT in a separate contract file, NOT in the repository, and NOT after the class definition",
+      "max_score": 10
+    },
+    {
+      "name": "Integer coercion for amount",
+      "description": "The `amount` field uses `:integer` type coercion (e.g., `required(:amount).value(:integer, ...)`) — NOT `:string` or untyped",
+      "max_score": 10
+    },
+    {
+      "name": "Nested hash params",
+      "description": "The `payment` field uses `.hash { }` to declare a nested structure (e.g., `required(:payment).hash { ... }`) — NOT a flat key or an untyped hash",
+      "max_score": 10
+    },
+    {
+      "name": "included_in? for plan",
+      "description": "The `plan` field uses `included_in?` predicate to restrict values to the allowed plan names (e.g., `value(:string, included_in?: %w[basic premium enterprise])`)",
+      "max_score": 10
+    },
+    {
+      "name": "format? for email",
+      "description": "The `email` field uses a `format?` predicate with a regex to validate the email pattern",
+      "max_score": 8
+    },
+    {
+      "name": "cross-field rule",
+      "description": "A `rule(...)` block is present to implement the cross-field validation (checking both plan and amount together)",
+      "max_score": 10
+    },
+    {
+      "name": "422 on invalid params",
+      "description": "The `#handle` method returns HTTP 422 with a structured error body when params are invalid (either via automatic halt or explicit check of `request.params.errors`)",
+      "max_score": 10
+    },
+    {
+      "name": "Structured error response",
+      "description": "The error response body includes the validation errors hash (e.g., `{ errors: request.params.errors.to_h }`) — NOT a plain string message",
+      "max_score": 8
+    },
+    {
+      "name": "201 on success",
+      "description": "The `#handle` method sets `response.status = 201` (or equivalent) on the success path",
+      "max_score": 8
+    },
+    {
+      "name": "No validation in service/repo",
+      "description": "There is no second params validation or schema check in any repository or service object called from the action — validation stays in the Action's params block",
+      "max_score": 8
+    },
+    {
+      "name": "optional referral_code",
+      "description": "The `referral_code` field is declared with `optional(...)` — NOT `required`",
+      "max_score": 8
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "context": "Tests whether the agent creates a dry-operation for a multi-step workflow, uses Success/Failure wrapping throughout, employs the step/Do notation, injects dependencies correctly, keeps business logic out of the Action, and writes a spec with test doubles.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Inherits Dry::Operation",
+      "description": "The operation class inherits from `Dry::Operation` (e.g., `class OnboardUser < Dry::Operation`) — NOT from a plain Ruby class or Dry::Transaction",
+      "max_score": 10
+    },
+    {
+      "name": "Operation file placement",
+      "description": "The operation file is placed under an `operations/` directory (e.g., `app/operations/users/onboard_user.rb` or `slices/<slice>/operations/`), NOT inside `app/actions/` or `app/services/`",
+      "max_score": 8
+    },
+    {
+      "name": "step calls in call method",
+      "description": "The operation's `call` method uses `step` calls (e.g., `attrs = step validate(input)`) for the sequential steps — NOT plain method calls that ignore Failure returns",
+      "max_score": 10
+    },
+    {
+      "name": "Steps return Success/Failure",
+      "description": "Every private step method returns either `Success(value)` or `Failure(reason)` — no step returns a raw value or raises an exception for control flow",
+      "max_score": 10
+    },
+    {
+      "name": "include Deps[] for dependencies",
+      "description": "The operation uses `include Deps[\"repos.user_repo\", \"mailers.welcome_mailer\"]` (or similar) — NOT constructor injection with a custom `initialize`, and NOT direct container access",
+      "max_score": 10
+    },
+    {
+      "name": "No business logic in Action",
+      "description": "The Action's `#handle` method does NOT contain validation logic, database calls, or mailer calls — it only calls the operation and maps Success/Failure to an HTTP response",
+      "max_score": 10
+    },
+    {
+      "name": "Action delegates to operation",
+      "description": "The Action injects and calls the operation (e.g., `include Deps[\"operations.users.onboard_user\"]` and calls `onboard_user.call(...)` in handle)",
+      "max_score": 8
+    },
+    {
+      "name": "Spec uses instance_double",
+      "description": "The operation spec uses `instance_double` (or `double`) for the repository and mailer dependencies — NOT real database calls or real mailer calls",
+      "max_score": 8
+    },
+    {
+      "name": "Spec tests failure paths",
+      "description": "The spec includes at least one test for a failing step (e.g., persistence failure stops execution and does not call the mailer)",
+      "max_score": 8
+    },
+    {
+      "name": "Dry::Monads included",
+      "description": "The operation includes `Dry::Monads[:result]` (or equivalent) to have access to `Success()` and `Failure()` constructors",
+      "max_score": 8
+    },
+    {
+      "name": "Action status codes",
+      "description": "The Action returns `201` on success and an appropriate error status (422 or 500) on failure — not always 200",
+      "max_score": 10
+    }
+  ]
+}

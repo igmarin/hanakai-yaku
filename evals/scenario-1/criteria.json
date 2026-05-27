@@ -1,0 +1,61 @@
+{
+  "context": "Tests whether the agent creates a Hanami Action using the correct dependency injection pattern, halt-based error handling, and avoids forbidden patterns such as direct container access or instance variable state sharing.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Deps[] injection",
+      "description": "The action uses `include Deps[\"repos.product_repo\"]` (or similar key matching the file path convention) to inject the repository — NOT `attr_reader` with manual assignment or `initialize`-based injection",
+      "max_score": 12
+    },
+    {
+      "name": "No direct container access",
+      "description": "The action does NOT contain `Hanami.app[\"...\"]` or `MyApp::App[\"...\"]` calls anywhere in the file to retrieve the repository or any other dependency",
+      "max_score": 12
+    },
+    {
+      "name": "halt 404 for missing product",
+      "description": "When the product is not found (nil result), the action calls `halt 404` with a JSON error body — NOT raises an exception, NOT sets `response.status = 404` without halting",
+      "max_score": 12
+    },
+    {
+      "name": "JSON error body on halt",
+      "description": "The halt call for the 404 case includes a JSON-encoded error body (e.g., `{ error: \"...\" }.to_json`), not an empty body or an HTML string",
+      "max_score": 10
+    },
+    {
+      "name": "StandardError rescue (not Exception)",
+      "description": "If an exception rescue is present, it rescues `StandardError` — NOT the base `Exception` class",
+      "max_score": 8
+    },
+    {
+      "name": "Error details not exposed",
+      "description": "The rescue block (if present) does NOT include `e.message` or `e.backtrace` in the HTTP response body — returns a generic error message instead",
+      "max_score": 8
+    },
+    {
+      "name": "handle method only",
+      "description": "The action class contains only a `#handle` method as the public interface — no instance variables used to share state between helper methods within the class",
+      "max_score": 8
+    },
+    {
+      "name": "Correct container key format",
+      "description": "The Deps key string matches the file path convention: the string `\"repos.product_repo\"` matches the file at `app/repos/product_repo.rb`",
+      "max_score": 8
+    },
+    {
+      "name": "Correct module namespace",
+      "description": "The action class is nested inside the correct module hierarchy (e.g., `module MyApp; module Actions; module Products; class Show`)",
+      "max_score": 8
+    },
+    {
+      "name": "Route registration",
+      "description": "A route file or snippet shows `get \"/products/:id\"` mapped to the show action (e.g., `to: \"products.show\"`)",
+      "max_score": 6
+    },
+    {
+      "name": "frozen_string_literal comment",
+      "description": "The action file includes `# frozen_string_literal: true` at the top",
+      "max_score": 8
+    }
+  ]
+}
