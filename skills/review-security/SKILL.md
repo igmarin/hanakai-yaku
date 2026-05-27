@@ -47,7 +47,7 @@ After completing all steps, compile findings into a summary:
 - **High** — Should be fixed soon; meaningful risk but harder to exploit directly (missing authz, sensitive logging, insecure session config).
 - **Advisory** — Best-practice improvements with lower immediate risk (generic error messages, structural hardening).
 
-For each finding, report: location (file + line), severity, what was found, and the recommended fix (see Core Rules).
+For each finding, report: location (file + line), severity, a summary of the issue (never include actual secret values, passwords, tokens, or API keys — describe their presence without exposing them), and the recommended fix (see Core Rules).
 
 ---
 
