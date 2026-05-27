@@ -2,7 +2,7 @@
 name: register-provider
 license: MIT
 description: >
-  Use when registering external dependencies in Hanami 2.x — create provider files at `config/providers/[name].rb` using `hanami generate provider [name]`, implement lifecycle hooks with `prepare` for requiring gems and `start` for instantiation/registration, register with a descriptive key using `register("name.client", instance)`, always load configuration through `target[:settings]` never raw `ENV`, rescue and log errors in `start` to prevent boot crashes, and verify registration via `Hanami.app["key"]` in console or a lightweight smoke test. Creates providers for databases, mailers, caches, and third-party services.
+  Use when registering external dependencies in Hanami 2.x — integrating a gem, wiring up a service, or setting up dependency injection for databases, mailers, caches, and third-party APIs. Creates provider files at `config/providers/[name].rb` using `hanami generate provider [name]`, implements lifecycle hooks with `prepare` for requiring gems and `start` for instantiation and service registration, registers components with a descriptive key using `register("name.client", instance)`, always loads configuration through `target[:settings]` never raw `ENV`, rescues and logs errors in `start` to prevent boot crashes, and verifies registration via `Hanami.app["key"]` in console or a lightweight smoke test.
 metadata:
   version: "1.0.0"
   ecosystem_sources:
@@ -18,22 +18,6 @@ metadata:
 # register-provider
 
 Use this skill when registering external dependencies (database, mailer, cache, third-party APIs) in the Hanami 2.x DI container.
-
-**Core principle:** Providers bridge external libraries into the DI container. They handle initialization, configuration, and lifecycle.
-
----
-
-## Quick Reference
-
-| Scenario | Approach |
-|---|---|
-| Create a provider | `bundle exec hanami generate provider <name>` |
-| Register a database | Use the built-in `database` provider or custom provider |
-| Register a mailer | Create `config/providers/mailer.rb` |
-| Register a cache | Create `config/providers/cache.rb` |
-| Register a third-party API client | Create `config/providers/<service>.rb` |
-| Access the provided component | `include Deps["<provider_name>.<component>"]` |
-| Configure the provider | Use the `prepare` and `start` lifecycle hooks |
 
 ---
 
@@ -72,6 +56,13 @@ Use this skill when registering external dependencies (database, mailer, cache, 
    end
    ```
 
+   > **Validation checkpoint:** After implementing the provider, verify it loads correctly before writing consuming code:
+   > ```ruby
+   > # In `hanami console`
+   > Hanami.app["mailer.client"]   # => should return the registered instance without errors
+   > ```
+   > If this raises or returns `nil`, fix the provider before proceeding.
+
 3. **Access provided components** via `Deps`:
 
    ```ruby
@@ -102,32 +93,44 @@ Use this skill when registering external dependencies (database, mailer, cache, 
 5. **Register third-party API clients using settings**:
    Always load keys and URLs through `target[:settings]`. Do not reference raw environment variables via `ENV` in providers.
 
+6. **Rescue and log errors in `start`** to control boot failure behavior. Choose one of two strategies:
+
+   - **Swallow the error** (register a null/fallback object) if the service is optional and the app should still boot without it.
+   - **Re-raise the error** if the service is required and a missing provider should halt boot.
+
    ```ruby
-   # config/providers/logger.rb
-   Hanami.app.register_provider(:logger) do
+   # config/providers/payment.rb
+   Hanami.app.register_provider(:payment) do
+     prepare do
+       require "stripe"
+     end
+
      start do
-       require "logger"
-       logger = Logger.new(target[:settings].log_file)
-       register("logger.client", logger)
+       Stripe.api_key = target[:settings].stripe_api_key
+       client = Stripe::Client.new
+       register("payment.client", client)
+     rescue StandardError => e
+       target[:logger].error("[provider:payment] failed to start: #{e.message}")
+       # Re-raise if this provider is required for the app to function:
+       raise
+       # Or register a null object and swallow if the service is optional:
+       # register("payment.client", NullPaymentClient.new)
      end
    end
    ```
 
-8. **Test components that depend on providers** by stubbing the provided dependency:
+7. **Test components that depend on providers** by stubbing the provided dependency:
 
    ```ruby
    stub_mailer = double("mailer", deliver: true)
    welcome = MyApp::Mailers::Welcome.new(mailer__client: stub_mailer)
    ```
 
-9. **Verify a provider is correctly registered** using the Hanami console or a smoke test:
-
-   > [WARNING] Rescue and log errors in `start`. A failed provider should not crash the app boot.
+8. **Verify a provider is correctly registered** using the Hanami console or a smoke test:
 
    ```ruby
    # In `hanami console`
    Hanami.app["mailer.client"]   # => returns the registered instance
-   Hanami.app["logger.client"]   # => returns Logger
    ```
 
    For a lightweight smoke test in specs:

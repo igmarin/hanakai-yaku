@@ -2,7 +2,7 @@
 name: create-operation
 license: MIT
 description: >
-  Encapsulate a business workflow in a `Dry::Operation` with explicit steps returning `Success(value)` or `Failure(error)` — inject dependencies via `include Deps[...]`, place the class in `slices/<slice>/operations/`, compose operations by injecting them as dependencies (never call one operation from inside another's private methods), pass test doubles through the constructor to verify step ordering, and delegate from actions that map results to HTTP responses.
+  Encapsulate a business workflow in a `Dry::Operation` with explicit steps returning `Success(value)` or `Failure(error)` — inject dependencies via `include Deps[...]`, place the class in `slices/[slice]/operations/`, compose operations by injecting them as dependencies (never call one operation from inside another's private methods), pass test doubles through the constructor to verify step ordering, and delegate from actions that map results to HTTP responses.
   Composes validation, persistence, and side effects into explicit steps using the step/Do notation.
   Use when the user asks to create a business operation, service object, or workflow
   using dry-operation, dry-transaction, or Hanami operations.
