@@ -40,6 +40,7 @@ See the [Ecosystem Overview](https://github.com/igmarin/agent-mcp-runtime/blob/m
 > [![Windsurf](https://img.shields.io/badge/Windsurf-0B100F?logo=windsurf&logoColor=fff)](#)
 
 > [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+> [![skills.sh](https://skills.sh/b/igmarin/hanakai-yaku)](https://skills.sh/igmarin/hanakai-yaku)
 > ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/igmarin/hanakai-yaku?utm_source=oss&utm_medium=github&utm_campaign=igmarin%2Fhanakai-yaku&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 ## Who This Is For
@@ -49,6 +50,29 @@ See the [Ecosystem Overview](https://github.com/igmarin/agent-mcp-runtime/blob/m
 | dry-rb users | Guidance on operations, validation contracts, DI patterns, and type-safe design. |
 | ROM users | Repository patterns, relation design, changeset composition, migration safety. |
 | Team leads | Repeatable workflows for Hanami onboarding, TDD discipline, and slice architecture. |
+
+## Installation
+
+Install skills via skills.sh:
+
+```bash
+npx skills add igmarin/hanakai-yaku
+```
+
+Or via GitHub CLI (v2.90.0+):
+
+```bash
+# Install the dependency first
+gh skill install igmarin/ruby-core-skills
+
+# Install all skills interactively
+gh skill install igmarin/hanakai-yaku
+
+# Install a specific skill
+gh skill install igmarin/hanakai-yaku load-context --scope project
+```
+
+Or use directly as chat commands (`@skill-name`) in compatible agents (OpenCode, Cursor, Claude Code, Gemini CLI, Windsurf).
 
 ## What Is In The Repository
 

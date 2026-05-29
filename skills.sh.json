@@ -1,0 +1,125 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Actions",
+      "description": "Skills for building Hanami actions, JSON APIs, error handling, and parameter validation.",
+      "skills": [
+        "build-json-api",
+        "create-action",
+        "handle-errors",
+        "validate-params"
+      ]
+    },
+    {
+      "title": "CLI",
+      "description": "Skills for Hanami CLI commands, component generation, database management, and development server.",
+      "skills": [
+        "create-app",
+        "generate-components",
+        "manage-database",
+        "run-development"
+      ]
+    },
+    {
+      "title": "Context",
+      "description": "Skills for discovering and loading Hanami application structure.",
+      "skills": [
+        "load-context"
+      ]
+    },
+    {
+      "title": "Cross-cutting",
+      "description": "Skills for settings management and code review.",
+      "skills": [
+        "manage-settings",
+        "review-code"
+      ]
+    },
+    {
+      "title": "Persistence",
+      "description": "Skills for ROM changesets, repositories, entities, relations, and migrations.",
+      "skills": [
+        "create-changeset",
+        "create-repository",
+        "define-entity",
+        "define-relation",
+        "write-migration"
+      ]
+    },
+    {
+      "title": "Dependency Injection",
+      "description": "Skills for dry-system dependency injection and provider registration.",
+      "skills": [
+        "inject-dependencies",
+        "register-provider"
+      ]
+    },
+    {
+      "title": "dry-monads",
+      "description": "Skills for Result pattern handling and railway-oriented programming.",
+      "skills": [
+        "handle-result-pattern"
+      ]
+    },
+    {
+      "title": "dry-rb",
+      "description": "Skills for dry-rb operations and validation contracts.",
+      "skills": [
+        "create-operation",
+        "create-validation-contract"
+      ]
+    },
+    {
+      "title": "Providers",
+      "description": "Skills for Hanami provider configuration and DI implementation.",
+      "skills": [
+        "configure-providers",
+        "implement-di"
+      ]
+    },
+    {
+      "title": "Security",
+      "description": "Skills for reviewing Hanami application security.",
+      "skills": [
+        "review-security"
+      ]
+    },
+    {
+      "title": "Routing",
+      "description": "Skills for defining Hanami routes.",
+      "skills": [
+        "define-routes"
+      ]
+    },
+    {
+      "title": "Slices",
+      "description": "Skills for Hanami slice configuration, creation, extraction, boundary review, and testing.",
+      "skills": [
+        "configure-slice",
+        "create-slice",
+        "extract-slice",
+        "review-slice-boundaries",
+        "test-slice"
+      ]
+    },
+    {
+      "title": "Testing",
+      "description": "Skills for writing Hanami action specs, request specs, and ROM specs.",
+      "skills": [
+        "write-action-spec",
+        "write-request-spec",
+        "write-rom-spec"
+      ]
+    },
+    {
+      "title": "Views",
+      "description": "Skills for Hanami views and part decoration.",
+      "skills": [
+        "create-view",
+        "decorate-with-parts"
+      ]
+    }
+  ]
+}
