@@ -63,7 +63,7 @@ Apply these patterns for frequently encountered service types:
 - **Background job adapter** — configure the adapter class and queue connection in `start`; register as `"jobs.adapter"` so job classes can resolve it via `Deps`.
 - **Cache store** — require the cache library in `prepare`; build the store with TTL and connection settings from `target["settings"]` in `start`.
 
-> If a `PROVIDER_PATTERNS.md` file is present in the bundle, load it for extended code examples for the above patterns.
+> For extended code examples, see [PROVIDER_PATTERNS.md](PROVIDER_PATTERNS.md).
 
 ## Output Style
 
