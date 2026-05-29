@@ -1,49 +1,34 @@
-# Rails Exception Pattern vs Hanami Result Pattern
+# Rails Routes vs Hanami Routes DSL Reference
 
-This document compares traditional Rails ActiveRecord exception/save patterns against Hanami's monadic Result patterns.
+This guide provides a comparative reference between Rails routing and the Hanami 2.x Routes DSL.
 
 ---
 
 ## Comparison Table
 
-| Rails (ActiveRecord) | Hanami 2.x (dry-monads Result Pattern) |
+| Rails (config/routes.rb) | Hanami 2.x (config/routes.rb) |
 |---|---|
-| `User.create!(attrs)` (raises on failure) | `create_user.call(attrs)` → `Success(user)` or `Failure(error)` |
-| `ActiveRecord::RecordInvalid` exceptions | `Failure({ code: :validation_failed, errors: ... })` (as values) |
-| `rescue_from ActiveRecord::RecordNotFound` | Pattern match `Failure` in Action and `halt 404` |
-| `if user.save; ...; else; ...; end` | `case result; in Success(v); ...; in Failure(e); ...; end` |
-| Service objects (custom class with raise) | `dry-monads` service objects returning `Success`/`Failure` |
-| `before_action` for sequential steps | `Do` notation (`yield`) for sequencing multiple operations |
+| `get "/users", to: "users#index"` | `get "/users", to: "users.index"` |
+| `resources :users` | `resources :users` |
+| `resource :profile` | `resource :profile` |
+| `scope "api" do ... end` | `scope "api" do ... end` |
+| `namespace :api do ... end` | `scope "api" do ... end` or `slice :api, at: "/api"` |
+| `root to: "home#index"` | `root to: "home.index"` |
+| `users_path` | `routes.path(:users)` |
+| `user_path(1)` | `routes.path(:user, id: 1)` |
 
 ---
 
-## Pattern Example
+## Route Ordering Pitfalls
 
-### Rails Exception Style
-```ruby
-# Rails Controller
-def create
-  @user = User.create!(user_params)
-  deliver_welcome_email(@user)
-  render json: @user, status: :created
-rescue ActiveRecord::RecordInvalid => e
-  render json: { errors: e.record.errors }, status: :unprocessable_entity
-end
-```
+Both routers evaluate definitions sequentially top-to-bottom. Specific paths must always be declared before wildcards to avoid shadowing:
 
-### Hanami Monadic Style
 ```ruby
-# Hanami Action
-def handle(request, response)
-  result = create_user.call(request.params[:user])
-  
-  case result
-  in Success(user)
-    response.status = 201
-    response.body = UserSerializer.new(user).to_json
-  in Failure(error_payload)
-    response.status = 422
-    response.body = { error: error_payload }.to_json
-  end
-end
+# CORRECT: Specific route evaluated first
+get "/users/new", to: "users.new"
+get "/users/:id", to: "users.show"
+
+# INCORRECT: "/users/new" is shadowed as an :id parameter
+get "/users/:id", to: "users.show"
+get "/users/new", to: "users.new"
 ```
