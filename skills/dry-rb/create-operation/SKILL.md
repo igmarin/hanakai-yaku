@@ -106,6 +106,8 @@ end
 4. **Action integration** — how the action calls this operation.
 5. **English only** unless user requests otherwise.
 
+> For extended operation patterns, see [OPERATION_PATTERNS.md](OPERATION_PATTERNS.md).
+
 ## Integration
 
 | Skill | When to chain |

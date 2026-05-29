@@ -117,6 +117,8 @@ Use this skill when creating ROM Repositories that encapsulate domain-level pers
 
 ---
 
+> For detailed repository pattern examples, see [REPOSITORIES.md](REPOSITORIES.md).
+
 ## Integration
 
 | Related Skill | When to chain |

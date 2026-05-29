@@ -94,6 +94,8 @@ DO inject dependencies through the constructor — use `include Deps[...]`.
    end
    ```
 
+> For testing DI patterns, see [TESTING_DI.md](TESTING_DI.md).
+
 ## Integration
 
 | Skill | When to chain |

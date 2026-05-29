@@ -127,6 +127,8 @@ Use this skill when defining ROM Relations that map to database tables in Hanami
 
 ---
 
+> For detailed relation pattern examples, see [RELATIONS.md](RELATIONS.md).
+
 ## Integration
 
 | Related Skill | When to chain |
