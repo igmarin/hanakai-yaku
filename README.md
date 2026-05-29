@@ -53,6 +53,17 @@ See the [Ecosystem Overview](https://github.com/igmarin/agent-mcp-runtime/blob/m
 
 ## Installation
 
+Install skills via tessl.io:
+
+```bash
+npx tessl i igmarin/hanakai-yaku
+```
+or with yarn
+
+```bash
+yarn dlx tessl i igmarin/hanakai-yaku
+```
+
 Install skills via skills.sh:
 
 ```bash
