@@ -33,7 +33,10 @@ echo ""
 echo "=== disk → plugin.json check ==="
 
 # Every SKILL.md on disk should be discoverable via plugin.json
-plugin_skills_path=$(ruby -rjson -e 'puts JSON.parse(File.read(ARGV[0])).fetch("skills", "./skills/")' "$ROOT/.tessl-plugin/plugin.json")
+plugin_skills_path=$(ruby -rjson -e '
+  path = JSON.parse(File.read(ARGV[0])).fetch("skills", "./skills/")
+  puts path.sub(%r{^\./}, "")
+' "$ROOT/.tessl-plugin/plugin.json")
 while IFS= read -r file; do
   rel="${file#$ROOT/}"
   if [[ "$rel" == ${plugin_skills_path}* ]]; then
