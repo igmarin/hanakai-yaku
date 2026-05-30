@@ -7,6 +7,7 @@ on:
       - 'tessl-evals/**'
       - 'tile.json'
       - 'tessl.json'
+      - '.tessl-plugin/plugin.json'
       - 'scripts/changed-tessl-skill-paths.rb'
       - 'scripts/generate-tessl-evals.rb'
       - 'scripts/validate-tessl-evals.rb'
