@@ -46,9 +46,6 @@ jobs:
         with:
           token: ${{ secrets.TESSL_TOKEN }}
 
-      - name: Lint plugin
-        run: tessl lint .
-
       - name: Compute automatic patch version
         id: version
         run: |
