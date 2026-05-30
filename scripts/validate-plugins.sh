@@ -13,7 +13,8 @@ echo "=== plugin.json inventory check ==="
 
 # Every skill discovered from plugin.json must exist on disk
 while IFS= read -r path; do
-  if [ -f "$ROOT/$path" ]; then
+  skill_md="$ROOT/$path/SKILL.md"
+  if [ -f "$skill_md" ]; then
     info "plugin.json → disk: $path"
   else
     error "plugin.json references missing file: $path"
@@ -23,7 +24,7 @@ done < <(ruby -rjson -e '
   skills = data.fetch("skills", "")
   if skills.is_a?(String)
     dir = File.join(ARGV[1], skills)
-    Dir.glob("**/SKILL.md", base: dir).each { |p| puts "#{skills}#{p}" }
+    Dir.glob("**/SKILL.md", base: dir).each { |p| puts "#{skills}#{File.dirname(p)}" }
   elsif skills.is_a?(Array)
     skills.each { |p| puts p }
   end
