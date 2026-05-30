@@ -33,16 +33,23 @@ echo ""
 echo "=== disk → plugin.json check ==="
 
 # Every SKILL.md on disk should be discoverable via plugin.json
-plugin_skills_path=$(ruby -rjson -e '
-  path = JSON.parse(File.read(ARGV[0])).fetch("skills", "./skills/")
-  puts path.sub(%r{^\./}, "")
-' "$ROOT/.tessl-plugin/plugin.json")
+expected_skill_dirs=$(ruby -rjson -e '
+  data = JSON.parse(File.read(ARGV[0]))
+  skills = data.fetch("skills", "./skills/")
+  if skills.is_a?(String)
+    dir = skills.sub(%r{^\./}, "")
+    Dir.glob("*/SKILL.md", base: File.join(ARGV[1], dir)).each { |p| puts "#{dir}#{File.dirname(p)}" }
+    Dir.glob("*/*/SKILL.md", base: File.join(ARGV[1], dir)).each { |p| puts "#{dir}#{File.dirname(p)}" }
+  elsif skills.is_a?(Array)
+    skills.each { |s| puts s.sub(%r{^\./}, "") }
+  end
+' "$ROOT/.tessl-plugin/plugin.json" "$ROOT" | sort)
 while IFS= read -r file; do
-  rel="${file#$ROOT/}"
-  if [[ "$rel" == ${plugin_skills_path}* ]]; then
-    info "disk → plugin.json: $rel"
+  skill_dir="$(dirname "${file#$ROOT/}")"
+  if printf '%s\n' "$expected_skill_dirs" | grep -Fxq "$skill_dir"; then
+    info "disk → plugin.json: $skill_dir"
   else
-    error "disk has SKILL.md outside plugin discovery path: $rel"
+    error "disk has SKILL.md not in plugin.json: $skill_dir"
   fi
 done < <(find "$ROOT/skills" -name 'SKILL.md' | sort)
 
