@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# validate-plugins.sh — checks frontmatter consistency and tile.json ↔ disk sync
-# Adapted from rails-agent-skills for hanakai-yaku
+# validate-plugins.sh — checks frontmatter consistency and plugin.json ↔ disk sync
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 errors=0
@@ -10,30 +9,37 @@ errors=0
 info()  { echo "  [OK] $*"; }
 error() { echo "  [FAIL] $*"; errors=$((errors + 1)); }
 
-echo "=== tile.json inventory check ==="
+echo "=== plugin.json inventory check ==="
 
-# Every skill in tile.json must exist on disk
+# Every skill discovered from plugin.json must exist on disk
 while IFS= read -r path; do
   if [ -f "$ROOT/$path" ]; then
-    info "tile.json → disk: $path"
+    info "plugin.json → disk: $path"
   else
-    error "tile.json references missing file: $path"
+    error "plugin.json references missing file: $path"
   fi
-done < <(ruby -rjson -e 'JSON.parse(File.read(ARGV[0])).fetch("skills").each { |_,v| puts v.fetch("path") }' "$ROOT/tile.json")
+done < <(ruby -rjson -e '
+  data = JSON.parse(File.read(ARGV[0]))
+  skills = data.fetch("skills", "")
+  if skills.is_a?(String)
+    dir = File.join(ARGV[1], skills)
+    Dir.glob("**/SKILL.md", base: dir).each { |p| puts "#{skills}#{p}" }
+  elsif skills.is_a?(Array)
+    skills.each { |p| puts p }
+  end
+' "$ROOT/.tessl-plugin/plugin.json" "$ROOT")
 
 echo ""
-echo "=== disk → tile.json check ==="
+echo "=== disk → plugin.json check ==="
 
-# Every SKILL.md on disk must be in tile.json
+# Every SKILL.md on disk should be discoverable via plugin.json
+plugin_skills_path=$(ruby -rjson -e 'puts JSON.parse(File.read(ARGV[0])).fetch("skills", "./skills/")' "$ROOT/.tessl-plugin/plugin.json")
 while IFS= read -r file; do
   rel="${file#$ROOT/}"
-  if ruby -rjson -e '
-    paths = JSON.parse(File.read(ARGV[0])).fetch("skills").values.map { |v| v.fetch("path") }
-    exit paths.include?(ARGV[1]) ? 0 : 1
-  ' "$ROOT/tile.json" "$rel"; then
-    info "disk → tile.json: $rel"
+  if [[ "$rel" == ${plugin_skills_path}* ]]; then
+    info "disk → plugin.json: $rel"
   else
-    error "disk has SKILL.md not in tile.json: $rel"
+    error "disk has SKILL.md outside plugin discovery path: $rel"
   fi
 done < <(find "$ROOT/skills" -name 'SKILL.md' | sort)
 
