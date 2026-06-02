@@ -1,6 +1,7 @@
 ---
 name: register-provider
 license: MIT
+type: atomic
 description: >
   Use when registering external dependencies in Hanami 2.x — integrating a gem, wiring up a service, or setting up dependency injection for databases, mailers, caches, and third-party APIs. Creates provider files at `config/providers/[name].rb` using `hanami generate provider [name]`, implements lifecycle hooks with `prepare` for requiring gems and `start` for instantiation and service registration, registers components with a descriptive key using `register("name.client", instance)`, always loads configuration through `target[:settings]` never raw `ENV`, rescues and logs errors in `start` to prevent boot crashes, and verifies registration via `Hanami.app["key"]` in console or a lightweight smoke test.
 metadata:

@@ -1,1 +1,0 @@
-decorate-with-parts workflow adherence

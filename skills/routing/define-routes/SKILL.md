@@ -1,6 +1,7 @@
 ---
 name: define-routes
 license: MIT
+type: atomic
 description: >
   Use when defining routes in Hanami 2.x. Covers get, post, patch, delete, resources,
   resource, scope, and named route helpers in config/routes.rb.

@@ -1,6 +1,7 @@
 ---
 name: build-json-api
 license: MIT
+type: atomic
 description: >
   Use when building JSON API endpoints in Hanami 2.x Actions — set `response.format = :json`, use dedicated serializers to encode response bodies, write round-trip serialize→parse tests asserting fields match with `.iso8601` timestamps, include pagination metadata with `{data:, meta:}` shape, return consistent error shapes across endpoints, and rescue `JSON::ParserError` with 400 status. Covers setting content-type headers, serializing Ruby objects
   to JSON, parsing incoming JSON request bodies, content negotiation, and round-trip

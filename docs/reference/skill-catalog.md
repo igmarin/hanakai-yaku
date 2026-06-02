@@ -1,105 +1,55 @@
 # Skill Catalog — hanakai-yaku
 
-Catalog of Hanami, dry-rb, and ROM development skills. 3 skills and 1 agent available now; 15 skills and 2 agents planned.
+Catalog of Hanami, dry-rb, and ROM development skills. 35 skills and 10 personas available.
 
 ---
 
 ## Quick Navigation
 
-**Skills:** [load-context](#load-context) · [configure-providers](#configure-providers) · [implement-di](#implement-di)
-**Agents:** [hanami-setup](#hanami-setup-agent)
+**Skills (35):** `load-context`, `configure-providers`, `implement-di`, `register-provider`, `inject-dependencies`, `create-action`, `validate-params`, `handle-errors`, `build-json-api`, `create-repository`, `define-relation`, `define-entity`, `write-migration`, `create-changeset`, `handle-result-pattern`, `create-operation`, `create-validation-contract`, `review-code`, `review-security`, `manage-settings`, `create-slice`, `configure-slice`, `extract-slice`, `review-slice-boundaries`, `test-slice`, `define-routes`, `create-view`, `decorate-with-parts`, `write-action-spec`, `write-request-spec`, `write-rom-spec`, `create-app`, `generate-components`, `manage-database`, `run-development`
+
+**Personas (10):** `hanami-setup`, `create-new-slice`, `build-api-slice`, `build-crud-resource`, `tdd-loop`, `setup-authentication`, `add-table-column`, `add-background-jobs`, `validation-contract`, `slice-lifecycle`
 
 ---
 
-## Skills
+## Category Reference
 
-### load-context
+| Category | Skills | Count |
+|----------|--------|-------|
+| **Context** | `load-context` | 1 |
+| **Providers** | `configure-providers`, `implement-di` | 2 |
+| **DI** | `register-provider`, `inject-dependencies` | 2 |
+| **Actions** | `create-action`, `validate-params`, `handle-errors`, `build-json-api` | 4 |
+| **Persistence** | `create-repository`, `define-relation`, `define-entity`, `write-migration`, `create-changeset` | 5 |
+| **dry-monads** | `handle-result-pattern` | 1 |
+| **dry-rb** | `create-operation`, `create-validation-contract` | 2 |
+| **Testing** | `write-action-spec`, `write-request-spec`, `write-rom-spec` | 3 |
+| **Slices** | `create-slice`, `configure-slice`, `extract-slice`, `review-slice-boundaries`, `test-slice` | 5 |
+| **Views** | `create-view`, `decorate-with-parts` | 2 |
+| **Routing** | `define-routes` | 1 |
+| **CLI** | `create-app`, `generate-components`, `manage-database`, `run-development` | 4 |
+| **Quality** | `review-code`, `review-security` | 2 |
+| **Settings** | `manage-settings` | 1 |
 
-| Path | `skills/context/load-context/SKILL.md` |
-| Category | Context |
-| Description | Load Hanami app structure before any code work |
-| Trigger Words | "load context", "before I code", "what does this app use", "discover structure" |
+### Personas
 
-**What it does:** Discovers all slices, providers, settings, routes, relations, and established patterns in a Hanami app. The non-negotiable first step before any implementation.
-
-**HARD-GATE:** Do not propose code without completing load-context.
-
-**Next after use:** `configure-providers` (after context, to set up providers) or `hanami-setup` (first step in onboarding).
-
----
-
-### configure-providers
-
-| Path | `skills/providers/configure-providers/SKILL.md` |
-| Category | Providers |
-| Description | Configure Hanami providers for services and databases |
-| Trigger Words | "provider", "configure", "ROM setup", "external service", "register component" |
-
-**What it does:** Creates provider files for external services, database connections, and application components. Integrates with Hanami settings for environment configuration.
-
-**HARD-GATE:** Never hardcode credentials. Use settings for all environment values.
-
-**Next after use:** `implement-di` (inject the provider into consumers).
-
----
-
-### implement-di
-
-| Path | `skills/providers/implement-di/SKILL.md` |
-| Category | Providers |
-| Description | Implement dependency injection with dry-system auto_inject |
-| Trigger Words | "dependency injection", "DI", "auto_inject", "Deps", "inject" |
-
-**What it does:** Adds `include Deps[...]` to actions, operations, and repositories. Ensures dependencies are injected through the constructor. Provides testing patterns for DI.
-
-**HARD-GATE:** Never call the container directly. Always inject through the constructor.
-
-**Next after use:** Write tests with injected test doubles; proceed to implementation.
-
----
-
-## Agents
-
-### hanami-setup Agent
-
-| Path | `agents/hanami-setup/SKILL.md` |
-| Description | Project onboarding lifecycle |
-
-**Phases:** Context Loading → Provider Configuration → DI Implementation → Verification
-
-**Hard Gates:** Context Loaded, Providers Verified
-
-**Dependencies:** `load-context`, `configure-providers`, `implement-di`
-
----
-
-## Planned (Future Groups)
-
-| Skill/Agent | Category | Group |
-|-------------|----------|-------|
-| `create-action` | Actions | Group 2 |
-| `test-action` | Actions | Group 2 |
-| `create-repository` | Persistence | Group 2 |
-| `create-relation` | Persistence | Group 2 |
-| `create-changeset` | Persistence | Group 2 |
-| `create-operation` | dry-rb | Group 2 |
-| `create-validation-contract` | dry-rb | Group 2 |
-| `write-tests` | Testing | Group 2 |
-| `plan-tests` | Testing | Group 2 |
-| `hanami-tdd` (agent) | Agents | Group 2 |
-| `create-slice` | Slices | Group 3 |
-| `test-slice` | Slices | Group 3 |
-| `extract-slice` | Slices | Group 3 |
-| `review-slice-boundaries` | Slices | Group 3 |
-| `create-view` | Views | Group 3 |
-| `design-routes` | Actions | Group 3 |
-| `review-migration` | Persistence | Group 3 |
-| `slice-lifecycle` (agent) | Agents | Group 3 |
+| Persona | Focus | Skills Chained |
+|---------|-------|----------------|
+| `hanami-setup` | Project onboarding | load-context, configure-providers, implement-di |
+| `create-new-slice` | Slice scaffolding | create-slice, define-routes, configure-slice, inject-dependencies, write-request-spec |
+| `build-api-slice` | REST API slice | create-slice, actions, routes, test, review |
+| `build-crud-resource` | Full CRUD | entity, migration, repo, actions, views, test |
+| `tdd-loop` | TDD red-green-refactor | test-planning-process, write-request-spec, create-action, review-code |
+| `setup-authentication` | Auth implementation | register-provider, inject-dependencies, handle-errors |
+| `add-table-column` | Schema changes | write-migration, define-relation, define-entity, create-repository, write-request-spec |
+| `add-background-jobs` | Background processing | register-provider, inject-dependencies, create-action, write-request-spec |
+| `validation-contract` | Contract validation | inject-dependencies, validate-params, handle-result-pattern, write-action-spec |
+| `slice-lifecycle` | Slice lifecycle | create-slice, test-slice, review-slice-boundaries, extract-slice |
 
 ---
 
 ## See Also
 
 - [Integration Matrix](integration-matrix.md) — How skills chain together
-- [Agent Guide](../agent-guide.md) — Agent workflows with Mermaid diagrams
+- [Persona Guide](../persona-guide.md) — Persona workflows with diagrams
 - [Architecture](../architecture.md) — Repository layout and conventions

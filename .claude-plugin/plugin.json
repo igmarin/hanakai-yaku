@@ -1,12 +1,12 @@
 {
   "name": "hanakai-yaku",
-  "version": "1.0.0",
+  "version": "0.4.0",
   "description": "Hanami 2.x development skills for Claude Code",
   "author": "igmarin",
   "skills": [
     {
       "name": "hanakai-yaku",
-      "description": "Curated Hanami 2.x skills and agents",
+      "description": "Curated Hanami 2.x skills and personas",
       "entry": "SKILL.md"
     }
   ]

@@ -1,6 +1,7 @@
 ---
 name: write-rom-spec
 license: MIT
+type: atomic
 description: >
   Use when writing ROM specs in Hanami 2.x — configure transactional rollback via a shared `"db rollback"` RSpec context wrapping every spec with `transaction(rollback: :always, auto_savepoint: true)`, place relation specs under `spec/relations/` and repository specs under `spec/repos/`, test custom Relation query methods with fully defined test data via `relation.insert(...)`, verify Repository CRUD operations including `one!` raising `ROM::TupleCountMismatchError` for missing tuples, and run specs to confirm failure before implementing. Use when testing Relation query methods, Repository CRUD operations, or entity creation and lookup in a Hanami ROM-backed app.
 metadata:

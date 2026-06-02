@@ -286,7 +286,7 @@ end
 
 **File:** `bin/validate_skills:62-70`
 
-The validation script expects agents to use `## Core Process`, but some workflow files I read (e.g., `agents/tdd-loop/SKILL.md`) use `## Core Rules`. The validation currently PASSES, so either:
+The validation script expects agents to use `## Core Process`, but some workflow files I read (e.g., `skills/personas/tdd-loop/SKILL.md`) use `## Core Rules`. The validation currently PASSES, so either:
 1. The workflow files were corrected during my editing, or
 2. The validation is checking correctly
 

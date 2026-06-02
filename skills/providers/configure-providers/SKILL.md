@@ -1,6 +1,7 @@
 ---
 name: configure-providers
 license: MIT
+type: atomic
 description: >
   Configure Hanami providers at `config/providers/[name].rb` using `Hanami.app.register_provider(:name) do [...] end` — define settings in `config/settings.rb` if the service needs configuration, implement lifecycle with `prepare` for requiring gems and `start` for instantiation using `target["settings"]` to access config (never hardcode credentials or use raw ENV), register with a descriptive key via `register("key", instance)`, and verify the provider boots without errors. Covers provider structure, settings integration, and boot lifecycle. Use when setting up a new provider, adding a service, or configuring ROM connections.
   Trigger words: provider, configure, ROM setup, external service, database

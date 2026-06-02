@@ -1,6 +1,7 @@
 ---
 name: manage-settings
 license: MIT
+type: atomic
 description: >
   Use when managing Hanami 2.x application settings, app config, or environment variables
   (env vars). Covers defining typed settings with dry-configurable, setting defaults,

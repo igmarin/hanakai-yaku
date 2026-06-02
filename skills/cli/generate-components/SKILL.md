@@ -1,6 +1,7 @@
 ---
 name: generate-components
 license: MIT
+type: atomic
 description: >
   Use when generating Hanami 2.x components via CLI. Covers hanami generate action,
   view, slice, migration with output paths and naming conventions.

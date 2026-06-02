@@ -1,6 +1,7 @@
 ---
 name: manage-database
 license: MIT
+type: atomic
 description: >
   Use when running Hanami 2.x database CLI commands — always confirm HANAMI_ENV and DATABASE_URL before destructive operations, create databases with `hanami db create`, run/revert migrations with `hanami db migrate`/`rollback` validating via `hanami db version`, seed data with `hanami db seed` from `db/seeds.rb`, prepare the full database with `hanami db prepare`, and never edit already-run migrations or use `hanami db drop` without environment confirmation. Covers create, migrate, rollback, seed with preconditions and expected outcomes.
 metadata:

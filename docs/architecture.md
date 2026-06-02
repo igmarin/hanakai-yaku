@@ -8,12 +8,12 @@ Conventions and structure for every `SKILL.md` in this library.
 hanakai-yaku/
 ├── docs/                    # Documentation
 │   ├── architecture.md
-│   ├── agent-guide.md
+│   ├── persona-guide.md
 │   ├── calling-skills.md
 │   └── reference/
 │       ├── skill-catalog.md
 │       └── integration-matrix.md
-├── agents/                  # Orchestrated agent skills
+├── skills/personas/        # Orchestrating personas
 │   └── hanami-setup/
 │       └── SKILL.md
 ├── skills/                  # Categorized skills
@@ -21,11 +21,8 @@ hanakai-yaku/
 │       └── <skill-name>/    # One directory per skill
 │           ├── SKILL.md     # Main skill file (required)
 │           └── reference.md # Optional companion material
-├── SKILL.md                 # Root orchestrator
-├── CONTEXT.md               # Domain glossary
-├── AGENTS.md                # Agent guidance
-├── tile.json                # Skill registry
-├── agents.json              # Agent registry
+├── SKILL.md                 # Root orchestrator (type: catalog)
+├── directory.json           # Skill + persona registry
 └── README.md
 ```
 
@@ -47,6 +44,7 @@ Every skill follows 6 sections in order:
 ```yaml
 ---
 name: skill-name
+type: atomic            # atomic | persona | catalog
 license: MIT
 description: >
   Use when [concrete trigger conditions]. Covers [key topics].
@@ -59,6 +57,7 @@ metadata:
 
 **Rules:**
 - `name` equals directory name (kebab-case).
+- `type` is required: `atomic` for standalone skills, `persona` for orchestrating workflows, `catalog` for the root SKILL.md.
 - `description` starts with action-oriented trigger language.
 - Max 1024 characters for frontmatter.
 - Front-loaded tokens should be under 100.
@@ -77,8 +76,8 @@ Non-code skills have domain-specific gates.
 
 | Context | Format | Example |
 |---------|--------|---------|
-| `tile.json` and `agents.json` | Full path | `skills/context/load-context/SKILL.md` |
-| Agent body (activate calls) | Category-path | `context/load-context` |
+| `directory.json` | Full path | `skills/context/load-context/SKILL.md` |
+| Persona body (activate calls) | Category-path | `context/load-context` |
 | Integration tables | Short name | `load-context` |
 
 ## Skill Types
@@ -94,10 +93,10 @@ Set up infrastructure. Produce configuration files.
 - `configure-providers`
 - `implement-di`
 
-### Code-Producing Skills *(planned)*
+### Code-Producing Skills
 Follow TDD gate. Produce implementation code.
 
-- `create-action`, `create-repository`, `create-operation`, etc.
+All atomic skills in `skills/actions/`, `skills/db/`, `skills/dry-rb/`, `skills/testing/`, `skills/views/`, `skills/slices/`.
 
 ## Approval Gates
 
@@ -107,5 +106,5 @@ Defined in: `load-context`, `hanami-setup`. Context must be discovered before an
 ### Providers Verified Gate
 Defined in: `configure-providers`, `hanami-setup`. All providers must boot without errors.
 
-### TDD Gate *(planned)*
+### TDD Gate
 Defined in: All code-producing skills. Test must exist, run, and fail before implementation.

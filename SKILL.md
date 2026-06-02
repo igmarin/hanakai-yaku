@@ -1,8 +1,9 @@
 ---
 name: hanakai-yaku
+type: catalog
 description: >
   Master orchestrator for hanakai-yaku, a curated library of 35 atomic skills and
-  10 callable agents for Hanami, dry-rb, and ROM Ruby development. Covers actions,
+  10 personas for Hanami, dry-rb, and ROM Ruby development. Covers actions,
   slices, repositories, relations, providers, DI, CLI, testing, views, routing,
   and TDD automation. Enforces Hanami conventions and TDD discipline.
   hanami, dry-rb, rom, ruby, tdd, slices, repositories, operations, providers, di,
@@ -10,7 +11,7 @@ description: >
 ---
 # hanakai-yaku
 
-Master entry point. Navigate and activate 35 Hanami, dry-rb, and ROM development skills plus 10 orchestration agents.
+Master entry point. Navigate and activate 35 Hanami, dry-rb, and ROM development skills plus 10 orchestration personas.
 
 **Core principle:** Atomic, task-specific instructions that turn AI coding assistants into disciplined Hanami collaborators through TDD and idiomatic patterns.
 
@@ -42,8 +43,8 @@ Master entry point. Navigate and activate 35 Hanami, dry-rb, and ROM development
 | **Review security** | `review-security` / `security-review-process` *(from core)* |
 | **Create an app** | `create-app` |
 | **Generate components** | `generate-components` |
-| **Project onboarding** | `hanami-setup` (agent) |
-| **TDD loop** | `tdd-loop` (agent) |
+| **Project onboarding** | `hanami-setup` (persona) |
+| **TDD loop** | `tdd-loop` (persona) |
  
 ## HARD-GATE
  
@@ -58,7 +59,7 @@ Implementation code CANNOT be written until:
 ## Core Process
  
 1. **Context:** Start every session with `load-context`.
-2. **Learn patterns:** Use `handle-result-pattern` and `inject-dependencies` to follow conventions.
+2. **Learn patterns:** Use `handle-result-pattern`, `create-operation`, and `create-validation-contract` for dry-rb patterns; use `inject-dependencies` and `register-provider` for DI conventions.
 3. **Build:** Use action, repository, relation, and view skills for implementation.
 4. **Test:** Use testing skills with the TDD gate.
 5. **Review:** Use `review-code`, `review-security`, and `refactor-process` *(from core)*.
@@ -80,11 +81,11 @@ Implementation code CANNOT be written until:
 | **Quality** | `review-code`, `review-security` |
 | **Settings** | `manage-settings` |
 | **Core Process** *(from ruby-core-skills)* | `tdd-process`, `refactor-process`, `review-process`, `security-review-process`, `test-planning-process` |
- 
-## Agents
- 
-| Agent | Focus |
-|-------|-------|
+
+## Personas
+
+| Persona | Focus |
+|---------|-------|
 | `hanami-setup` | Project onboarding: Context → Providers → DI → Verify |
 | `create-new-slice` | Slice scaffolding with proper structure |
 | `build-api-slice` | Full API slice with actions, repos, relations |
@@ -96,11 +97,10 @@ Implementation code CANNOT be written until:
 | `validation-contract` | Validation contract creation |
 | `slice-lifecycle` | Slice development: Create → Test → Review → Extract |
 
-*See `tile.json` for the complete skill registry and `agents.json` for the agent registry.*
+*See `directory.json` for the complete skill and persona registry.*
 
 ## Integration
 
-- **Source of Truth:** `tile.json` (skill registry), `agents.json` (agent registry)
+- **Source of Truth:** `directory.json`
 - **Reference:** `docs/reference/skill-catalog.md`, `docs/reference/integration-matrix.md`
 - **Glossary:** `CONTEXT.md` (domain terms)
-- **Agent Guidance:** `AGENTS.md`

@@ -1,6 +1,7 @@
 ---
 name: define-entity
 license: MIT
+type: atomic
 description: >
   Use when defining ROM Struct attributes, configuring dry-types coercion for entity
   fields, implementing value-based equality semantics, or setting up a domain model

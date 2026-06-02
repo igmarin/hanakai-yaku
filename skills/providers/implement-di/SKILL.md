@@ -1,6 +1,7 @@
 ---
 name: implement-di
 license: MIT
+type: atomic
 description: >
   Inject dependencies through Hanami's `auto_inject` using `Deps["provider_key"]` — never call `Hanami.app["key"]` outside of providers, dependencies must be pre-registered by a provider using a descriptive dot-namespaced snake_case key, inject via constructor (no custom `initialize`), pass `instance_double` test stubs through `.new(keyword:)` in specs, validate resolution to catch `Dry::Container::Error` on unregistered keys, and access dependencies by their last key segment — for example `Deps["repos.user_repo"]` → call `user_repo`. Use when adding DI to actions, operations, or repositories.
   Trigger words: dependency injection, DI, auto_inject, Deps, inject,
