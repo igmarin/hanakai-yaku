@@ -2,7 +2,7 @@
   "name": "igmarin/hanakai-yaku",
   "version": "0.4.0",
   "license": "MIT",
-  "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, and validation. Shared Ruby process skills have moved to ruby-core-skills. Uses Markdown + Front-matter architecture.",
+  "summary": "Curated library of 35 atomic skills and 10 personas for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, validation, and orchestration workflows. Shared Ruby process skills have moved to ruby-core-skills.",
   "depends_on": [
     "igmarin/ruby-core-skills"
   ],

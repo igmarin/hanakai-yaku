@@ -105,4 +105,4 @@ Run: `bundle exec rspec spec/requests/posts/create_spec.rb` → expect green.
 | Mistake / Red Flag | Why it matters |
 |---|---|
 | Implementation written before any test | TDD means test first. No exceptions. |
-| Skipping the HARD-GATE — assuming the test fails without running it | A passing 
+| Skipping the HARD-GATE — assuming the test fails without running it | A passing test without running it first doesn't verify the assertion works — run it to confirm RED |
