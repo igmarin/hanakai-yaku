@@ -140,11 +140,14 @@ For persona skills, lead with hard gates and non-negotiable behavioral rules rat
 
 ```bash
 # Check what the agent will see
-cat evals/<skill>/scenario-0/task.md  # for skills with local evals
+cat evals/<skill>/task.md  # for skills with flat evals/
+cat evals/<skill>/scenario-0/task.md  # for skills with nested evals/
 
 # Confirm first sentence boundary
 head -15 skills/<category>/<skill>/SKILL.md
 ```
+
+**Note:** The `task.md` file is cached from the last `tessl eval run` or `tessl scenario generate`. If you change the description, either regenerate scenarios with `tessl scenario generate .` or delete the cached `task.md` and re-run the eval to pick up the new description.
 
 ### Step 5: Run eval
 
@@ -232,6 +235,29 @@ For persona skills specifically, auto-generated evals test the hard gates and pa
 
 *\*Persona skills use Tessl auto-generated evals (no local `evals/` scenarios) — testing requires `tessl scenario generate` first.*
 
+### v2.0.0 (hanakai-yaku, after migration + optimization)
+
+**91% baseline avg** (35 atomic skills) — tested after flatten-agents-into-personas migration, before per-skill description optimization.
+
+| Skill | Score | Note |
+|-------|-------|------|
+| Inject Dependencies | 100% | Perfect first-sentence packing |
+| Create App | 100% | CLI commands packed tightly |
+| Create View | 100% | Clear exposure + template rules |
+| Review Code | 100% | 10-line rule + DI audit clear |
+| Write Rom Spec | 100% | Transaction rollback + tuple error |
+| Run Development | 85% | Multi-command workflow hard to compress |
+| Create Validation Contract | 82% | Dry::Validation DSL reference heavy |
+| Configure Providers | 82% | Lifecycle phases need examples |
+| Create Action | 80% | Many optional params |
+| Define Entity | 80% | dry-types schema details |
+| Implement DI | 80% | Borderline — acceptable |
+| **Extract Slice** | **79%** | Progressive disclosure rule (#6) hard to fit in first sentence |
+| **Write Request Spec** | **67%** | "Confirm fails before implement" + "use create-action" rule scored low |
+| **Baseline avg** | **91%** | No skills below 67%; with-context avg not yet measured |
+
+**Lesson unique to hanakai-yaku:** The `write-request-spec` skill has a TDD gate ("confirm the spec fails because the route is unimplemented") that the Tessl eval tests as instruction-2, but agents tend to skip it in baseline mode. The fix was to lead with `"Write failing RSpec request spec first then use create-action to implement"`. The eval re-run requires `tessl scenario generate .` first (or targeted re-generation) since cached task.md files don't reflect description changes.
+
 ### Key Lessons
 
 1. **Leading with the most critical constraint produces the biggest gains.** Identify Risks jumped +18 points by putting "do NOT fabricate risks, every risk MUST reference evidence" at the very start.
@@ -250,8 +276,8 @@ This strategy applies to any repo with Tessl evals that use `sentence_from_descr
 |------|-------------|--------|-------------|
 | ruby-core-skills | Ruby + process skills | 16 | `"skills": "./skills/"` |
 | agnostic-planning-skills | PM + planning skills | 11 + 4 personas | `"skills": "./skills/"` |
-| rails-agent-skills | Rails-specific skills | 28 | `"skills": "./skills/"` |
-| hanakai-yaku | Hanami/dry-rb/ROM skills | 37 | `"skills": "./skills/"` |
+| rails-agent-skills | Rails-specific skills | 28 + 9 agents (not yet migrated) | `"skills": "./skills/"` |
+| hanakai-yaku | Hanami/dry-rb/ROM skills | 35 + 10 personas | `"skills": "./skills/"` |
 
 ### Migration checklist for each repo:
 
@@ -263,3 +289,14 @@ This strategy applies to any repo with Tessl evals that use `sentence_from_descr
 - [ ] For persona skills with no local evals, consider generating scenarios with `tessl scenario generate`
 
 To apply: run the eval, check which skills score <80% baseline, fix their descriptions using the rules above, and re-run.
+
+---
+
+## Kudos
+
+| Repo | Contribution | Contributor |
+|------|-------------|-------------|
+| **ruby-core-skills** | Initial v1.0.0 baseline + first-sentence strategy (54% → 87%) | @igmarin |
+| **agnostic-planning-skills** | Persona hard-gate strategy + Phase 11 eval results (81% → 93%) | @igmarin |
+| **hanakai-yaku** | v2.0.0 migration validation + task.md cache documentation (91% baseline) | @igmarin |
+| `docs/persona-guide.md` | Shared persona reference created during hanakai-yaku migration | @igmarin |

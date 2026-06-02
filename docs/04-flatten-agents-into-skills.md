@@ -2,7 +2,7 @@
 
 **Status:** Completed
 **Scope:** igmarin/agnostic-planning-skills (Phase 1 of 4 repos)
-**Next:** Copy this plan to hanakai-yaku, rails-agent-skills, ruby-core-skills
+**Next:** Copy this plan to rails-agent-skills, ruby-core-skills
 
 ## Core Decisions (from grill session)
 
@@ -209,6 +209,61 @@ Copy this plan and run through these steps for each target repo:
 
 ---
 
+---
+
+## PHASE 13 — Apply to hanakai-yaku (Phase 2 of 4)
+
+| Item | Result |
+|------|--------|
+| **Repo** | `igmarin/hanakai-yaku` |
+| **Skills** | 35 atomic + 10 personas |
+| **CI workflows** | 2 files pinned, `GITHUB_TOKEN` + `use_github_token` added, `pull-requests` → `write` |
+| **Tessl plugin** | Switched to `"skills": "./skills/"` auto-discovery — no breaking changes |
+| **Eval baseline** | 91% avg across all 35 atomic skills (no personas tested — no local evals) |
+| **Low scorers fixed** | `write-request-spec` (67%→improved), `extract-slice` (79%→improved) — first-sentence packing |
+
+### Findings unique to hanakai-yaku
+
+1. **Auto-discovery worked seamlessly.** Switching `.tessl-plugin/plugin.json` from explicit array to `"skills": "./skills/"` picked up all 35 skills + 10 personas without issues. Personas at `skills/personas/` are discovered automatically.
+
+2. **review-security is an outlier.** Lives at `skills/review-security/SKILL.md` (no category subdirectory). All other skills nest under `skills/actions/`, `skills/db/`, etc. Left in place since auto-discovery handles it, but recommend normalizing to `skills/cross-cutting/review-security/`.
+
+3. **Eval scenario generation for descriptions is slow.** Running `tessl scenario generate .` on 35 skills took >5 minutes. For single-skill description fixes, delete `evals/<skill>/` dir and run targeted evals instead.
+
+4. **No `.claude-plugin/agents/` equivalent exists.** Claude Code doesn't have a subagent wrapper format. The `CLAUDE.md` file handles Claude discovery — no wrappers needed.
+
+5. **`.opencode/agents/` wrappers are simple.** Each is a Markdown file with YAML frontmatter (`mode: subagent`, `prompt`, `permission`). Orchestrator personas get `edit/write: allow, bash: deny`.
+
+6. **Tags needed updating.** Agent files had `tags: [agents]` in metadata. Moved to `tags: [personas]` in the persona SKILL.md copies.
+
+### Checklist additions for remaining repos
+
+In addition to the reusable checklist above, for **rails-agent-skills** and **ruby-core-skills**:
+
+- [ ] Check for outlier skills outside category subdirectories (e.g., `skills/<name>/` without category)
+- [ ] Update `tags: [agents]` → `tags: [personas]` in moved persona files
+- [ ] Verify `.opencode/agents/` wrappers have correct `permission` block (orchestrators: edit/write allow, bash deny)
+- [ ] After switching to auto-discovery, run `tessl eval run . --agent "claude:claude-sonnet-4-6"` to validate no skills are missed
+
+### Summary of Operations (hanakai-yaku)
+
+| Action | Files |
+|--------|-------|
+| Add `type:` atomic | 35 SKILL.md files |
+| Add `type:` catalog | 1 root SKILL.md |
+| Move agents → personas | 10 files (agents → skills/personas/) |
+| Add `type:` persona | 10 files |
+| Create `.opencode/agents/` wrappers | 10 files |
+| Delete obsolete | 1 dir (`agents/`) + 2 files (`agents.json`, `AGENTS.md`) + 1 dir (`tessl-evals/`) |
+| Update `directory.json` | 1 file (added 10 personas, bumped to 0.4.0) |
+| Update `.tessl-plugin/plugin.json` | 1 file (auto-discovery, bumped to 0.4.0) |
+| Update documentation | ~12 files (SKILL.md, CLAUDE.md, GEMINI.md, README.md, docs/*) |
+| Fix CI workflows | 2 files (pinned `@latest`, added `GITHUB_TOKEN`, fixed permissions) |
+| Fix description evals | 2 skills (write-request-spec, extract-slice) |
+| **Total** | **~75 file operations** |
+
+---
+
 ## Summary of Operations (agnostic-planning-skills)
 
 | Action | Files |
@@ -224,3 +279,15 @@ Copy this plan and run through these steps for each target repo:
 | Fix PR review findings | 4 files |
 | Optimize descriptions | 7 skills (4 personas + 3 atomic) |
 | **Total** | **~50 file operations** |
+
+---
+
+## Kudos
+
+| Repo | Phase | Contributor |
+|------|-------|-------------|
+| **agnostic-planning-skills** (Phase 1) | All 12 phases | @igmarin |
+| **hanakai-yaku** (Phase 2) | PHASE 1–13 | @igmarin |
+| `docs/persona-guide.md` | Created for hanakai-yaku, usable by all repos | @igmarin |
+
+The `docs/persona-guide.md` document was created during the hanakai-yaku migration and is available for reuse by rails-agent-skills and ruby-core-skills. It provides a shared reference for persona structure, invocation, and phases that all persona-based repos can adopt.

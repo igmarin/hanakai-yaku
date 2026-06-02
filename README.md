@@ -3,7 +3,7 @@
 
 **hanakai-yaku turns AI coding assistants into disciplined Hanami collaborators.**
 
-A curated library of atomic skills and personas for Hanami, dry-rb, and ROM Ruby development. 3 initial skills and 1 persona (35 skills + 10 personas) that teach AI tools how to configure providers, implement dependency injection, write TDD tests, create repositories, design slices, and build operations — using Hanami conventions.
+A curated library of **35 atomic skills** and **10 personas** for Hanami, dry-rb, and ROM Ruby development that teach AI tools how to configure providers, implement dependency injection, write TDD tests, create repositories, design slices, and build operations — using Hanami conventions.
 
 > **Status:** Experimental — used to validate skill format portability across Ruby frameworks. Not actively maintained as a product. For production Rails AI tooling, see [rails-ai-bridge](https://github.com/igmarin/rails-ai-bridge).
 
