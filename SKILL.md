@@ -59,7 +59,7 @@ Implementation code CANNOT be written until:
 ## Core Process
  
 1. **Context:** Start every session with `load-context`.
-2. **Learn patterns:** Use `handle-result-pattern` and `inject-dependencies` to follow conventions.
+2. **Learn patterns:** Use `handle-result-pattern`, `create-operation`, and `create-validation-contract` for dry-rb patterns; use `inject-dependencies` and `register-provider` for DI conventions.
 3. **Build:** Use action, repository, relation, and view skills for implementation.
 4. **Test:** Use testing skills with the TDD gate.
 5. **Review:** Use `review-code`, `review-security`, and `refactor-process` *(from core)*.

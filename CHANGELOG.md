@@ -1,13 +1,37 @@
 # Changelog
 
-## [Unreleased]
+## [0.4.0] - 2026-06-01
+
+### Breaking Changes
+- **Renamed "agents" → "personas"** across all docs, configs, and metadata
+- **Moved `agents/` → `skills/personas/`** — all agent SKILL.md files now live under `skills/personas/<name>/`
+- **Deleted `AGENTS.md`**, `agents.json`, and `agents/` directory
+- **Added `type:` frontmatter** — `type: atomic` (35 skills), `type: persona` (10 personas), `type: catalog` (root SKILL.md)
 
 ### Added
-- GitHub Actions workflow (`.github/workflows/tile-check.yml`) to perform local `tile.json` integrity validation.
+- `type: atomic` to all 35 atomic skill SKILL.md files
+- `type: persona` to all 10 persona SKILL.md files (in `skills/personas/`)
+- `type: catalog` to root SKILL.md
+- `.opencode/agents/` wrappers — 10 subagent wrappers with `mode: subagent` + permission blocks
+- `docs/persona-guide.md` — Persona reference guide with phases, hard gates, and invocation docs
+- Personas to `directory.json` — all 10 personas now listed in the skill registry
+
+### Changed
+- `.tessl-plugin/plugin.json` — switched from explicit skill array to `"skills": "./skills/"` auto-discovery
+- `.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json` — version synced to 0.4.0
+- `CLAUDE.md`, `GEMINI.md`, `README.md` — agent→persona terminology throughout
+- `docs/` — all references updated (skill-catalog, integration-matrix, index, architecture, calling-skills, using-skills-guide)
+- Updated skill descriptions for `write-request-spec` and `extract-slice` to improve Tessl eval baseline scores
+
+### Removed
+- `agents/` directory (10 files moved to `skills/personas/`)
+- `agents.json` (entries merged into `directory.json`)
+- `AGENTS.md` (content merged into CLAUDE.md/GEMINI.md)
+- `tessl-evals/` directory (replaced by `evals/` for Tessl plugin auto-discovery)
 
 ### Fixed
-- Fixed agent dependencies syntax (from string to YAML list of hashes) in `hanami-setup` and `slice-lifecycle` agents to pass ecosystem consistency audit.
-- Added `new_name` fields to `deprecated_skills` in `tile.json` to resolve name redirects correctly.
+- CI workflows — pinned `anomalyco/opencode/github@latest` → `@github-v1.2.24`, added `GITHUB_TOKEN` env + `use_github_token: true`, fixed `pull-requests: read` → `write` in review workflow
+- Malformed headings in `hanami-setup` and `slice-lifecycle` persona SKILL.md (`# # Title` → `# Title`)
 
 ## [0.3.0] - 2026-05-24
 

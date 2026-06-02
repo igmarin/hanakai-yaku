@@ -4,7 +4,7 @@ Integration matrix: which skill connects to which and in what order.
 
 ---
 
-## Complete Agent Loop
+## Complete Persona Loop
 
 ### Hanami Setup
 
@@ -63,7 +63,7 @@ Need a new service?
   └─ configure-providers → implement-di
 
 Full project setup?
-  └─ hanami-setup (agent)
+  └─ hanami-setup (persona)
 ```
 
 ---
@@ -80,4 +80,4 @@ Full project setup?
 ## See Also
 
 - [Skill Catalog](skill-catalog.md) — Complete skills list
-- [Persona guide](../persona-guide.md) — Agent workflows with Mermaid diagrams
+- [Persona guide](../persona-guide.md) — Persona workflows with Mermaid diagrams

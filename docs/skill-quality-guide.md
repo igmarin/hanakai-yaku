@@ -7,10 +7,13 @@ Quality standards for all skills in the `hanakai-yaku` repository.
 Every `SKILL.md` must include:
 
 - `name`: Canonical kebab-case identifier
+- `type`: `atomic` (standalone skill), `persona` (orchestrating workflow), or `catalog` (root)
 - `version`: Semver string
 - `license`: SPDX identifier (e.g., MIT)
 - `description`: One-line description with trigger words
-- `ecosystem_sources`: Non-empty array of gem/repo slugs
+
+Optional fields:
+- `ecosystem_sources`: Array of gem/repo slugs (recommended for discovery)
 
 ## Required Sections
 
@@ -18,7 +21,7 @@ Skills must contain (in order):
 
 1. `# Title + Core Principle`
 2. `## Quick Reference`
-3. `## Core Rules` (skills) or `## Core Process` (agents)
+3. `## Core Rules` (atomic skills) or `## Core Process` (personas)
 4. `## Common Mistakes`
 5. `## Red Flags`
 6. `## Integration`
@@ -66,14 +69,15 @@ Testing skills must include a `## HARD-GATE` section enforcing:
 
 ## Validation
 
-All skills are validated by `bin/validate_skills` which checks:
-- YAML frontmatter parses correctly
-- Required fields are present and non-empty
-- Required Markdown sections exist
-- No duplicate skill names
+Before submitting a PR, verify:
 
-Run before every commit:
+1. **Frontmatter**: All required fields are present (`name`, `type`, `version`, `license`, `description`)
+2. **YAML**: Frontmatter parses without errors
+3. **Sections**: All required Markdown sections exist
+4. **Names**: No duplicate skill names across the repository
+5. **Registry**: `directory.json` includes the new skill or persona
+6. **markdownlint**: Passes with zero violations
 
 ```bash
-bin/validate_skills
+markdownlint skills/ --ignore node_modules
 ```

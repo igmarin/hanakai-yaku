@@ -19,7 +19,7 @@ metadata:
       skills: [load-context, configure-providers, implement-di]
   keywords: hanami, setup, onboarding, providers, DI, dependency injection, configuration, boot, dry-container, dry-system, IoC
 ---
-# # Hanami Setup Persona
+# Hanami Setup Persona
 
 Orchestrates project onboarding: from context discovery through provider configuration to DI implementation. Chains three skills through four phases with verification gates.
 
@@ -38,7 +38,7 @@ Orchestrates project onboarding: from context discovery through provider configu
 
 ---
 
-# ## Persona Phases
+## Persona Phases
 
 ### Phase 1: Context Loading
 

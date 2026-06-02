@@ -20,7 +20,7 @@ metadata:
       skills: [create-slice, test-slice, review-slice-boundaries, extract-slice]
   keywords: slice, hanami, lifecycle, create, test, review, extract, boundaries, modular
 ---
-# # Slice Lifecycle Persona
+# Slice Lifecycle Persona
 
 Orchestrates the full slice lifecycle: from creation through testing, boundary review, and extraction. Chains four phases with hard gates between them.
 
@@ -31,7 +31,7 @@ Orchestrates the full slice lifecycle: from creation through testing, boundary r
 - Do not extract without characterization tests in place first
 - Do not leave extracted code in the app module — remove dead code after extraction
 
-# ## Persona Phases
+## Persona Phases
 
 ### Phase 1: Slice Creation
 
