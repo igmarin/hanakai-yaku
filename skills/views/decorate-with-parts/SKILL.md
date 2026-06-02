@@ -1,6 +1,7 @@
 ---
 name: decorate-with-parts
 license: MIT
+type: atomic
 description: >
   Use when creating View Parts for decorator-style logic in Hanami 2.x — define Part classes inheriting from `Hanami::View::Part`, delegate attributes to the wrapped value via `delegate :name, :email, to: :value`, expose data as a Part in Views with `expose :model, as: :model_part`, add presentation methods returning formatted strings or booleans (no HTML generation and no database queries in Parts), and access the raw underlying object via the `value` method when needed. Defines Part classes that encapsulate presentation logic, keeps templates free of complex formatting, and exposes them via the `expose` macro.
 metadata:

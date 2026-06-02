@@ -80,4 +80,4 @@ Full project setup?
 ## See Also
 
 - [Skill Catalog](skill-catalog.md) — Complete skills list
-- [Agent Guide](../agent-guide.md) — Agent workflows with Mermaid diagrams
+- [Persona guide](../persona-guide.md) — Agent workflows with Mermaid diagrams

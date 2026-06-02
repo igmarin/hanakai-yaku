@@ -6,11 +6,11 @@ Hanami, dry-rb, and ROM development skills for AI agents.
 
 | Need | Document |
 |------|----------|
-| Browse all skills and agents | [reference/skill-catalog.md](reference/skill-catalog.md) |
+| Browse all skills and personas | [reference/skill-catalog.md](reference/skill-catalog.md) |
 | Understand skill chaining | [reference/integration-matrix.md](reference/integration-matrix.md) |
-| Agent workflows with diagrams | [agent-guide.md](agent-guide.md) |
+| Agent workflows with diagrams | [persona-guide.md](persona-guide.md) |
 | Repository structure and conventions | [architecture.md](architecture.md) |
-| Invoke skills and agents | [calling-skills.md](calling-skills.md) |
+| Invoke skills and personas | [calling-skills.md](calling-skills.md) |
 
 ## Skill Categories
 
@@ -25,10 +25,10 @@ Hanami, dry-rb, and ROM development skills for AI agents.
 | Slices *(planned)* | `create-slice`, `test-slice` |
 | Views *(planned)* | `create-view` |
 
-## Agents
+## Personas
 
-| Agent | Focus |
-|-------|-------|
+| Persona | Focus |
+|---------|-------|
 | `hanami-setup` | Project onboarding: Context → Providers → DI → Verify |
 | `hanami-tdd` *(planned)* | TDD feature cycle: Plan → Test → Implement → Review |
 | `slice-lifecycle` *(planned)* | Slice development: Create → Test → Review |

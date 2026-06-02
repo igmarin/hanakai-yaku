@@ -1,14 +1,14 @@
-# Using Skills in agents
+# Using Skills and Personas
 
-This guide explains how to compose atomic skills into agents, choose the right skill for a task, and chain skills together for common development scenarios.
+This guide explains how to compose atomic skills into personas, choose the right skill for a task, and chain skills together for common development scenarios.
 
 ---
 
 ## Philosophy: Skills as Building Blocks
 
-Each skill in `hanakai-yaku` is **atomic** — it covers one specific task completely. agents are **orchestrations** — they sequence skills in a meaningful order.
+Each skill in `hanakai-yaku` is **atomic** — it covers one specific task completely. Personas are **orchestrations** — they sequence skills in a meaningful order.
 
-**Analogy**: Skills are musical notes. agents are songs. You can play a song (workflow) or improvise by combining notes (ad-hoc skill chaining).
+**Analogy**: Skills are musical notes. Personas are songs. You can play a song (workflow) or improvise by combining notes (ad-hoc skill chaining).
 
 ---
 
@@ -144,7 +144,7 @@ When modularizing a growing application.
 
 ---
 
-## agents vs. Ad-Hoc Chaining
+## Personas vs. Ad-Hoc Chaining
 
 ### Use a Workflow when...
 

@@ -1,6 +1,7 @@
 ---
 name: configure-slice
 license: MIT
+type: atomic
 description: >
   Creates and configures Hanami 2.x Slices by registering providers, setting up container
   dependencies, customizing auto-registration paths, and managing slice-level settings.

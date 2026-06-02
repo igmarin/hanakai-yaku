@@ -1,6 +1,7 @@
 ---
 name: create-slice
 license: MIT
+type: atomic
 description: >
   Use when creating Hanami Slices — generate a slice with `hanami generate slice [name]`, register it in `config/app.rb` via `slice :name, at: "/path"`, define slice routes in `slices/[name]/config/routes.rb`, configure inter-slice dependencies with `import`/`export` (avoid circular deps: if A imports from B, B must not import from A), and keep slices self-contained for distinct bounded contexts like API, admin, or billing, the main web application. Covers slice directory generation, route configuration, cross-slice dependency management, and slice-level container access.
 metadata:

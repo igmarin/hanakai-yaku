@@ -1,6 +1,7 @@
 ---
 name: write-migration
 license: MIT
+type: atomic
 description: >
   Use when creating or modifying database schemas in Hanami 2.x with Sequel. Covers
   create_table, add_column, drop_column, alter_table, primary_key, indexes, and migration

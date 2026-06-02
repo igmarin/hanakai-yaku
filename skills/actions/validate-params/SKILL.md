@@ -1,6 +1,7 @@
 ---
 name: validate-params
 license: MIT
+type: atomic
 description: >
   Use when validating request parameters in Hanami 2.x Actions, including defining
   required/optional params blocks, applying type coercion (integer, bool, date), validating

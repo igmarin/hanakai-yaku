@@ -1,6 +1,6 @@
 {
   "name": "igmarin/hanakai-yaku",
-  "version": "0.3.11",
+  "version": "0.4.0",
   "license": "MIT",
   "summary": "Curated library of atomic AI agent skills for Hanami, dry-rb, and ROM Ruby development. Covers actions, slices, repositories, relations, changesets, providers, DI, operations, TDD, CLI, views, routing, and validation. Shared Ruby process skills have moved to ruby-core-skills. Uses Markdown + Front-matter architecture.",
   "depends_on": [
@@ -111,6 +111,36 @@
     },
     "decorate-with-parts": {
       "path": "skills/views/decorate-with-parts/SKILL.md"
+    },
+    "add-background-jobs": {
+      "path": "skills/personas/add-background-jobs/SKILL.md"
+    },
+    "add-table-column": {
+      "path": "skills/personas/add-table-column/SKILL.md"
+    },
+    "build-api-slice": {
+      "path": "skills/personas/build-api-slice/SKILL.md"
+    },
+    "build-crud-resource": {
+      "path": "skills/personas/build-crud-resource/SKILL.md"
+    },
+    "create-new-slice": {
+      "path": "skills/personas/create-new-slice/SKILL.md"
+    },
+    "hanami-setup": {
+      "path": "skills/personas/hanami-setup/SKILL.md"
+    },
+    "setup-authentication": {
+      "path": "skills/personas/setup-authentication/SKILL.md"
+    },
+    "slice-lifecycle": {
+      "path": "skills/personas/slice-lifecycle/SKILL.md"
+    },
+    "tdd-loop": {
+      "path": "skills/personas/tdd-loop/SKILL.md"
+    },
+    "validation-contract": {
+      "path": "skills/personas/validation-contract/SKILL.md"
     }
   },
   "deprecated_skills": {

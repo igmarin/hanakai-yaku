@@ -8,12 +8,12 @@ Conventions and structure for every `SKILL.md` in this library.
 hanakai-yaku/
 ├── docs/                    # Documentation
 │   ├── architecture.md
-│   ├── agent-guide.md
+│   ├── persona-guide.md
 │   ├── calling-skills.md
 │   └── reference/
 │       ├── skill-catalog.md
 │       └── integration-matrix.md
-├── agents/                  # Orchestrated agent skills
+├── skills/personas/        # Orchestrating personas
 │   └── hanami-setup/
 │       └── SKILL.md
 ├── skills/                  # Categorized skills
@@ -24,8 +24,7 @@ hanakai-yaku/
 ├── SKILL.md                 # Root orchestrator
 ├── CONTEXT.md               # Domain glossary
 ├── AGENTS.md                # Agent guidance
-├── tile.json                # Skill registry
-├── agents.json              # Agent registry
+├── directory.json           # Skill registry
 └── README.md
 ```
 
@@ -77,8 +76,8 @@ Non-code skills have domain-specific gates.
 
 | Context | Format | Example |
 |---------|--------|---------|
-| `tile.json` and `agents.json` | Full path | `skills/context/load-context/SKILL.md` |
-| Agent body (activate calls) | Category-path | `context/load-context` |
+| `directory.json` | Full path | `skills/context/load-context/SKILL.md` |
+| Persona body (activate calls) | Category-path | `context/load-context` |
 | Integration tables | Short name | `load-context` |
 
 ## Skill Types

@@ -1,13 +1,13 @@
 # Skill Catalog — hanakai-yaku
 
-Catalog of Hanami, dry-rb, and ROM development skills. 3 skills and 1 agent available now; 15 skills and 2 agents planned.
+Catalog of Hanami, dry-rb, and ROM development skills. 35 skills and 10 personas available.
 
 ---
 
 ## Quick Navigation
 
 **Skills:** [load-context](#load-context) · [configure-providers](#configure-providers) · [implement-di](#implement-di)
-**Agents:** [hanami-setup](#hanami-setup-agent)
+**Personas:** [hanami-setup](#hanami-setup-persona)
 
 ---
 
@@ -58,11 +58,11 @@ Catalog of Hanami, dry-rb, and ROM development skills. 3 skills and 1 agent avai
 
 ---
 
-## Agents
+## Personas
 
-### hanami-setup Agent
+### hanami-setup Persona
 
-| Path | `agents/hanami-setup/SKILL.md` |
+| Path | `skills/personas/hanami-setup/SKILL.md` |
 | Description | Project onboarding lifecycle |
 
 **Phases:** Context Loading → Provider Configuration → DI Implementation → Verification
@@ -86,7 +86,7 @@ Catalog of Hanami, dry-rb, and ROM development skills. 3 skills and 1 agent avai
 | `create-validation-contract` | dry-rb | Group 2 |
 | `write-tests` | Testing | Group 2 |
 | `plan-tests` | Testing | Group 2 |
-| `hanami-tdd` (agent) | Agents | Group 2 |
+| `hanami-tdd` (persona) | Personas | Group 2 |
 | `create-slice` | Slices | Group 3 |
 | `test-slice` | Slices | Group 3 |
 | `extract-slice` | Slices | Group 3 |
@@ -94,12 +94,12 @@ Catalog of Hanami, dry-rb, and ROM development skills. 3 skills and 1 agent avai
 | `create-view` | Views | Group 3 |
 | `design-routes` | Actions | Group 3 |
 | `review-migration` | Persistence | Group 3 |
-| `slice-lifecycle` (agent) | Agents | Group 3 |
+| `slice-lifecycle` (persona) | Personas | Group 3 |
 
 ---
 
 ## See Also
 
 - [Integration Matrix](integration-matrix.md) — How skills chain together
-- [Agent Guide](../agent-guide.md) — Agent workflows with Mermaid diagrams
+- [Persona Guide](../persona-guide.md) — Persona workflows with Mermaid diagrams
 - [Architecture](../architecture.md) — Repository layout and conventions

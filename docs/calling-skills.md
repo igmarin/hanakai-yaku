@@ -1,4 +1,4 @@
-# Calling Skills and Agents
+# Calling Skills and Personas
 
 hanakai-yaku skills can be invoked through chat commands or CLI.
 
@@ -23,7 +23,7 @@ hanakai-yaku skills can be invoked through chat commands or CLI.
 
 ---
 
-## Using Agents
+## Using Personas
 
 ```text
 @hanami-setup            # Full project onboarding workflow
@@ -48,7 +48,7 @@ npx skills add igmarin/hanakai-yaku
 
 ---
 
-## Available Skills and Agents
+## Available Skills and Personas
 
 ### Skills (3)
 
@@ -58,7 +58,7 @@ npx skills add igmarin/hanakai-yaku
 | `configure-providers` | Providers | Set up providers, settings, and service registration |
 | `implement-di` | Providers | Dependency injection patterns with dry-system |
 
-### Agent (1)
+### Persona (1)
 
 | Name | Phases | Focus |
 |------|--------|-------|

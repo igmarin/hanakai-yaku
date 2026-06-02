@@ -1,6 +1,7 @@
 ---
 name: create-changeset
 license: MIT
+type: atomic
 description: >
   Creates a ROM changeset for write operations — creating, updating, or deleting
   data. Covers changeset types, input transformation, validation, and command

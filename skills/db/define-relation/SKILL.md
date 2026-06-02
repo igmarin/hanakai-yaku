@@ -1,6 +1,7 @@
 ---
 name: define-relation
 license: MIT
+type: atomic
 description: >
   Use when defining ROM Relations that map to database tables in Hanami 2.x — inherit from `Hanami::DB::Relation` with `schema :table_name, infer: true` for automatic schema introspection or explicit `schema :table_name do ... end` with typed attributes, add custom query methods as public relation methods returning filtered/reordered relations, define associations via `many_to_one`/`one_to_many` with `as:` aliases and load strategies using `combine` for eager-loading, and keep relations in sync with migrations by verifying via console. Trigger terms: ROM Relations, schema inference, associations, query methods, combine, eager-loading.
 metadata:

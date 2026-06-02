@@ -1,6 +1,7 @@
 ---
 name: create-action
 license: MIT
+type: atomic
 description: >
   Use when creating, generating, or reviewing Hanami 2.x Action classes (route handlers,
   request handling, hanami controller equivalents). Generates Action classes with

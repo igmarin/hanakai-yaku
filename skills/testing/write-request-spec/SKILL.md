@@ -1,8 +1,9 @@
 ---
 name: write-request-spec
 license: MIT
+type: atomic
 description: >
-  Use when writing RSpec request specs for Hanami 2.x Actions — place specs under `spec/requests/` as `RSpec.describe "resource", type: :request`, send JSON request bodies with `.to_json` and `CONTENT_TYPE: application/json` header, assert status and body via `last_response.status` and `json_body` helper returning `expect(last_response).to be_successful`, test both 404 and 422 error responses with verified error JSON shapes, wrap DB-touching specs in a shared `"db transaction"` context using ROM transaction rollback, and confirm the spec fails before implementing the corresponding action. Covers Rack test helpers,
+  Write failing RSpec request spec first then use `create-action` to implement — place at `spec/requests/` with `type: :request`, send JSON bodies with `.to_json` + `CONTENT_TYPE: application/json`, assert via `last_response.status` + `json_body`, confirm spec fails because action is unimplemented (not syntax error), test 404/422 error shapes, wrap DB specs in `"db transaction"` with ROM rollback. Covers Rack test helpers,
   params, response assertions, and JSON shape validation.
 metadata:
   ecosystem_sources:

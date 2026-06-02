@@ -1,6 +1,7 @@
 ---
 name: create-repository
 license: MIT
+type: atomic
 description: >
   Use when creating ROM Repositories in Hanami 2.x, including CRUD operations, defining
   custom queries, configuring associations, setting up aggregate roots, entity mapping,

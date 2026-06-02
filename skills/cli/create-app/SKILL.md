@@ -1,6 +1,7 @@
 ---
 name: create-app
 license: MIT
+type: atomic
 description: >
   Use when creating a new Hanami 2.x application — generate with `hanami new [name] --database=postgres`, configure environment detection via HANAMI_ENV (development/test/production), establish database connectivity via DATABASE_URL, install dependencies with `bundle install`, set up the database with `hanami db create && hanami db migrate && hanami db version`, and run the development server with `hanami dev`. Generates the full directory layout, config/app.rb, config/routes.rb, config/settings.rb, db/migrate/, slices/, and a config.ru. Use when starting a Hanami project from scratch, scaffolding a new app, or understanding project structure.
 metadata:

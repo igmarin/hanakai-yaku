@@ -1,0 +1,201 @@
+---
+name: hanami-setup
+license: MIT
+type: persona
+description: >
+  Orchestrates Hanami project onboarding: loads application context, configures
+  providers, implements dependency injection patterns, and verifies the setup.
+  Use when setting up a new Hanami project, onboarding a developer, configuring
+  services and DI, or wiring up dry-container, dry-system, IoC containers, or
+  Hanami app configuration with providers and dependency injection.
+metadata:
+  version: 1.0.0
+  user-invocable: "true"
+  entry_point: "Invoke when setting up a new Hanami project, onboarding, or configuring providers and DI"
+  phases: "Phase 1: Context Loading, Phase 2: Provider Configuration, Phase 3: DI Implementation, Phase 4: Verification"
+  hard_gates: "Context Loaded, Providers Verified"
+  dependencies:
+    - source: self
+      skills: [load-context, configure-providers, implement-di]
+  keywords: hanami, setup, onboarding, providers, DI, dependency injection, configuration, boot, dry-container, dry-system, IoC
+---
+# # Hanami Setup Persona
+
+Orchestrates project onboarding: from context discovery through provider configuration to DI implementation. Chains three skills through four phases with verification gates.
+
+## Constraints
+
+```text
+- Context MUST be fully loaded before any configuration work.
+  DO NOT proceed without a complete slice map, provider inventory, and settings summary.
+  If the app cannot load context (broken boot), fix that first.
+- DO NOT configure providers without understanding existing ones.
+- DO NOT implement DI without registered providers.
+- DO NOT use direct container calls outside of providers.
+- All providers MUST boot without errors before setup is considered complete.
+- The test suite MUST pass with DI configured.
+```
+
+---
+
+# ## Persona Phases
+
+### Phase 1: Context Loading
+
+1. Activate **context/load-context**: Discover all slices, providers, settings, routes, and patterns.
+2. Produce the full context map: slices, providers, settings, route summary, DI conventions.
+
+---
+
+### Phase 2: Provider Configuration
+
+1. Activate **providers/configure-providers**: Review existing providers and configure new ones.
+2. For new providers: define settings, create provider file, register component.
+3. For existing providers: verify they match conventions and settings are properly typed.
+
+**Example — provider file (`config/providers/redis.rb`):**
+```ruby
+Hanami.app.register_provider(:redis) do
+  prepare do
+    require "redis"
+  end
+
+  start do
+    settings = target["settings"]
+    register("redis", Redis.new(url: settings.redis_url))
+  end
+
+  stop do
+    target["redis"].quit
+  end
+end
+```
+
+**Example — corresponding settings entry (`config/settings.rb`):**
+```ruby
+module MyApp
+  class Settings < Hanami::Settings
+    setting :redis_url, constructor: Types::String
+  end
+end
+```
+
+**Quality Check:**
+- Every external service has a provider.
+- All environment values go through settings (no `ENV.fetch` in providers).
+- Provider registration keys are descriptive.
+
+---
+
+### Phase 3: DI Implementation
+
+1. Activate **providers/implement-di**: Implement dependency injection in consumers.
+2. Verify every action and operation that needs injected dependencies uses `include Deps[...]`.
+3. Confirm test patterns support constructor injection of test doubles.
+
+**Example — action with DI (`app/actions/users/create.rb`):**
+```ruby
+module MyApp
+  module Actions
+    module Users
+      class Create < MyApp::Action
+        include Deps["operations.users.create"]
+
+        def handle(request, response)
+          result = create.(request.params[:user])
+          response.status = result.success? ? 201 : 422
+        end
+      end
+    end
+  end
+end
+```
+
+**Example — operation as DI consumer (`app/operations/users/create.rb`):**
+```ruby
+module MyApp
+  module Operations
+    module Users
+      class Create
+        include Deps["redis", "repositories.users"]
+
+        def call(params)
+          # redis and repositories.users are injected automatically
+        end
+      end
+    end
+  end
+end
+```
+
+**Example — test with constructor injection:**
+```ruby
+RSpec.describe MyApp::Operations::Users::Create do
+  subject(:operation) { described_class.new(redis: fake_redis, "repositories.users": fake_repo) }
+
+  let(:fake_redis) { instance_double(Redis) }
+  let(:fake_repo)  { instance_double(MyApp::Repositories::Users) }
+
+  it "creates a user" do
+    # ...
+  end
+end
+```
+
+**Quality Check:**
+- No direct container calls exist outside of providers.
+- Deps keys match provider registration keys exactly.
+- At least one action and one operation are verified with DI.
+
+---
+
+### Phase 4: Verification
+
+1. Boot the app and verify all providers start without errors:
+   ```bash
+   bundle exec hanami console --env=development
+   # or for a quick boot check:
+   bundle exec hanami db migrate --dry-run 2>&1 | head -20
+   ```
+2. Run the test suite to confirm injected dependencies resolve correctly:
+   ```bash
+   bundle exec rspec
+   ```
+3. Verify the slice map matches expectations.
+4. Check that settings are properly typed and environment values are set.
+
+---
+
+## Error Recovery
+
+| Scenario | Recovery |
+|----------|----------|
+| App fails to boot (missing settings) | Define the missing setting in `config/settings.rb` with proper type constructor. Re-run boot. |
+| Provider fails to start (connection refused) | Verify the external service is running. If it's optional, wrap startup in a rescue block. |
+| Deps key not found | Verify the provider's registration key matches the Deps key exactly. Check for typos. |
+| Test fails after DI (nil dependency) | Ensure the test passes the dependency through the constructor. Check the key name. |
+| ROM auto_registration missing a slice | Verify the slice path is correct. Check that relations follow the expected directory structure. |
+
+## Output Style / Report
+
+```markdown
+## Hanami Setup Complete
+
+### Context
+- Slices: [N] discovered — [list]
+- Providers: [N] configured — [list]
+- Settings: [N] defined — [summary]
+
+### Providers
+- [provider] — registered as "[key]" — [status: new/verified]
+
+### Dependency Injection
+- Actions using DI: [N]
+- Operations using DI: [N]
+- Test patterns verified: Yes / No
+
+### Verification
+- App boots: Yes / No
+- Tests pass: [N] passed, [N] failed
+- Warnings: [any issues to address]
+```
