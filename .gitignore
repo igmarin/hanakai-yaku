@@ -22,3 +22,7 @@ CODE_REVIEW.md
 CONTEXT.md
 CONTRIBUTING.md
 .antigravitycli/
+
+# rs-guard
+pr-diff.txt
+.rs-guard/
