@@ -54,8 +54,6 @@ See the [Ecosystem Overview](https://github.com/igmarin/agent-mcp-runtime/blob/m
 | Team leads | Repeatable workflows for Hanami onboarding, TDD discipline, and slice architecture. |
 
 ## Installation
-
-
 Install skills via skills.sh:
 
 ```bash
