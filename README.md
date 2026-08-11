@@ -44,7 +44,6 @@ See the [Ecosystem Overview](https://github.com/igmarin/agent-mcp-runtime/blob/m
 > [![skills.sh](https://skills.sh/b/igmarin/hanakai-yaku)](https://skills.sh/igmarin/hanakai-yaku)
 > [![Smithery](https://img.shields.io/badge/Smithery-orange)](https://smithery.ai/skills/ismael-marin/hanakai-yaku)
 >![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/igmarin/hanakai-yaku?utm_source=oss&utm_medium=github&utm_campaign=igmarin%2Fhanakai-yaku&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
->[![tessl](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi.tessl.io%2Fv1%2Fbadges%2Figmarin%2Fhanakai-yaku)](https://tessl.io/registry/igmarin/hanakai-yaku)
 
 ## Who This Is For
 
@@ -56,16 +55,6 @@ See the [Ecosystem Overview](https://github.com/igmarin/agent-mcp-runtime/blob/m
 
 ## Installation
 
-Install skills via tessl.io:
-
-```bash
-npx tessl i igmarin/hanakai-yaku
-```
-or with yarn
-
-```bash
-yarn dlx tessl i igmarin/hanakai-yaku
-```
 
 Install skills via skills.sh:
 

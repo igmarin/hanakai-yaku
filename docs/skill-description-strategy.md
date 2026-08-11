@@ -1,44 +1,18 @@
 # Skill Description Strategy
 
-*Optimizing `description` metadata for Tessl baseline eval scores.*
-
 ## The Bottleneck
-
-The Tessl eval task prompt includes only the **first sentence** of the skill's `description` metadata. The function `sentence_from_description` splits on `/(?<=[.!?])\s+/` — everything after the first `. ` (or `!` / `?` + space) is invisible to the agent in baseline mode.
 
 The first sentence is the **only signal** the agent receives about the skill's specific conventions. The rest of the description, the SKILL.md body, assets, and examples are all invisible until the agent loads the skill explicitly.
 
-## Tessl CLI (Plugin Mode)
-
 Since the migration from tiles to plugins:
 
-```bash
-# 1. Rename scenarios directory (required for plugin auto-discovery)
-mv tessl-evals evals
 
-# 2. Run the eval on the plugin (auto-detects evals/ directory)
-tessl eval run .
-
-# 3. View results — note baseline scores <80%
-tessl eval view --last
-
-# 4. Get detailed instruction-level breakdown
-tessl eval view <eval-run-id> --json
-
-# 5. Check what the agent actually sees in the task prompt
 cat evals/<skill-name>/scenario-0/task.md
 
 # 6. Compare against the description frontmatter
 head -15 skills/<category>/<skill-name>/SKILL.md
-```
-
-**Important: The scenarios directory MUST be named `evals/`** — the Tessl CLI in plugin mode looks for `evals/` inside the plugin's directory. Other names (like `tessl-evals/`) will not be discovered. See [Evaluate skill quality using scenarios](https://docs.tessl.io/improving-your-skills/evaluate-skill-quality-using-scenarios.md#step-4-run-the-evaluation) for details.
-
-Skills without local `evals/` scenarios get **auto-generated evals** by Tessl. These auto-generated evals extract behavioral rules from the SKILL.md body and test the agent solely on the first sentence. For these skills, an effective first sentence is even more critical — there is no custom scenario to provide additional context.
 
 ## Persona Skills (`type: persona`)
-
-Persona skills (orchestrating multi-phase workflows) are especially vulnerable to low baseline scores. Their SKILL.md bodies contain hard gates, phase ordering rules, error recovery procedures, and gate patterns — all of which the generic Tessl eval tests against, but none of which fit easily in a first sentence.
 
 **Strategy for personas:** Lead with hard gates and non-negotiable rules. What the persona *does* is implicit from its name — the first sentence must encode *how* it enforces quality:
 
@@ -108,15 +82,8 @@ The regex splits on `?` followed by whitespace. `should_calculate?` is fine (`?=
 
 ### Step 1: Read the eval results
 
-```bash
-tessl eval view --last
-```
 
 Note which skills score <80% baseline. For detailed instruction-level analysis:
-
-```bash
-tessl eval view <eval-run-id> --json
-```
 
 The JSON output contains a `rubric.checklist` array with each instruction's `name`, `description`, and `max_score` — this shows exactly what rules the agent was expected to follow.
 
@@ -147,19 +114,9 @@ cat evals/<skill>/scenario-0/task.md  # for skills with nested evals/
 head -15 skills/<category>/<skill>/SKILL.md
 ```
 
-**Note:** The `task.md` file is cached from the last `tessl eval run` or `tessl scenario generate`. If you change the description, either regenerate scenarios with `tessl scenario generate .` or delete the cached `task.md` and re-run the eval to pick up the new description.
 
 ### Step 5: Run eval
 
-```bash
-# Plugin mode (auto-discovers evals/ and all skills)
-tessl eval run .
-
-# Codebase mode (explicit scenario path)
-tessl eval run ./evals/
-
-tessl eval view --last
-```
 
 Check if the specific low-scoring instruction improved.
 
@@ -167,20 +124,10 @@ Check if the specific low-scoring instruction improved.
 
 If eval scores are 0% for all skills (even previously good ones), run:
 
-```bash
-tessl project repair
-```
-
-A missing or broken Tessl project link can cause the scorer to fail silently. Verify `tessl.json` has a valid project link.
-
 ### Step 7: Try a different agent model
 
 If baseline scores are 0% systemically while with-context scores are normal, the agent model may have a baseline-mode bug. Retry with a different model:
 
-```bash
-tessl eval run . --agent "claude:claude-sonnet-4-6"
-tessl eval run . --agent "claude:claude-opus-4-6"
-```
 
 Known issue: `claude:glm-5.1` may produce 0% baseline scores due to a solver compatibility issue in baseline mode.
 
@@ -233,8 +180,6 @@ For persona skills specifically, auto-generated evals test the hard gates and pa
 | Product Owner* | 62% | N/A | — | Persona: packed 4 hard gates into first sentence |
 | Project Manager* | 37% | N/A | — | Persona: packed 3 hard gates + constraints into first sentence |
 
-*\*Persona skills use Tessl auto-generated evals (no local `evals/` scenarios) — testing requires `tessl scenario generate` first.*
-
 ### v2.0.0 (hanakai-yaku, after migration + optimization)
 
 **91% baseline avg** (35 atomic skills) — tested after flatten-agents-into-personas migration, before per-skill description optimization.
@@ -256,8 +201,6 @@ For persona skills specifically, auto-generated evals test the hard gates and pa
 | **Write Request Spec** | **67%** | "Confirm fails before implement" + "use create-action" rule scored low |
 | **Baseline avg** | **91%** | No skills below 67%; with-context avg not yet measured |
 
-**Lesson unique to hanakai-yaku:** The `write-request-spec` skill has a TDD gate ("confirm the spec fails because the route is unimplemented") that the Tessl eval tests as instruction-2, but agents tend to skip it in baseline mode. The fix was to lead with `"Write failing RSpec request spec first then use create-action to implement"`. The eval re-run requires `tessl scenario generate .` first (or targeted re-generation) since cached task.md files don't reflect description changes.
-
 ### Key Lessons
 
 1. **Leading with the most critical constraint produces the biggest gains.** Identify Risks jumped +18 points by putting "do NOT fabricate risks, every risk MUST reference evidence" at the very start.
@@ -270,8 +213,6 @@ For persona skills specifically, auto-generated evals test the hard gates and pa
 
 ## Cross-Repo Applicability
 
-This strategy applies to any repo with Tessl evals that use `sentence_from_description` (the standard Tessl eval generator):
-
 | Repo | Description | Skills | Plugin mode |
 |------|-------------|--------|-------------|
 | ruby-core-skills | Ruby + process skills | 16 | `"skills": "./skills/"` |
@@ -281,12 +222,7 @@ This strategy applies to any repo with Tessl evals that use `sentence_from_descr
 
 ### Migration checklist for each repo:
 
-- [ ] Rename `tessl-evals/` → `evals/` (or create a symlink)
-- [ ] Update `.tessl-plugin/plugin.json` to use `"skills": "./skills/"` for auto-discovery
-- [ ] Run `tessl project repair` to verify project link
-- [ ] Run `tessl eval run . --agent "claude:claude-sonnet-4-6"` for baseline
 - [ ] Check scores: fix any skill with <80% baseline
-- [ ] For persona skills with no local evals, consider generating scenarios with `tessl scenario generate`
 
 To apply: run the eval, check which skills score <80% baseline, fix their descriptions using the rules above, and re-run.
 

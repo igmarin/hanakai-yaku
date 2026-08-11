@@ -12,7 +12,7 @@ and 10 personas for Hanami 2.x, dry-rb, and ROM Ruby development.
 - Do skills correctly reference ruby-core-skills process dependencies
   (tdd-process, refactor-process, review-process)?
 
-### 2. Hanami/dry-rb/ROM Conventions (for any Ruby code in skills/evals/scripts)
+### 2. Hanami/dry-rb/ROM Conventions (for any Ruby code in the repository)
 - `frozen_string_literal: true` on line 1 of every .rb file
 - Hanami slice structure respected (actions/, repos/, relations/, views/)
 - ROM Relations and Repos follow established patterns

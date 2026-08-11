@@ -29,7 +29,6 @@
 | Orchestrator | Orchestrating Persona | A persona that chains atomic skills |
 | agents.json | (deleted) | Merged into directory.json |
 | AGENTS.md | (deleted) | Content merged into CLAUDE.md / GEMINI.md |
-| tile.json | directory.json | Old tessl registry → new `directory.json` format |
 
 ---
 
@@ -106,12 +105,6 @@ Create `mode: subagent` wrappers for opencode users. One per persona, with:
 
 ---
 
-## PHASE 9 — Tessl plugin migration
-
-- [x] Update `.tessl-plugin/plugin.json` to use `"skills": "./skills/"` (auto-discovery)
-- [x] Rename `tessl-evals/` → `evals/` (required for plugin eval mode)
-- [x] Run `tessl project repair` to confirm project link
-- [x] Update `tile.json` references in docs to `directory.json`
 
 ---
 
@@ -129,8 +122,6 @@ Applied to: agnostic-planning-skills, ruby-core-skills, rails-agent-skills, hana
 ---
 
 ## PHASE 11 — Description optimization (eval-driven)
-
-Run Tessl evals, identify skills with <80% baseline score, and fix their `description` first sentence.
 
 ### Rules applied:
 
@@ -152,15 +143,11 @@ Run Tessl evals, identify skills with <80% baseline score, and fix their `descri
 | Tech Lead* | 84% | N/A | — | Added evidence citation + severity classification |
 | **Baseline avg** | **81%** | **93%** | **+12** | With context avg: 100% |
 
-*\*Persona skills use Tessl auto-generated evals — no local `evals/` scenarios*
 
 ### Known issue:
 
 `claude:glm-5.1` produces false 0% baseline scores. Always use `claude:claude-sonnet-4-6` for evals:
 
-```bash
-tessl eval run . --agent "claude:claude-sonnet-4-6"
-```
 
 ### Ceiling:
 
@@ -190,18 +177,12 @@ Copy this plan and run through these steps for each target repo:
 - [ ] Update root SKILL.md, README, CLAUDE.md, GEMINI.md
 - [ ] Create `.opencode/agents/` wrappers (if opencode users exist)
 
-### Tessl plugin
-- [ ] Ensure `.tessl-plugin/plugin.json` uses `"skills": "./skills/"`
-- [ ] Rename `tessl-evals/` → `evals/` if exists
-- [ ] Run `tessl project repair` to verify link
-
 ### CI workflows
 - [ ] Pin `anomalyco/opencode/github@latest` → `@github-v1.2.24`
 - [ ] Add `GITHUB_TOKEN` env + `use_github_token: true`
 - [ ] Fix `pull-requests: read` → `pull-requests: write` in PR review workflow
 
 ### Description optimization
-- [ ] Run `tessl eval run . --agent "claude:claude-sonnet-4-6"`
 - [ ] Check baseline scores — fix any <80%
 - [ ] Apply persona hard-gate strategy for any persona skills
 - [ ] Run evals again to validate
@@ -218,19 +199,14 @@ Copy this plan and run through these steps for each target repo:
 | **Repo** | `igmarin/hanakai-yaku` |
 | **Skills** | 35 atomic + 10 personas |
 | **CI workflows** | 2 files pinned, `GITHUB_TOKEN` + `use_github_token` added, `pull-requests` → `write` |
-| **Tessl plugin** | Switched to `"skills": "./skills/"` auto-discovery — no breaking changes |
 | **Eval baseline** | 91% avg across all 35 atomic skills (no personas tested — no local evals) |
 | **Low scorers fixed** | `write-request-spec` (67%→improved), `extract-slice` (79%→improved) — first-sentence packing |
 
 ### Findings unique to hanakai-yaku
 
-1. **Auto-discovery worked seamlessly.** Switching `.tessl-plugin/plugin.json` from explicit array to `"skills": "./skills/"` picked up all 35 skills + 10 personas without issues. Personas at `skills/personas/` are discovered automatically.
+1. **review-security is an outlier.** Lives at `skills/review-security/SKILL.md` (no category subdirectory). All other skills nest under `skills/actions/`, `skills/db/`, etc. Left in place since auto-discovery handles it, but recommend normalizing to `skills/cross-cutting/review-security/`.
 
-2. **review-security is an outlier.** Lives at `skills/review-security/SKILL.md` (no category subdirectory). All other skills nest under `skills/actions/`, `skills/db/`, etc. Left in place since auto-discovery handles it, but recommend normalizing to `skills/cross-cutting/review-security/`.
-
-3. **Eval scenario generation for descriptions is slow.** Running `tessl scenario generate .` on 35 skills took >5 minutes. For single-skill description fixes, delete `evals/<skill>/` dir and run targeted evals instead.
-
-4. **No `.claude-plugin/agents/` equivalent exists.** Claude Code doesn't have a subagent wrapper format. The `CLAUDE.md` file handles Claude discovery — no wrappers needed.
+2. **No `.claude-plugin/agents/` equivalent exists.** Claude Code doesn't have a subagent wrapper format. The `CLAUDE.md` file handles Claude discovery — no wrappers needed.
 
 5. **`.opencode/agents/` wrappers are simple.** Each is a Markdown file with YAML frontmatter (`mode: subagent`, `prompt`, `permission`). Orchestrator personas get `edit/write: allow, bash: deny`.
 
@@ -243,7 +219,6 @@ In addition to the reusable checklist above, for **rails-agent-skills** and **ru
 - [ ] Check for outlier skills outside category subdirectories (e.g., `skills/<name>/` without category)
 - [ ] Update `tags: [agents]` → `tags: [personas]` in moved persona files
 - [ ] Verify `.opencode/agents/` wrappers have correct `permission` block (orchestrators: edit/write allow, bash deny)
-- [ ] After switching to auto-discovery, run `tessl eval run . --agent "claude:claude-sonnet-4-6"` to validate no skills are missed
 
 ### Summary of Operations (hanakai-yaku)
 
@@ -254,9 +229,7 @@ In addition to the reusable checklist above, for **rails-agent-skills** and **ru
 | Move agents → personas | 10 files (agents → skills/personas/) |
 | Add `type:` persona | 10 files |
 | Create `.opencode/agents/` wrappers | 10 files |
-| Delete obsolete | 1 dir (`agents/`) + 2 files (`agents.json`, `AGENTS.md`) + 1 dir (`tessl-evals/`) |
 | Update `directory.json` | 1 file (added 10 personas, bumped to 0.4.0) |
-| Update `.tessl-plugin/plugin.json` | 1 file (auto-discovery, bumped to 0.4.0) |
 | Update documentation | ~12 files (SKILL.md, CLAUDE.md, GEMINI.md, README.md, docs/*) |
 | Fix CI workflows | 2 files (pinned `@latest`, added `GITHUB_TOKEN`, fixed permissions) |
 | Fix description evals | 2 skills (write-request-spec, extract-slice) |

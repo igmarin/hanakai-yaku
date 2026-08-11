@@ -1,7 +1,0 @@
-{
-  "name": "hanakai-yaku",
-  "version": "0.4.0",
-  "description": "Hanami 2.x development skills for Cursor",
-  "author": "igmarin",
-  "entry": "SKILL.md"
-}
